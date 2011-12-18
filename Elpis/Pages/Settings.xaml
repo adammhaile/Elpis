@@ -31,7 +31,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
+        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                   Style="{StaticResource FadeScroller}">
             <StackPanel Grid.Row="0" VerticalAlignment="Stretch">
                 <GroupBox Header="Login" Margin="5">

@@ -66,12 +66,12 @@
   <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
     <Grid>
       <Grid.RowDefinitions>
-        <RowDefinition MaxHeight="24" />
+        <RowDefinition MaxHeight="18" />
         <RowDefinition Height="0.00001*" />
-        <RowDefinition MaxHeight="24" />
+        <RowDefinition MaxHeight="18" />
       </Grid.RowDefinitions>
       <Border Grid.RowSpan="3" CornerRadius="0" Background="{StaticResource MainBGBrush}" />
-      <RepeatButton Grid.Row="0" Style="{StaticResource ScrollBarLineButton}" Height="24"
+      <RepeatButton Grid.Row="0" Style="{StaticResource ScrollBarLineButton}" Height="18"
                     Command="ScrollBar.LineUpCommand" Content="M 0 4 L 8 4 L 4 0 Z" />
       <Track Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
         <Track.DecreaseRepeatButton>
@@ -85,7 +85,7 @@
           <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageDownCommand" />
         </Track.IncreaseRepeatButton>
       </Track>
-      <RepeatButton Grid.Row="2" Style="{StaticResource ScrollBarLineButton}" Height="24"
+      <RepeatButton Grid.Row="2" Style="{StaticResource ScrollBarLineButton}" Height="18"
                     Command="ScrollBar.LineDownCommand" Content="M 0 0 L 4 4 L 8 0 Z" />
     </Grid>
   </ControlTemplate>
@@ -93,12 +93,12 @@
   <ControlTemplate x:Key="HorizontalScrollBar" TargetType="{x:Type ScrollBar}">
     <Grid>
       <Grid.ColumnDefinitions>
-        <ColumnDefinition MaxWidth="24" />
+        <ColumnDefinition MaxWidth="18" />
         <ColumnDefinition Width="0.00001*" />
-        <ColumnDefinition MaxWidth="24" />
+        <ColumnDefinition MaxWidth="18" />
       </Grid.ColumnDefinitions>
       <Border Grid.ColumnSpan="3" CornerRadius="0" Background="#F0F0F0" />
-      <RepeatButton Grid.Column="0" Style="{StaticResource ScrollBarLineButton}" Width="24"
+      <RepeatButton Grid.Column="0" Style="{StaticResource ScrollBarLineButton}" Width="18"
                     Command="ScrollBar.LineLeftCommand" Content="M 4 0 L 4 8 L 0 4 Z" />
       <Track Name="PART_Track" Grid.Column="1" IsDirectionReversed="False">
         <Track.DecreaseRepeatButton>
@@ -112,7 +112,7 @@
           <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageRightCommand" />
         </Track.IncreaseRepeatButton>
       </Track>
-      <RepeatButton Grid.Column="2" Style="{StaticResource ScrollBarLineButton}" Width="24"
+      <RepeatButton Grid.Column="2" Style="{StaticResource ScrollBarLineButton}" Width="18"
                     Command="ScrollBar.LineRightCommand" Content="M 0 0 L 4 4 L 0 8 Z" />
     </Grid>
   </ControlTemplate>
@@ -123,11 +123,11 @@
     <Style.Triggers>
       <Trigger Property="Orientation" Value="Horizontal">
         <Setter Property="Width" Value="Auto" />
-        <Setter Property="Height" Value="24" />
+        <Setter Property="Height" Value="18" />
         <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
       </Trigger>
       <Trigger Property="Orientation" Value="Vertical">
-        <Setter Property="Width" Value="24" />
+        <Setter Property="Width" Value="18" />
         <Setter Property="Height" Value="Auto" />
         <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
       </Trigger>
@@ -135,7 +135,7 @@
         <Setter Property="Opacity" Value="1.0" />
       </Trigger>
       <Trigger Property="IsMouseOver" Value="False">
-        <Setter Property="Opacity" Value="0.0" />
+        <Setter Property="Opacity" Value="1.0" />
       </Trigger>
     </Style.Triggers>
   </Style>
@@ -154,7 +154,7 @@
               <RowDefinition Height="*" />
               <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <ScrollContentPresenter Grid.ColumnSpan="2" Grid.RowSpan="2" />
+            <ScrollContentPresenter Grid.ColumnSpan="1" Grid.RowSpan="1" />
             <ScrollBar Name="PART_VerticalScrollBar" Grid.Column="1"
                        Value="{TemplateBinding VerticalOffset}" Maximum="{TemplateBinding ScrollableHeight}"
                        ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />

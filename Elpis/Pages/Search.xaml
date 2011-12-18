@@ -32,7 +32,7 @@
         <Image Grid.Row="1" Grid.ColumnSpan="3" Source="/Elpis;component/Images/background.png"
                Margin="10" Opacity="0.25"/>
         <ScrollViewer Name="ResultScroller" Grid.Row="1" Grid.ColumnSpan="3"
-                  ScrollViewer.VerticalScrollBarVisibility="Visible" Style="{StaticResource FadeScroller}">
+                  ScrollViewer.VerticalScrollBarVisibility="Auto" Style="{StaticResource FadeScroller}">
             <ItemsControl Name="ResultItems" HorizontalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
