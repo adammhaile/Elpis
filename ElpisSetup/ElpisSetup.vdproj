@@ -257,11 +257,6 @@
             "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=0.33.4369.15703, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_219D2474510FB9396F76839D15068B72"
-                    {
-                    "Name" = "8:PandoraSharp.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:PandoraSharp.dll"
             "TargetName" = "8:"
@@ -288,11 +283,6 @@
             "AssemblyAsmDisplayName" = "8:Bass.Net, Version=2.4.8.3, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2337FC5C43A57E1920D0BE853F4D57BE"
-                    {
-                    "Name" = "8:Bass.Net.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Bass.Net.dll"
             "TargetName" = "8:"
@@ -379,11 +369,6 @@
             "AssemblyAsmDisplayName" = "8:Util, Version=0.8.4369.15703, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_B80C72A6FEB26F5A1D4C43849A0FF7B3"
-                    {
-                    "Name" = "8:Util.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Util.dll"
             "TargetName" = "8:"
@@ -410,11 +395,6 @@
             "AssemblyAsmDisplayName" = "8:BassPlayer, Version=0.8.4369.15703, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_B9F27FF9ED2B7E2D00568969C84F4D9D"
-                    {
-                    "Name" = "8:BassPlayer.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:BassPlayer.dll"
             "TargetName" = "8:"
@@ -441,11 +421,6 @@
             "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=0.33.4369.15703, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
-                    "_E0BC3D5FD11BDEC07ED1BDAEB725307E"
-                    {
-                    "Name" = "8:PandoraSharpPlayer.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:PandoraSharpPlayer.dll"
             "TargetName" = "8:"
@@ -552,15 +527,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Elpis"
-        "ProductCode" = "8:{FAC44ADB-F02D-4DEF-B418-B993EAC8DEAA}"
-        "PackageCode" = "8:{F9FE633C-19B8-4710-BF63-54475DEA9409}"
+        "ProductCode" = "8:{293092CB-A285-4D60-9CC7-467675C6AAEF}"
+        "PackageCode" = "8:{214163CC-87CC-468B-8B91-128C9E9A8C94}"
         "UpgradeCode" = "8:{F0962B86-5C6F-4A2C-98F4-2FF9D0AC46AD}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.8.7"
+        "ProductVersion" = "8:0.8.8"
         "Manufacturer" = "8:Adam Haile"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
