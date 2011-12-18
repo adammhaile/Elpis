@@ -1,2 +1,5 @@
+v0.8.7
+Minor update to fix some confusion with scrolling in the UI.
+
 v0.8.6
 Initial Public Beta
