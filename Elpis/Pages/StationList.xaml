@@ -1,0 +1,151 @@
+﻿<UserControl x:Class="Elpis.StationList" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GUI.Converters"
+             xmlns:Controls="clr-namespace:Elpis.Controls" mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="440"
+             Unloaded="StationList_Unloaded" Loaded="StationList_Loaded">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Elpis;component/Styles/ScrollBars.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/ImageButton.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/Misc.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/Brushes.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/BaseControls.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/Images.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:BinaryImageConverter x:Key="imgConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource MainBGBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Image Grid.Row="3" Grid.ColumnSpan="3" Source="/Elpis;component/Images/background.png"
+               Margin="10" Opacity="0.25"/>
+        <TextBlock Name="lblNoStations"
+                   Margin="15"
+                   FontSize="22"
+                   Foreground="{StaticResource MainFontBrush}"
+                   TextWrapping="Wrap"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Visibility="Visible">
+            Looks like you have no stations!
+            <LineBreak/>
+            Click on the Plus button above to add your favorite artist or songs and start listening.
+        </TextBlock>
+        <ScrollViewer Name="scrollMain" Grid.Row="0" VerticalScrollBarVisibility="Visible"
+                  HorizontalScrollBarVisibility="Disabled" Style="{StaticResource FadeScroller}">
+
+            <ItemsControl Name="StationItems" HorizontalContentAlignment="Stretch">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ContentControl Name="StationItem">
+                            <Grid Name="StationGrid">
+                                <Grid Margin="0" HorizontalAlignment="Stretch"
+                      MouseLeftButtonUp="StationItem_MouseLeftButtonUp" Style="{StaticResource HoverGrid}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="0"
+                         Source="{Binding Path=ArtImage, 
+                                                                    Converter={StaticResource imgConverter}, 
+                                                                    ConverterParameter={StaticResource Image_UnknownArt}}"
+                         Height="96" Width="96" />
+                                    <Grid Grid.Column="1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Controls:ImageButton Width="28" Height="28" x:Name="btnMenu" Grid.Column="0"
+                                        ActiveImageUri="{StaticResource Image_MenuRightHover}" InactiveImageUri="{StaticResource Image_MenuRight}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Center" Click="btnMenu_Click" Visibility="Visible" />
+
+                                        <TextBlock Grid.Column="1" Name="txtStationName" Text="{Binding Path=Name}" FontSize="22"
+                               FontWeight="DemiBold" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                               Foreground="{StaticResource MainFontBrush}" Controls:TextBlockUtils.AutoTooltip="True"
+                               Controls:TextBlockUtils.AutoTooltipFontSize="12" />
+                                        <ContentControl x:Name="StationMenu" HorizontalAlignment="Stretch"
+                                                    Grid.Column="0" Grid.ColumnSpan="2"
+                                                    VerticalAlignment="Center" Visibility="Hidden">
+                                            <Grid Name="MenuGrid" Background="{StaticResource MainBGBrush}"
+                            Width="{Binding RelativeSource=
+                                                    {RelativeSource FindAncestor,
+                                                    AncestorType={x:Type Grid}},
+                                                    Path=ActualWidth}"
+                            Height="{Binding RelativeSource=
+                                                    {RelativeSource FindAncestor,
+                                                    AncestorType={x:Type Grid}},
+                                                    Path=ActualHeight}"
+                            IsVisibleChanged="MenuGrid_IsVisibleChanged" Tag="{Binding}">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*" />
+                                                    <RowDefinition Height="*" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Controls:ImageButton Width="28" Height="28" x:Name="btnMenuClose" Grid.Column="0" Grid.RowSpan="2"
+                                        ActiveImageUri="{StaticResource Image_MenuLeftHover}" InactiveImageUri="{StaticResource Image_MenuLeft}"
+                                        VerticalAlignment="Center" HorizontalAlignment="Center" Click="btnMenuClose_Click" Visibility="Visible" />
+                                                <Grid Name="gridMenuRename" Grid.Row="0" Grid.Column="1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="24" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Name="txtStationNameMenu"
+                                     Foreground="{StaticResource MainFontBrush}" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Path=Name}"
+                                     FontSize="22" FontWeight="DemiBold" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch"
+                                     VerticalAlignment="Center" Controls:TextBlockUtils.AutoTooltip="True" Controls:TextBlockUtils.AutoTooltipFontSize="12" />
+                                                    <TextBox Visibility="Hidden" Name="txtRename" Grid.Column="0"
+                                   FontSize="22" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                   KeyUp="TextBox_KeyUp" />
+                                                    <Controls:ImageButton Width="32" Height="32" Margin="4,2"
+                                                Grid.Column="1" x:Name="btnSaveRename" ActiveImageUri="{StaticResource Image_CheckHover}"
+                                                InactiveImageUri="{StaticResource Image_Check}" Click="btnSaveRename_Click" VerticalAlignment="Center"
+                                                HorizontalAlignment="Center" Visibility="Hidden" />
+                                                </Grid>
+                                                <Grid Name="gridMenuButtons" Grid.Row="1" Grid.Column="1">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Controls:ImageButton Width="32" Height="32" Margin="4,2"
+                                                Grid.Column="1" x:Name="btnRename" ActiveImageUri="{StaticResource Image_WriteHover}"
+                                                InactiveImageUri="{StaticResource Image_Write}" Click="btnRename_Click" Tag="{Binding}" VerticalAlignment="Center"
+                                                HorizontalAlignment="Center" />
+                                                    <Controls:ImageButton Width="32" Height="32" Margin="4,2"
+                                                Grid.Column="2" x:Name="btnDelete" ActiveImageUri="{StaticResource Image_TrashHover}"
+                                                InactiveImageUri="{StaticResource Image_Trash}" Click="btnDelete_Click" Tag="{Binding}" VerticalAlignment="Center"
+                                                HorizontalAlignment="Center" />
+                                                    <Controls:ImageButton Width="32" Height="32" Margin="2"
+                                                Grid.Column="3" x:Name="btnInfo" ActiveImageUri="{StaticResource Image_InfoHover}"
+                                                InactiveImageUri="{StaticResource Image_Info}" Click="btnInfo_Click" VerticalAlignment="Center"
+                                                HorizontalAlignment="Center" Tag="{Binding Path=InfoUrl}" />
+                                                </Grid>
+                                            </Grid>
+                                        </ContentControl>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </ContentControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Border Name="WaitScreen" BorderBrush="{StaticResource MainBGBrush}" BorderThickness="0"
+            Background="{StaticResource MainWaitBrush}" Visibility="Collapsed">
+            <Grid x:Name="Spinner" Background="{StaticResource TransparencyShadeBrush}">
+                <Controls:ContentSpinner Margin="10" Width="190" ContentScale="1" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

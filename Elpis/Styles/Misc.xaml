@@ -1,0 +1,42 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:system="clr-namespace:System;assembly=mscorlib">
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="/Elpis;component/Styles/Brushes.xaml" />
+  </ResourceDictionary.MergedDictionaries>
+  <Style x:Key="HoverGrid" TargetType="{x:Type Grid}">
+    <Style.Triggers>
+      <Trigger Property="IsMouseOver" Value="False">
+        <Setter Property="Background" Value="{StaticResource ItemBGBrush}" />
+      </Trigger>
+      <Trigger Property="IsMouseOver" Value="True">
+        <Setter Property="Background" Value="{StaticResource ItemHoverBrush}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <Style x:Key="InverseHoverGrid" TargetType="{x:Type Grid}">
+    <Style.Triggers>
+      <Trigger Property="IsMouseOver" Value="False">
+        <Setter Property="Background" Value="{StaticResource ItemHoverBrush}" />
+      </Trigger>
+      <Trigger Property="IsMouseOver" Value="True">
+        <Setter Property="Background" Value="{StaticResource ItemBGBrush}" />
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+  <system:Boolean x:Key="BoolTrue">True</system:Boolean>
+  <system:Boolean x:Key="BoolFalse">False</system:Boolean>
+    <Style x:Key="LinkStyle" TargetType="{x:Type Hyperlink}">
+        <Setter Property="TextDecorations" Value="{x:Null}" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource LinkHoverBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource LinkBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="True">
+                <Setter Property="Cursor" Value="Hand" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

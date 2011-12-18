@@ -1,0 +1,95 @@
+﻿<Window x:Class="Elpis.MainWindow" xmlns:convert="clr-namespace:GUI.Converters" xmlns:elpis="clr-namespace:Elpis"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:trans="clr-namespace:GUI.PageTransition" Title="Elpis"
+        Height="520" Width="440" MinHeight="500" MinWidth="440" MaxHeight="720" MaxWidth="640" WindowStyle="None"
+        ResizeMode="NoResize" Icon="/Elpis;component/Images/main_icon.png" Loaded="Window_Loaded" Closing="Window_Closing"
+        StateChanged="Window_StateChanged">
+  <Window.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Elpis;component/Styles/Brushes.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <!--<convert:WindowStateToVisibilityConverter x:Key="wsToVis" />
+      <convert:WindowStateToThicknessConverter x:Key="wsToThick" />-->
+    </ResourceDictionary>
+  </Window.Resources>
+
+  <Border Name="borderMain" Margin="0">
+    <!-- Choice, borderless with drop shadow and crap performance or borderless without drop shadow and good performance. -->
+    <!--<Border Name="borderMain" 
+            Margin="{Binding Path=WindowState,
+                                 Converter={StaticResource wsToThick},
+                                 ConverterParameter=10,
+                                 RelativeSource={RelativeSource AncestorType={x:Type Window}}}">-->
+        
+    <!--<Border.Effect>
+            <DropShadowEffect Color="Black"
+                              Direction="270"
+                              BlurRadius="10"
+                              ShadowDepth="3" />
+        </Border.Effect>-->
+
+    <Grid Name="ResizeBorders">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="4" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="4" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="4" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="4" />
+      </Grid.ColumnDefinitions>
+      <Grid Name="LayoutRoot" Grid.RowSpan="3" Grid.ColumnSpan="3">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Name="HeaderGrid" Height="23" VerticalAlignment="Top"
+              Background="{StaticResource MainBGBrush}">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <Grid Grid.Column="0" Name="TitleBar" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <TextBlock Name="TitleText" Padding="8,0" HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       Text="{Binding Path=Title,
+                                    RelativeSource={RelativeSource 
+                                        AncestorType={x:Type Window}}}"
+                       TextTrimming="CharacterEllipsis" Foreground="{StaticResource MainFontBrush}" FontWeight="999" FontSize="16" />
+          </Grid>
+          <TextBlock Grid.Column="1" Name="MinimizeButton" Text="0" FontFamily="Webdings" FontSize="16"
+                     Foreground="{StaticResource MainFontBrush}" Margin="3" HorizontalAlignment="Right" VerticalAlignment="Top" />
+          <TextBlock Grid.Column="3" Name="CloseButton" Text="r" FontFamily="Webdings" FontSize="16"
+                     Foreground="{StaticResource MainFontBrush}" Margin="3" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        </Grid>
+        <elpis:MainBar x:Name="mainBar" Grid.Row="1" />
+        <Grid Grid.Row="2">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+          <trans:PageTransition Grid.Row="0" Grid.ColumnSpan="2" x:Name="transitionControl"
+                                Background="{StaticResource MainBGBrush}" Margin="0" TransitionType="Next" HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch" CurrentPageSet="transitionControl_CurrentPageSet" />
+        </Grid>
+      </Grid>
+      <Rectangle Name="topLeft" Fill="#00000000" />
+      <Rectangle Name="top" Fill="#00000000" Grid.Column="1" />
+      <Rectangle Name="topRight" Fill="#00000000" Grid.Column="2" />
+      <Rectangle Name="right" Fill="#00000000" Grid.Row="1" Grid.Column="2" />
+      <Rectangle Name="bottomRight" Fill="#00000000" Grid.Row="2" Grid.Column="2" />
+      <Rectangle Name="bottom" Fill="#00000000" Grid.Row="2" Grid.Column="1" />
+      <Rectangle Name="bottomLeft" Fill="#00000000" Grid.Row="2" />
+      <Rectangle Name="left" Fill="#00000000" Grid.Row="1" />
+    </Grid>
+  </Border>
+</Window>

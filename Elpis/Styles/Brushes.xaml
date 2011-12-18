@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="/Elpis;component/Styles/Colors.xaml" />
+  </ResourceDictionary.MergedDictionaries>
+
+  <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource ErrorShade}" />
+
+  <SolidColorBrush x:Key="ShadeDarkBrush" Color="{StaticResource ShadeDark}" />
+  <SolidColorBrush x:Key="ShadeMediumDarkBrush" Color="{StaticResource ShadeMediumDark}" />
+  <SolidColorBrush x:Key="ShadeMediumBrush" Color="{StaticResource ShadeMedium}" />
+  <SolidColorBrush x:Key="ShadeMediumLightBrush" Color="{StaticResource ShadeMediumLight}" />
+  <SolidColorBrush x:Key="ShadeLightBrush" Color="{StaticResource ShadeLight}" />
+  <SolidColorBrush x:Key="TransparencyShadeBrush" Color="{StaticResource TransparencyShade}" />
+
+  <SolidColorBrush x:Key="MainBGBrush" Color="{StaticResource ShadeDark}" />
+  <SolidColorBrush x:Key="MainWaitBrush" Color="{StaticResource TransparencyShade}" />
+  <SolidColorBrush x:Key="MainFontBrush" Color="{StaticResource ShadeLight}" />
+
+  <SolidColorBrush x:Key="ItemBGBrush" Color="{StaticResource ShadeDark}" />
+  <SolidColorBrush x:Key="ItemHoverBrush" Color="{StaticResource ShadeMediumDark}" />
+
+  <SolidColorBrush x:Key="ProgBGBrush" Color="{StaticResource ShadeMediumLight}" />
+
+  <SolidColorBrush x:Key="LinkHoverBrush" Color="{StaticResource ShadeMediumDark}" />
+  <SolidColorBrush x:Key="LinkBrush" Color="{StaticResource ShadeDark}" />
+
+  <SolidColorBrush x:Key="ControlBGBrush" Color="{StaticResource ShadeDark}" />
+  <SolidColorBrush x:Key="ControlBorderBrush" Color="{StaticResource ShadeMedium}" />
+  <SolidColorBrush x:Key="ControlSelectBrush" Color="{StaticResource ShadeMedium}" />
+  <SolidColorBrush x:Key="ControlStrokeBrush" Color="{StaticResource ShadeMediumLight}" />
+  <SolidColorBrush x:Key="ControlGlyphBrush" Color="{StaticResource ShadeMediumLight}" />
+</ResourceDictionary>

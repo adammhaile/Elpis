@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="Elpis.About" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Converter="clr-namespace:GUI.Converters"
+             mc:Ignorable="d" d:DesignHeight="479" d:DesignWidth="482">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Elpis;component/Styles/Brushes.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/BaseControls.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/Misc.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Converter:AssemblyVersionConverter x:Key="assemblyVersion" />
+            <Style x:Key="TextBase" TargetType="{x:Type TextBlock}">
+                <Setter Property="Foreground" Value="{StaticResource MainFontBrush}" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource MainBGBrush}">
+        <TextBlock Foreground="{StaticResource MainFontBrush}" FontSize="22" HorizontalAlignment="Center"
+               VerticalAlignment="Center" TextAlignment="Center">
+      Elpis <TextBlock Text="{Binding ., Converter={StaticResource assemblyVersion}}" />
+      <LineBreak />
+      © Adam Haile - 2011
+      <LineBreak />
+      <LineBreak />
+      <TextBlock FontWeight="DemiBold">Links:</TextBlock>
+      <LineBreak />
+      <Hyperlink Name="Project" Style="{StaticResource LinkStyle}"
+                         NavigateUri="http://elpis.adamhaile.net/"
+                  RequestNavigate="RequestNavigate">
+                <TextBlock Text="Project Website" FontStyle="Italic" Foreground="{StaticResource MainFontBrush}"
+                           ToolTip="http://elpis.adamhaile.net/"/>
+              </Hyperlink> 
+      <LineBreak />
+      <Hyperlink Name="TitleLink" Style="{StaticResource LinkStyle}"
+                         NavigateUri="http://code.google.com/p/elpis-pandora-client/"
+                  RequestNavigate="RequestNavigate">
+                <TextBlock Text="Elpis Source Repository" FontStyle="Italic" Foreground="{StaticResource MainFontBrush}" 
+                           ToolTip="http://code.google.com/p/elpis-pandora-client/" />
+              </Hyperlink> 
+    </TextBlock>
+
+        <Button Content="Close" Name="btnClose" Click="btnClose_Click" Width="100" Height="30"
+            HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="5" />
+    </Grid>
+</UserControl>

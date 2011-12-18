@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Elpis.LoadingPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Controls="clr-namespace:Elpis.Controls"
+             mc:Ignorable="d" d:DesignHeight="480" d:DesignWidth="480">
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Elpis;component/Styles/Brushes.xaml" />
+        <ResourceDictionary Source="/Elpis;component/Styles/BaseControls.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <Border Name="WaitScreen" BorderThickness="0" Background="{StaticResource MainBGBrush}" Visibility="Visible"
+          Grid.RowSpan="4" Grid.ColumnSpan="3">
+    <Grid x:Name="Spinner" Background="{StaticResource TransparencyShadeBrush}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="240" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="240" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+      <Controls:ContentSpinner Grid.Row="1" Grid.Column="1" Width="240" Height="240" ContentScale="1" />
+      <TextBlock Grid.Row="2" Grid.ColumnSpan="3" Name="lblStatus" HorizontalAlignment="Center" TextAlignment="Center"
+                 VerticalAlignment="Top" TextWrapping="Wrap" Margin="5" FontSize="22" Foreground="{StaticResource MainFontBrush}"
+                 Text="Loading Elpis..." />
+    </Grid>
+  </Border>
+</UserControl>
