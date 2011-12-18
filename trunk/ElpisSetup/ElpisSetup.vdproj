@@ -254,7 +254,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=0.8.33.59, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=0.33.4369.12865, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_219D2474510FB9396F76839D15068B72"
@@ -376,7 +376,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Util, Version=0.8.0.59, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Util, Version=0.8.4369.12865, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_B80C72A6FEB26F5A1D4C43849A0FF7B3"
@@ -407,7 +407,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=0.8.5.59, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=0.8.4369.12865, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_B9F27FF9ED2B7E2D00568969C84F4D9D"
@@ -438,7 +438,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=0.8.33.59, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=0.33.4369.12866, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_E0BC3D5FD11BDEC07ED1BDAEB725307E"
@@ -553,7 +553,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Elpis"
         "ProductCode" = "8:{4E95E092-AE1C-49CE-829B-BDFD473C9969}"
-        "PackageCode" = "8:{654078CB-7B4D-47B2-88EE-8A8F1AB45A9A}"
+        "PackageCode" = "8:{805A9E63-303D-4218-A184-9BF5F854E73F}"
         "UpgradeCode" = "8:{F0962B86-5C6F-4A2C-98F4-2FF9D0AC46AD}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

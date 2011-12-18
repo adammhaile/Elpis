@@ -36,7 +36,7 @@
             <LineBreak/>
             Click on the Plus button above to add your favorite artist or songs and start listening.
         </TextBlock>
-        <ScrollViewer Name="scrollMain" Grid.Row="0" VerticalScrollBarVisibility="Visible"
+        <ScrollViewer Name="scrollMain" Grid.Row="0" VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled" Style="{StaticResource FadeScroller}">
 
             <ItemsControl Name="StationItems" HorizontalContentAlignment="Stretch">
@@ -96,10 +96,9 @@
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
                                                         <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="24" />
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Name="txtStationNameMenu"
-                                     Foreground="{StaticResource MainFontBrush}" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Path=Name}"
+                                     Foreground="{StaticResource MainFontBrush}" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=Name}"
                                      FontSize="22" FontWeight="DemiBold" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch"
                                      VerticalAlignment="Center" Controls:TextBlockUtils.AutoTooltip="True" Controls:TextBlockUtils.AutoTooltipFontSize="12" />
                                                     <TextBox Visibility="Hidden" Name="txtRename" Grid.Column="0"
