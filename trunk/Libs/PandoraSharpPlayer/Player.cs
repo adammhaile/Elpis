@@ -643,7 +643,7 @@ namespace PandoraSharpPlayer
             Playing = newState == BassAudioEngine.PlayState.Playing;
             Stopped = newState == BassAudioEngine.PlayState.Ended || newState == BassAudioEngine.PlayState.Stopped;
 
-            if (newState == BassAudioEngine.PlayState.Ended && !Stopped)
+            if (newState == BassAudioEngine.PlayState.Ended && CurrentStation != null)
             {
                 Log.O("Song ended, playing next song.");
                 RunTask(() => PlayNextSong());
