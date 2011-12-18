@@ -1,0 +1,91 @@
+﻿<UserControl x:Class="Elpis.MainBar" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:ElpisControls="clr-namespace:Elpis.Controls"
+             xmlns:Converter="clr-namespace:GUI.Converters" mc:Ignorable="d" d:DesignWidth="400">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Elpis;component/Styles/ImageButton.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/BaseControls.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/Brushes.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/Misc.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/Images.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <ContextMenu x:Key="ErrorMenu">
+                <MenuItem Click="ShowError_Click" Header="Show Error Details"/>
+                <MenuItem Click="DismissError_Click" Header="Dismiss Error"/>
+            </ContextMenu>
+            <Converter:BooleanToVisibilityConverter x:Key="visConverter" />
+            <Style TargetType="Grid" x:Key="GridFade">
+                <Style.Triggers>
+                    <Trigger Property="Visibility" Value="Visible">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="00:00:0.5" BeginTime="00:00:00" From="0.0" To="1.0" />
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="00:00:0.5" BeginTime="00:00:0.5" From="1.0" To="0.0" />
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="00:00:0.5" BeginTime="00:00:1" From="0.0" To="1.0" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Grid.Row="1" Background="{StaticResource MainBGBrush}" Height="32">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <ElpisControls:ImageButton Width="28" Height="28" Margin="8,2,2,2" Grid.Column="0" x:Name="btnStationList"
+                               ActiveImageUri="{StaticResource Image_PlaylistHover}" InactiveImageUri="{StaticResource Image_Playlist}"
+                               Click="btnStationList_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
+        <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="1" x:Name="btnCreateStation"
+                               ActiveImageUri="{StaticResource Image_AddHover}" InactiveImageUri="{StaticResource Image_Add}"
+                               Click="btnCreateStation_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
+        <Grid Name="gridPlayPause" Grid.Column="3" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="0" x:Name="btnPlay"
+                                 ActiveImageUri="{StaticResource Image_PlayHover}" InactiveImageUri="{StaticResource Image_Play}"
+                                 Click="btnPlayPause_Click" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                 Visibility="{Binding Path=Playing, 
+                                                Converter={StaticResource visConverter}, 
+                                                ConverterParameter={StaticResource BoolFalse}}" />
+            <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="0" x:Name="btnPause"
+                                 ActiveImageUri="{StaticResource Image_PauseHover}" InactiveImageUri="{StaticResource Image_Pause}"
+                                 Click="btnPlayPause_Click" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                 Visibility="{Binding Path=Playing, 
+                                                Converter={StaticResource visConverter}, 
+                                                ConverterParameter={StaticResource BoolTrue}}" />
+            <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="1" x:Name="btnNext"
+                                 ActiveImageUri="{StaticResource Image_NextHover}" InactiveImageUri="{StaticResource Image_Next}" Click="btnNext_Click"
+                                 VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" />
+        </Grid>
+        <Grid Grid.Column="4" Name="gridError" Style="{StaticResource GridFade}"
+              Visibility="Hidden">
+            
+            <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="1" x:Name="btnError"
+                               ActiveImageUri="{StaticResource Image_ErrorHover}" InactiveImageUri="{StaticResource Image_Error}"
+                               Click="btnError_Click" VerticalAlignment="Center" HorizontalAlignment="Center">
+                
+            </ElpisControls:ImageButton>
+        </Grid>
+        <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="5" x:Name="btnSettings"
+                               ActiveImageUri="{StaticResource Image_SettingsHover}" InactiveImageUri="{StaticResource Image_Settings}"
+                               Click="btnSettings_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
+        <ElpisControls:ImageButton Width="28" Height="28" Margin="2,2,8,2" Grid.Column="6" x:Name="btnAbout"
+                               ActiveImageUri="{StaticResource Image_InfoHover}" InactiveImageUri="{StaticResource Image_Info}" Click="btnAbout_Click"
+                               VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
+    </Grid>
+</UserControl>

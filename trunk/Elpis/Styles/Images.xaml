@@ -1,0 +1,104 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:System="clr-namespace:System;assembly=System">
+    <System:Uri x:Key="Image_MainIcon">
+        /Elpis;component/Images/main_icon.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Add">
+        /Elpis;component/Images/add.png
+    </System:Uri>
+    <System:Uri x:Key="Image_AddHover">
+        /Elpis;component/Images/add_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Info">
+        /Elpis;component/Images/info.png
+    </System:Uri>
+    <System:Uri x:Key="Image_InfoHover">
+        /Elpis;component/Images/info_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_MenuRight">
+        /Elpis;component/Images/menuRight.png
+    </System:Uri>
+    <System:Uri x:Key="Image_MenuRightHover">
+        /Elpis;component/Images/menuRight_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_MenuLeft">
+        /Elpis;component/Images/menuLeft.png
+    </System:Uri>
+    <System:Uri x:Key="Image_MenuLeftHover">
+        /Elpis;component/Images/menuLeft_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Next">
+        /Elpis;component/Images/next.png
+    </System:Uri>
+    <System:Uri x:Key="Image_NextHover">
+        /Elpis;component/Images/next_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Pause">
+        /Elpis;component/Images/pause.png
+    </System:Uri>
+    <System:Uri x:Key="Image_PauseHover">
+        /Elpis;component/Images/pause_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Play">
+        /Elpis;component/Images/play.png
+    </System:Uri>
+    <System:Uri x:Key="Image_PlayHover">
+        /Elpis;component/Images/play_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Playlist">
+        /Elpis;component/Images/playlist.png
+    </System:Uri>
+    <System:Uri x:Key="Image_PlaylistHover">
+        /Elpis;component/Images/playlist_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Settings">
+        /Elpis;component/Images/settings.png
+    </System:Uri>
+    <System:Uri x:Key="Image_SettingsHover">
+        /Elpis;component/Images/settings_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_ThumbUp">
+        /Elpis;component/Images/thumbUp.png
+    </System:Uri>
+    <System:Uri x:Key="Image_ThumbLove">
+        /Elpis;component/Images/thumbLove.png
+    </System:Uri>
+    <System:Uri x:Key="Image_ThumbDown">
+        /Elpis;component/Images/thumbDown.png
+    </System:Uri>
+    <System:Uri x:Key="Image_ThumbBan">
+        /Elpis;component/Images/thumbBan.png
+    </System:Uri>
+
+    <System:Uri x:Key="Image_Check">
+        /Elpis;component/Images/check.png
+    </System:Uri>
+    <System:Uri x:Key="Image_CheckHover">
+        /Elpis;component/Images/check_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Trash">
+        /Elpis;component/Images/trash.png
+    </System:Uri>
+    <System:Uri x:Key="Image_TrashHover">
+        /Elpis;component/Images/trash_hover.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Write">
+        /Elpis;component/Images/write.png
+    </System:Uri>
+    <System:Uri x:Key="Image_WriteHover">
+        /Elpis;component/Images/write_hover.png
+    </System:Uri>
+
+    <System:Uri x:Key="Image_Error">
+        /Elpis;component/Images/error.png
+    </System:Uri>
+    <System:Uri x:Key="Image_ErrorHover">
+        /Elpis;component/Images/error_hover.png
+    </System:Uri>
+
+    <System:Uri x:Key="Image_Background">
+        /Elpis;component/Images/background.png
+    </System:Uri>
+
+    <BitmapImage x:Key="Image_UnknownArt" UriSource="/Elpis;component/Images/unknown_art.png" />
+</ResourceDictionary>
