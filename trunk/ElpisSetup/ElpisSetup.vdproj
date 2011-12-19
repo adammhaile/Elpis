@@ -111,6 +111,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E480AEA3EA6C4EC3BDD6CAD2B8F3ACD5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_C0D607861CBA44EB990DD3A2C241B2C6"
         "MsmSig" = "8:_UNDEFINED"
@@ -254,9 +260,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=0.33.4369.15703, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=0.33.4369.41505, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_219D2474510FB9396F76839D15068B72"
+                    {
+                    "Name" = "8:PandoraSharp.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:PandoraSharp.dll"
             "TargetName" = "8:"
@@ -283,6 +294,11 @@
             "AssemblyAsmDisplayName" = "8:Bass.Net, Version=2.4.8.3, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_2337FC5C43A57E1920D0BE853F4D57BE"
+                    {
+                    "Name" = "8:Bass.Net.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Bass.Net.dll"
             "TargetName" = "8:"
@@ -366,9 +382,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Util, Version=0.8.4369.15703, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Util, Version=0.8.4369.41505, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_B80C72A6FEB26F5A1D4C43849A0FF7B3"
+                    {
+                    "Name" = "8:Util.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Util.dll"
             "TargetName" = "8:"
@@ -392,9 +413,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=0.8.4369.15703, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=0.8.4369.41505, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_B9F27FF9ED2B7E2D00568969C84F4D9D"
+                    {
+                    "Name" = "8:BassPlayer.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:BassPlayer.dll"
             "TargetName" = "8:"
@@ -418,9 +444,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=0.33.4369.15703, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=0.33.4369.41505, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_E0BC3D5FD11BDEC07ED1BDAEB725307E"
+                    {
+                    "Name" = "8:PandoraSharpPlayer.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:PandoraSharpPlayer.dll"
             "TargetName" = "8:"
@@ -457,6 +488,26 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E480AEA3EA6C4EC3BDD6CAD2B8F3ACD5"
+            {
+            "SourcePath" = "8:Banner.jpg"
+            "TargetName" = "8:Banner.jpg"
+            "Tag" = "8:"
+            "Folder" = "8:_C7AF4829359247308B6C1AC2B71027D8"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
@@ -528,7 +579,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Elpis"
         "ProductCode" = "8:{293092CB-A285-4D60-9CC7-467675C6AAEF}"
-        "PackageCode" = "8:{214163CC-87CC-468B-8B91-128C9E9A8C94}"
+        "PackageCode" = "8:{5482B558-F400-4119-99C1-76730A27C421}"
         "UpgradeCode" = "8:{F0962B86-5C6F-4A2C-98F4-2FF9D0AC46AD}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -551,7 +602,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:cd $(ProjectDir)\r\niexpress /N ElpisInstall.SED"
+        "PostBuildEvent" = "8:cscript.exe \"$(ProjectDir)EnableLaunchApp.js\" \"$(BuiltOuputPath)\"\r\ncd $(ProjectDir)\r\niexpress /N ElpisInstall.SED"
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"
@@ -680,7 +731,7 @@
                 {
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_2E6C3E4F930A4CC4841F81AC6B491C15"
                     {
-                    "Sequence" = "3:100"
+                    "Sequence" = "3:110"
                     "DisplayName" = "8:Finished"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -695,7 +746,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E480AEA3EA6C4EC3BDD6CAD2B8F3ACD5"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "UpdateText"
@@ -724,7 +776,7 @@
                 {
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_3120A9A859BD44ACA0ED725643914DF0"
                     {
-                    "Sequence" = "3:200"
+                    "Sequence" = "3:300"
                     "DisplayName" = "8:Installation Folder"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -739,7 +791,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E480AEA3EA6C4EC3BDD6CAD2B8F3ACD5"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "InstallAllUsersVisible"
@@ -759,7 +812,7 @@
                     }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_647DFA16A35A46FDBFD8C53B861A4957"
                     {
-                    "Sequence" = "3:300"
+                    "Sequence" = "3:400"
                     "DisplayName" = "8:Confirm Installation"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -774,7 +827,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E480AEA3EA6C4EC3BDD6CAD2B8F3ACD5"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -796,7 +850,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E480AEA3EA6C4EC3BDD6CAD2B8F3ACD5"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -829,7 +884,7 @@
                     }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_E9B3B62844794798ACF735E741D5EA26"
                     {
-                    "Sequence" = "3:110"
+                    "Sequence" = "3:200"
                     "DisplayName" = "8:Read Me"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
@@ -844,7 +899,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E480AEA3EA6C4EC3BDD6CAD2B8F3ACD5"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ReadmeText"
@@ -937,7 +993,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_E480AEA3EA6C4EC3BDD6CAD2B8F3ACD5"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
