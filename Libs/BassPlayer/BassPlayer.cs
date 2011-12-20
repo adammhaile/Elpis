@@ -1134,7 +1134,14 @@ namespace BassPlayer
                 return false;
             }
 
-            UpdateTimer.Stop();
+            try
+            {
+                UpdateTimer.Stop();
+            }
+            catch
+            {
+                throw new BassStreamException("Bass Error: Update Timer Error");
+            }
             int stream = GetCurrentStream();
 
             bool doFade = false;

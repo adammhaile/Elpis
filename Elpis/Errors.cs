@@ -39,7 +39,7 @@ namespace Elpis
                         new ErrorCode
                             {
                                 Description =
-                                    "Oh no! Looks like Pandora changed the API. Check the website for updates.",
+                                    "Oh no! Looks like Pandora changed the API.\r\nCheck http://elpis.adamhaile.net for updates.",
                                 HardFail = true
                             }
                         },
