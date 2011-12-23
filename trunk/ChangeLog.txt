@@ -1,3 +1,7 @@
+v0.8.9
+Added close button for when station list is shown and station is already loaded
+Fixed issue where it wouldn't always start a new sopng after having been paused for several hours
+
 v0.8.8
 Fixed bug where it won't autoplay the next song.
 
