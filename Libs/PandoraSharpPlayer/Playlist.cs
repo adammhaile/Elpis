@@ -169,12 +169,11 @@ namespace PandoraSharpPlayer
             if(!next.IsStillValid)
             {
                 Log.O("Song was invalid, reloading and skipping any more invalid songs.");
+                //clear songs that are now invalid
+                ClearSongs();
                 SendPlaylistLow();
 
                 WaitForPlaylistReload();
-
-                //skip past any songs that are now invalid
-                while(!(next = DequeueSong()).IsStillValid){}
             }
 
             Log.O("NextSong: " + next);

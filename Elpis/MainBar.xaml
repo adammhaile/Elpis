@@ -47,9 +47,15 @@
         <ElpisControls:ImageButton Width="28" Height="28" Margin="8,2,2,2" Grid.Column="0" x:Name="btnStationList"
                                ActiveImageUri="{StaticResource Image_PlaylistHover}" InactiveImageUri="{StaticResource Image_Playlist}"
                                Click="btnStationList_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
+        <ElpisControls:ImageButton Width="28" Height="28" Margin="8,2,2,2" Grid.Column="0" x:Name="btnStationListClose"
+                               ActiveImageUri="{StaticResource Image_CloseHover}" InactiveImageUri="{StaticResource Image_Close}"
+                               Click="btnStationListClose_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
         <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="1" x:Name="btnCreateStation"
                                ActiveImageUri="{StaticResource Image_AddHover}" InactiveImageUri="{StaticResource Image_Add}"
                                Click="btnCreateStation_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
+        <!--<ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="1" x:Name="btnCreateStationClose"
+                               ActiveImageUri="{StaticResource Image_CloseHover}" InactiveImageUri="{StaticResource Image_Close}"
+                               Click="btnCreateStationClose_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />-->
         <Grid Name="gridPlayPause" Grid.Column="3" Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

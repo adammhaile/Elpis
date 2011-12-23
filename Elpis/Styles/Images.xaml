@@ -96,6 +96,13 @@
         /Elpis;component/Images/error_hover.png
     </System:Uri>
 
+    <System:Uri x:Key="Image_Close">
+        /Elpis;component/Images/close.png
+    </System:Uri>
+    <System:Uri x:Key="Image_CloseHover">
+        /Elpis;component/Images/close_hover.png
+    </System:Uri>
+
     <System:Uri x:Key="Image_Background">
         /Elpis;component/Images/background.png
     </System:Uri>

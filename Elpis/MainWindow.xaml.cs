@@ -812,7 +812,7 @@ namespace Elpis
         private void _stationPage_Loaded(object sender, RoutedEventArgs e)
         {
             Log.O("Show Stations");
-            mainBar.SetModeStationList();
+            mainBar.SetModeStationList(_player.CurrentStation != null);
         }
 
         private void _searchPage_Loaded(object sender, RoutedEventArgs e)
@@ -894,14 +894,18 @@ namespace Elpis
 
         private void mainBar_NextClick()
         {
-            transitionControl.ShowPage(_playlistPage);
+            //if (transitionControl.CurrentPage == _playlistPage)
             _player.Next();
+
+            transitionControl.ShowPage(_playlistPage);   
         }
 
         private void mainBar_PlayPauseClick()
         {
-            transitionControl.ShowPage(_playlistPage);
+            //if (transitionControl.CurrentPage == _playlistPage)
             _player.PlayPause();
+
+            transitionControl.ShowPage(_playlistPage);    
         }
 
         private void _player_StationLoaded(object sender, Station station)

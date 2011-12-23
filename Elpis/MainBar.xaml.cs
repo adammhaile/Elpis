@@ -86,9 +86,19 @@ namespace Elpis
             btnStationList.Visibility = Vis(state);
         }
 
+        private void ShowStationListClose(bool state)
+        {
+            btnStationListClose.Visibility = Vis(state);
+        }
+
         private void ShowCreateStation(bool state)
         {
             btnCreateStation.Visibility = Vis(state);
+        }
+
+        private void ShowCreateStationClose(bool state)
+        {
+            //btnCreateStationClose.Visibility = Vis(state);
         }
 
         public void SetPlaying(bool state)
@@ -102,7 +112,9 @@ namespace Elpis
             ShowSettings(false);
             
             ShowStationList(false);
+            ShowStationListClose(false);
             ShowCreateStation(false);
+            ShowCreateStationClose(false);
         }
 
         public void SetModePlayList()
@@ -113,16 +125,20 @@ namespace Elpis
             //This will not go away once set, that's intended
             SetPlaying(true);
             ShowStationList(true);
+            ShowStationListClose(false);
             ShowCreateStation(true);
+            ShowCreateStationClose(false);
         }
 
-        public void SetModeStationList()
+        public void SetModeStationList(bool stationLoaded)
         {
             ShowAbout(true);
             ShowSettings(true);
 
-            ShowStationList(true);
+            ShowStationList(!stationLoaded);
+            ShowStationListClose(stationLoaded);
             ShowCreateStation(true);
+            ShowCreateStationClose(false);
         }
 
         public void SetModeSearch()
@@ -131,7 +147,9 @@ namespace Elpis
             ShowSettings(true);
 
             ShowStationList(true);
+            ShowStationListClose(false);
             ShowCreateStation(false);
+            ShowCreateStationClose(true);
         }
 
         public void SetModeLogin()
@@ -140,7 +158,9 @@ namespace Elpis
             ShowSettings(true);
 
             ShowStationList(false);
+            ShowStationListClose(false);
             ShowCreateStation(false);
+            ShowCreateStationClose(false);
         }
 
         public void SetModeSettings()
@@ -149,7 +169,9 @@ namespace Elpis
             ShowSettings(true);
 
             ShowStationList(false);
+            ShowStationListClose(false);
             ShowCreateStation(false);
+            ShowCreateStationClose(false);
         }
 
         public void SetModeAbout()
@@ -158,7 +180,9 @@ namespace Elpis
             ShowSettings(true);
 
             ShowStationList(false);
+            ShowStationListClose(false);
             ShowCreateStation(false);
+            ShowCreateStationClose(false);
         }
         #endregion
         public void ShowError(string msg)
@@ -171,6 +195,12 @@ namespace Elpis
         }
 
         private void btnStationList_Click(object sender, RoutedEventArgs e)
+        {
+            if (StationListClick != null)
+                StationListClick();
+        }
+
+        private void btnStationListClose_Click(object sender, RoutedEventArgs e)
         {
             if (StationListClick != null)
                 StationListClick();
@@ -201,6 +231,12 @@ namespace Elpis
         }
 
         private void btnCreateStation_Click(object sender, RoutedEventArgs e)
+        {
+            if (CreateStationClick != null)
+                CreateStationClick();
+        }
+
+        private void btnCreateStationClose_Click(object sender, RoutedEventArgs e)
         {
             if (CreateStationClick != null)
                 CreateStationClick();
