@@ -38,6 +38,7 @@ using Util;
 using Log = Util.Log;
 using UserControl = System.Windows.Controls.UserControl;
 using WinForms = System.Windows.Forms;
+using System.Windows.Interop;
 
 namespace Elpis
 {
@@ -155,6 +156,14 @@ namespace Elpis
                     this.Height = size.Height;
                 }
             }
+        }
+
+        public void ShowWindow()
+        {
+            if (WindowState == WindowState.Minimized)
+                WindowState = WindowState.Normal;
+
+            Microsoft.Shell.NativeMethods.ShowToFront((new System.Windows.Interop.WindowInteropHelper(this)).Handle);
         }
 
 #region Setups
@@ -354,8 +363,7 @@ namespace Elpis
 
             _notify.DoubleClick += ((o, e) =>
                                         {
-                                            if (WindowState == WindowState.Minimized)
-                                                WindowState = WindowState.Normal;
+                                            ShowWindow();
                                         });
             _notify.ContextMenuStrip.Opening += ((o, e) => LoadNotifyMenu());
 
