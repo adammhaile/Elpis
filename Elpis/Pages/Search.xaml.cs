@@ -48,7 +48,7 @@ namespace Elpis
             InitializeComponent();
 
             _player.SearchResult += _player_SearchResult;
-            _player.StationCreated += _player_StationCreated;
+            //_player.StationCreated += _player_StationCreated;
             _player.ExceptionEvent += _player_ExceptionEvent;
         }
 
@@ -58,12 +58,6 @@ namespace Elpis
         void _player_ExceptionEvent(object sender, string code, System.Exception ex)
         {
             ShowWait(false);
-        }
-
-        private void _player_StationCreated(object sender, Station station)
-        {
-            if (StationCreated != null)
-                StationCreated(this, station);
         }
 
         private void RunSearch(string query)

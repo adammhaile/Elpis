@@ -539,6 +539,26 @@ namespace PandoraSharpPlayer
                         });
         }
 
+        public void CreateStationFromSong(Song song)
+        {
+            RunTask(() =>
+            {
+                Station station = _pandora.CreateStationFromMusic(song.MusicID);
+                if (StationCreated != null)
+                    StationCreated(this, station);
+            });
+        }
+
+        public void CreateStationFromArtist(Song song)
+        {
+            RunTask(() =>
+            {
+                Station station = _pandora.CreateStationFromMusic(song.ArtistMusicID);
+                if (StationCreated != null)
+                    StationCreated(this, station);
+            });
+        }
+
         public void CreateStation(SearchResult result)
         {
             RunTask(() =>

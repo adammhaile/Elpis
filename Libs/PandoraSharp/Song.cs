@@ -214,6 +214,11 @@ namespace PandoraSharp
             catch { } //TODO: Give this a failed event to notify UI
         }
 
+        public void CreateStation()
+        {
+
+        }
+
         public override string ToString()
         {
             return Artist + " - " + SongTitle;

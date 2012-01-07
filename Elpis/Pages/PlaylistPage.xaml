@@ -18,6 +18,8 @@
                 <MenuItem Click="mnuTired_Click" Header="Tired of This Song"/>
                 <MenuItem Click="mnuBookArtist_Click" Header="Bookmark Artist"/>
                 <MenuItem Click="mnuBookSong_Click" Header="Bookmark Song"/>
+                <MenuItem Click="mnuCreateArtist_Click" Header="Create Station from Artist" />
+                <MenuItem Click="mnuCreateSong_Click" Header="Create Station from Song" />
             </ContextMenu>
             <Converter:BinaryImageConverter x:Key="imgConverter" />
 
