@@ -466,6 +466,7 @@ namespace PandoraSharp
 
             var station = new Station(this, result);
             Stations.Add(station);
+
             return station;
         }
 
@@ -477,6 +478,16 @@ namespace PandoraSharp
         public Station CreateStationFromShared(string id)
         {
             return CreateStation("sh", id);
+        }
+
+        public Station CreateStationFromSong(Song song)
+        {
+            return CreateStationFromMusic(song.MusicID);
+        }
+
+        public Station CreateStationFromArtist(Song song)
+        {
+            return CreateStationFromMusic(song.ArtistMusicID);
         }
 
         public void AddFeedback(string stationID, string trackToken, SongRating rating)

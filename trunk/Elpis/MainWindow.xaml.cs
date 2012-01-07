@@ -194,8 +194,6 @@ namespace Elpis
             _aboutPage.Close += RestorePrevPage;
 
             _searchPage.Cancel += _searchPage_Cancel;
-            _searchPage.StationCreated += _searchPage_StationCreated;
-
             _loginPage.ConnectingEvent += _loginPage_ConnectingEvent;
         }
 
@@ -210,6 +208,7 @@ namespace Elpis
             _player.PlaybackStateChanged += _player_PlaybackStateChanged;
             _player.LoginStatusEvent += _player_LoginStatusEvent;
             _player.PlaybackStart += _player_PlaybackStart;
+            _player.StationCreated += _player_StationCreated;
 
             mainBar.PlayPauseClick += mainBar_PlayPauseClick;
             mainBar.NextClick += mainBar_NextClick;
@@ -741,7 +740,7 @@ namespace Elpis
             }
         }
 
-        private void _searchPage_StationCreated(object sender, Station station)
+        private void _player_StationCreated(object sender, Station station)
         {
             _player.RefreshStations();
             this.BeginDispatch(() => _player.PlayStation(station));

@@ -372,5 +372,21 @@ namespace Elpis
         {
             _currMenuSong = null;
         }
+
+        private void mnuCreateArtist_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currMenuSong != null)
+            {
+                _player.CreateStationFromArtist(_currMenuSong);
+            }
+        }
+
+        private void mnuCreateSong_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currMenuSong != null)
+            {
+                _player.CreateStationFromSong(_currMenuSong);
+            }
+        }
     }
 }
