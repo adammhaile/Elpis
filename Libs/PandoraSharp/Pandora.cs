@@ -43,6 +43,8 @@ namespace PandoraSharp
 
         public delegate void StationsUpdatingEventHandler(object sender);
 
+        public delegate void QuickMixSavedEventHandler(object sender);
+
         #endregion
 
         #region SortOrder enum
@@ -125,6 +127,7 @@ namespace PandoraSharp
         public event StationsUpdatingEventHandler StationsUpdatingEvent;
         public event FeedbackUpdateEventHandler FeedbackUpdateEvent;
         public event LoginStatusEventHandler LoginStatusEvent;
+        public event QuickMixSavedEventHandler QuickMixSavedEvent;
 
         protected internal string RPCRequest(string url, string data)
         {
@@ -434,7 +437,10 @@ namespace PandoraSharp
                     ids.Add(s.ID);
             }
 
-            CallRPC("station.setQuickMix", new object[] {"RANDOM", ids.ToArray()});
+            CallRPC("station.setQuickMix", new object[] {"RANDOM", (object[])ids.ToArray()});
+
+            if (QuickMixSavedEvent != null)
+                QuickMixSavedEvent(this);
         }
 
         public List<SearchResult> Search(string query)

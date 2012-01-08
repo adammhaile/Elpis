@@ -15,6 +15,12 @@
                 <ResourceDictionary Source="/Elpis;component/Styles/Images.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <local:BinaryImageConverter x:Key="imgConverter" />
+            <ContextMenu x:Key="StationMenu" Closed="StationMenu_Closed">
+                <MenuItem Name="mnuRename" Click="mnuRename_Click" Header="Rename"/>
+                <MenuItem Name="mnuDelete" Click="mnuDelete_Click" Header="Delete"/>
+                <MenuItem Name="mnuEditQuickMix" Click="mnuEditQuickMix_Click" Header="Edit QuickMix"/>
+                <MenuItem Name="mnuInfo" Click="mnuInfo_Click" Header="Station Info"/>
+            </ContextMenu>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="{StaticResource MainBGBrush}">
@@ -59,16 +65,24 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <Controls:ImageButton Width="28" Height="28" x:Name="btnMenu" Grid.Column="0"
                                         ActiveImageUri="{StaticResource Image_MenuRightHover}" InactiveImageUri="{StaticResource Image_MenuRight}"
                                         VerticalAlignment="Center" HorizontalAlignment="Center" Click="btnMenu_Click" Visibility="Visible" />
 
-                                        <TextBlock Grid.Column="1" Name="txtStationName" Text="{Binding Path=Name}" FontSize="22"
+                                        <TextBlock Grid.Column="1" Grid.ColumnSpan="2" Name="txtStationName" Text="{Binding Path=Name}" FontSize="22"
                                FontWeight="DemiBold" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                Foreground="{StaticResource MainFontBrush}" Controls:TextBlockUtils.AutoTooltip="True"
                                Controls:TextBlockUtils.AutoTooltipFontSize="12" />
-                                        <ContentControl x:Name="StationMenu" HorizontalAlignment="Stretch"
+                                        <TextBox Visibility="Hidden" Name="txtRename" Grid.Column="1"
+                                   FontSize="22" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                   KeyUp="TextBox_KeyUp" />
+                                        <Controls:ImageButton Width="32" Height="32" Margin="4,2"
+                                                Grid.Column="2" x:Name="btnSaveRename" ActiveImageUri="{StaticResource Image_CheckHover}"
+                                                InactiveImageUri="{StaticResource Image_Check}" Click="btnSaveRename_Click" VerticalAlignment="Center"
+                                                HorizontalAlignment="Center" Visibility="Hidden" />
+                                        <!--<ContentControl x:Name="StationMenu" HorizontalAlignment="Stretch"
                                                     Grid.Column="0" Grid.ColumnSpan="2"
                                                     VerticalAlignment="Center" Visibility="Hidden">
                                             <Grid Name="MenuGrid" Background="{StaticResource MainBGBrush}"
@@ -101,11 +115,11 @@
                                      Foreground="{StaticResource MainFontBrush}" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=Name}"
                                      FontSize="22" FontWeight="DemiBold" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch"
                                      VerticalAlignment="Center" Controls:TextBlockUtils.AutoTooltip="True" Controls:TextBlockUtils.AutoTooltipFontSize="12" />
-                                                    <TextBox Visibility="Hidden" Name="txtRename" Grid.Column="0"
+                                                    <TextBox Visibility="Hidden" Name="txtRename1" Grid.Column="0"
                                    FontSize="22" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                    KeyUp="TextBox_KeyUp" />
                                                     <Controls:ImageButton Width="32" Height="32" Margin="4,2"
-                                                Grid.Column="1" x:Name="btnSaveRename" ActiveImageUri="{StaticResource Image_CheckHover}"
+                                                Grid.Column="1" x:Name="btnSaveRename2" ActiveImageUri="{StaticResource Image_CheckHover}"
                                                 InactiveImageUri="{StaticResource Image_Check}" Click="btnSaveRename_Click" VerticalAlignment="Center"
                                                 HorizontalAlignment="Center" Visibility="Hidden" />
                                                 </Grid>
@@ -131,7 +145,7 @@
                                                 HorizontalAlignment="Center" Tag="{Binding Path=InfoUrl}" />
                                                 </Grid>
                                             </Grid>
-                                        </ContentControl>
+                                        </ContentControl>-->
                                     </Grid>
                                 </Grid>
                             </Grid>

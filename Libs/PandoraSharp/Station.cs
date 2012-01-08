@@ -27,7 +27,7 @@ using PandoraSharp.Exceptions;
 
 namespace PandoraSharp
 {
-    public class Station
+    public class Station : INotifyPropertyChanged
     {
         private readonly object _artLock = new object();
         private readonly Pandora _pandora;
@@ -113,6 +113,15 @@ namespace PandoraSharp
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void Notify(String info)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(info));
+            }
+        }
+
         public string ID { get; private set; }
         public string IdToken { get; private set; }
         public bool IsCreator { get; private set; }
@@ -122,8 +131,19 @@ namespace PandoraSharp
 
         public string Name { get; private set; }
 
-        [DefaultValue(false)]
-        public bool UseQuickMix { get; set; }
+        private bool _useQuickMix = false;
+        public bool UseQuickMix
+        {
+            get { return _useQuickMix; }
+            set
+            {
+                if (value != _useQuickMix)
+                {
+                    _useQuickMix = value;
+                    Notify("UseQuickMix");
+                }
+            }
+        }
 
         public string ArtUrl { get; private set; }
 

@@ -33,9 +33,18 @@ namespace Elpis
     /// </summary>
     public partial class StationList : UserControl
     {
+        public delegate void EditQuickMixEventHandler();
+        public event EditQuickMixEventHandler EditQuickMixEvent;
+
         private readonly Player _player;
 
-        private ContentControl _currMenu;
+        private ContextMenu _stationMenu;
+        private MenuItem _mnuRename;
+        private MenuItem _mnuDelete;
+        private MenuItem _mnuEditQuickMix;
+        private MenuItem _mnuInfo;
+        private Station _currMenuStation = null;
+        private Control _currStationItem = null;
 
         private Pandora.SortOrder _currSort = Pandora.SortOrder.DateDesc;
         private bool _waiting;
@@ -46,6 +55,12 @@ namespace Elpis
             _player.StationLoading += _player_StationLoading;
             _player.ExceptionEvent += _player_ExceptionEvent;
             InitializeComponent();
+
+            _stationMenu = this.Resources["StationMenu"] as ContextMenu;
+            _mnuRename = _stationMenu.Items[0] as MenuItem; //mnuRename
+            _mnuDelete = _stationMenu.Items[1] as MenuItem; //mnuDelete
+            _mnuEditQuickMix = _stationMenu.Items[2] as MenuItem; //mnuEditQuickMix
+            _mnuInfo = _stationMenu.Items[3] as MenuItem; //mnuInfo
         }
 
         public List<Station> Stations
@@ -93,8 +108,6 @@ namespace Elpis
                                    {
                                        if(this.IsLoaded)
                                             ShowWait(true);
-
-                                       ToggleMenu();
                                    });
         }
 
@@ -113,7 +126,6 @@ namespace Elpis
         private void StationList_Unloaded(object sender, RoutedEventArgs e)
         {
             ShowWait(false);
-            ToggleMenu();
         }
 
         private void StationItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -123,16 +135,81 @@ namespace Elpis
             _player.PlayStation(station);
         }
 
-        private void btnRename_Click(object sender, RoutedEventArgs e)
+        private void DoRename()
+        {
+            if (_currMenuStation == null || _currStationItem == null) return;
+
+            string name = _currStationItem.FindChildByName<TextBox>("txtRename").Text;
+
+            _player.StationRename(_currMenuStation, name);
+
+            var btnSaveRename = _currStationItem.FindChildByName<Button>("btnSaveRename");
+            var txtStationName = _currStationItem.FindChildByName<TextBlock>("txtStationName");
+            var txtRename = _currStationItem.FindChildByName<TextBox>("txtRename");
+
+            txtStationName.Text = name;
+            txtStationName.Visibility = Visibility.Visible;
+            txtRename.Visibility = Visibility.Hidden;
+            btnSaveRename.Visibility = Visibility.Hidden;
+        }
+
+        private void TextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                DoRename();
+        }
+
+        private void btnSaveRename_Click(object sender, RoutedEventArgs e)
         {
             e.Handled = true;
 
-            var btnRename = ((ImageButton) sender);
-            var menugrid = ((Grid) ((Grid) btnRename.Parent).Parent);
+            DoRename();
+        }
 
-            var textStation = menugrid.FindChildByName<TextBlock>("txtStationNameMenu");
-            var textBox = menugrid.FindChildByName<TextBox>("txtRename");
-            var saverename = menugrid.FindChildByName<Button>("btnSaveRename");
+        private void ShowMenu(object sender)
+        {
+            if (_currMenuStation != null)
+            {
+                _mnuRename.Visibility = _currMenuStation.IsQuickMix ? Visibility.Collapsed : Visibility.Visible;
+                _mnuDelete.Visibility = _currMenuStation.IsQuickMix ? Visibility.Collapsed : Visibility.Visible;
+                _mnuEditQuickMix.Visibility = _currMenuStation.IsQuickMix ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            _stationMenu.PlacementTarget = sender as UIElement;
+            _stationMenu.IsOpen = true;
+        }
+
+        private Control GetStationItem(object sender)
+        {
+            return (Control)(((ImageButton)sender).FindParentByName<ContentControl>("StationItem"));
+        }
+
+        private Station GetItemStation(object sender)
+        {
+            return GetStationItem(sender).DataContext as Station;
+        }
+
+        private void btnMenu_Click(object sender, RoutedEventArgs e)
+        {
+            _currMenuStation = GetItemStation(sender);
+            _currStationItem = GetStationItem(sender);
+
+            ShowMenu(sender);
+        }
+
+        private void StationMenu_Closed(object sender, RoutedEventArgs e)
+        {
+            //_currMenuStation = null;
+            //_currStationItem = null;
+        }
+
+        private void mnuRename_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currStationItem == null) return;
+
+            var textStation = _currStationItem.FindChildByName<TextBlock>("txtStationName");
+            var textBox = _currStationItem.FindChildByName<TextBox>("txtRename");
+            var saverename = _currStationItem.FindChildByName<Button>("btnSaveRename");
 
             textBox.Text = textStation.Text;
             textStation.Visibility = Visibility.Hidden;
@@ -142,125 +219,26 @@ namespace Elpis
             textBox.SelectAll();
         }
 
-        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        private void mnuDelete_Click(object sender, RoutedEventArgs e)
         {
-            e.Handled = true;
-
-            var station = (Station) ((ImageButton) sender).Tag;
-            _waiting = true;
-            ToggleMenu();
-            ShowWait(true);
-            _player.StationDelete(station);
-        }
-
-        private void TextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
+            if (_currMenuStation != null)
             {
-                string name = ((TextBox) sender).Text;
-                var station = (Station) (((TextBox) sender).FindParentByName<ContentControl>("StationItem")).DataContext;
-                _player.StationRename(station, name);
-
-                var stationMenu = ((TextBox) sender).FindParentByName<ContentControl>("StationMenu");
-                var textStationName = stationMenu.FindSiblingByName<TextBlock>("txtStationName");
-                var textStationNameMenu = ((TextBox) sender).FindSiblingByName<TextBlock>("txtStationNameMenu");
-                var textBox = (TextBox) sender;
-
-                textStationName.Text = textStationNameMenu.Text = name;
-                textStationNameMenu.Visibility = Visibility.Visible;
-                textBox.Visibility = Visibility.Hidden;
-
-                ToggleMenu();
+                _waiting = true;
+                ShowWait(true);
+                _player.StationDelete(_currMenuStation);
             }
         }
 
-        private void btnSaveRename_Click(object sender, RoutedEventArgs e)
+        private void mnuEditQuickMix_Click(object sender, RoutedEventArgs e)
         {
-            e.Handled = true;
-            string name = (((Button) sender).FindSiblingByName<TextBox>("txtRename")).Text;
-
-            var station = (Station) (((Button) sender).FindParentByName<ContentControl>("StationItem")).DataContext;
-            _player.StationRename(station, name);
-
-            var stationMenu = ((Button) sender).FindParentByName<ContentControl>("StationMenu");
-            var textStationName = stationMenu.FindSiblingByName<TextBlock>("txtStationName");
-            var textStationNameMenu = ((Button) sender).FindSiblingByName<TextBlock>("txtStationNameMenu");
-            var self = (Button) sender;
-
-            textStationName.Text = textStationNameMenu.Text = name;
-            textStationNameMenu.Visibility = Visibility.Visible;
-            self.Visibility = Visibility.Hidden;
-
-            ToggleMenu();
+            if(EditQuickMixEvent != null)
+                EditQuickMixEvent();
         }
 
-        private void MenuGrid_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void mnuInfo_Click(object sender, RoutedEventArgs e)
         {
-            if ((bool) e.NewValue)
-            {
-                var station = (Station) ((Grid) sender).Tag;
-                var textStation = ((Grid) sender).FindChildByName<TextBlock>("txtStationNameMenu");
-                var textBox = ((Grid) sender).FindChildByName<TextBox>("txtRename");
-                var saverename = ((Grid) sender).FindChildByName<Button>("btnSaveRename");
-                var rename = ((Grid) sender).FindChildByName<Button>("btnRename");
-                var delete = ((Grid) sender).FindChildByName<Button>("btnDelete");
-
-                if (station.IsQuickMix || !station.IsCreator)
-                {
-                    rename.Visibility = Visibility.Collapsed;
-                    delete.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    rename.Visibility = Visibility.Visible;
-                    delete.Visibility = Visibility.Visible;
-                }
-                textBox.Text = textStation.Text;
-                textStation.Visibility = Visibility.Visible;
-                textBox.Visibility = Visibility.Hidden;
-                saverename.Visibility = Visibility.Hidden;
-            }
-        }
-
-        private void ToggleMenu()
-        {
-            if (_currMenu == null) return;
-
-            if (_currMenu.Visibility != Visibility.Hidden)
-            {
-                _currMenu.Visibility = Visibility.Hidden;
-                _currMenu = null;
-            }
-            else
-                _currMenu.Visibility = Visibility.Visible;
-        }
-
-        private void btnMenu_Click(object sender, RoutedEventArgs e)
-        {
-            //var grid = ((ImageButton) sender).FindSiblingByName<Grid>("CenterGrid");
-            //var btnMenuClose = ((ImageButton) sender).FindSiblingByName<ImageButton>("btnMenuClose");
-
-            var newMenu = ((ImageButton)sender).FindSiblingByName<ContentControl>("StationMenu");
-
-            if (_currMenu != null && _currMenu != newMenu)
-                ToggleMenu();
-
-            if (newMenu != null)
-            {
-                _currMenu = newMenu;
-                
-                ToggleMenu();
-            }
-        }
-
-        private void btnMenuClose_Click(object sender, RoutedEventArgs e)
-        {
-            ToggleMenu();
-        }
-
-        private void btnInfo_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start((string) ((ImageButton) sender).Tag);
+            if (_currMenuStation != null && _currMenuStation.InfoUrl.StartsWith("http"))
+                Process.Start(_currMenuStation.InfoUrl);
         }
     }
 }

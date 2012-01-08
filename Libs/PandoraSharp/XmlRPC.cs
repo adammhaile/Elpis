@@ -173,15 +173,16 @@ namespace PandoraSharp
             else if (t == typeof (int))
                 return string.Format("<value><int>{0}</int></value>",
                                      ((int) v).ToString());
-            else if (t == typeof (object[]))
+            else if (t.IsArray)
             {
-                string result = string.Empty;
+                string arrayData = string.Empty;
                 foreach (object obj in ((object[]) v))
                 {
-                    result += string.Format("<value><array><data>{0}</data></array></value>",
-                                            GenerateValue(obj));
+                    arrayData += GenerateValue(obj);
                 }
-                return result;
+
+                return string.Format("<value><array><data>{0}</data></array></value>",
+                                            arrayData);
             }
             else
                 throw new ArgumentException(
