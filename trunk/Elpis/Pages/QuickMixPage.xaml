@@ -1,10 +1,12 @@
-﻿<UserControl x:Class="Elpis.Search" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl x:Class="Elpis.QuickMixPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:Elpis.Controls"
-             mc:Ignorable="d" d:DesignHeight="440" d:DesignWidth="440" 
-             Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             mc:Ignorable="d" d:DesignHeight="440" d:DesignWidth="440"
+             Loaded="UserControl_Loaded"
+             Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,31 +22,33 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <TextBox Name="txtSearch" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" Text="" Opacity="1"
-             VerticalContentAlignment="Center" TextAlignment="Center" FontSize="16" Padding="3" Margin="3"
-             KeyDown="txtSearch_KeyDown" PreviewMouseDown="txtSearch_PreviewMouseDown" />
-        <Button Name="btnSearch" Grid.Row="0" Grid.Column="1" Content="Search" Margin="3" Click="btnSearch_Click" />
-        <Button Name="btnCancel" Grid.Row="0" Grid.Column="2" Content="Cancel" Margin="3" Click="btnCancel_Click" />
+        <TextBlock Grid.Row="0"
+                   Text="Select the Stations to use in QuickMix"
+                   Foreground="{StaticResource MainFontBrush}"
+                   FontSize="18"
+                   FontWeight="DemiBold"
+                   TextAlignment="Center"/>
         <Image Grid.Row="1" Grid.ColumnSpan="3" Source="/Elpis;component/Images/background.png"
                Margin="10" Opacity="0.25"/>
-        <ScrollViewer Name="ResultScroller" Grid.Row="1" Grid.ColumnSpan="3"
+        <ScrollViewer Name="ResultScroller" Grid.Row="1"
                   ScrollViewer.VerticalScrollBarVisibility="Auto" Style="{StaticResource FadeScroller}">
-            <ItemsControl Name="ResultItems" HorizontalContentAlignment="Stretch">
+            <ItemsControl Name="StationItems" HorizontalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <ContentControl Name="ResultItem">
-                            <Grid Margin="3,0" HorizontalAlignment="Stretch" MouseLeftButtonUp="Grid_MouseLeftButtonUp"
-                    Style="{StaticResource HoverGrid}">
+                            <Grid Margin="3,0" HorizontalAlignment="Stretch"
+                                Style="{StaticResource HoverGrid}">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Name="txtResult" Text="{Binding Path=DisplayName}"
+                                <CheckBox Name="chkUse" Grid.Column="0" IsChecked="{Binding Path=UseQuickMix, Mode=TwoWay}" />
+                                <TextBlock Grid.Column="1" Name="txtStationName" Text="{Binding Path=Name}"
                            FontSize="18" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                            Foreground="{StaticResource MainFontBrush}" Controls:TextBlockUtils.AutoTooltip="True"
                            Controls:TextBlockUtils.AutoTooltipFontSize="12" />
@@ -54,12 +58,21 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <TextBlock Name="lblNoResults" Grid.Row="1" Grid.ColumnSpan="3"
-               Text="Sorry, no results found. Try more generic search terms or check the spelling." TextWrapping="Wrap"
-               TextAlignment="Center" Foreground="{StaticResource ErrorBrush}" FontSize="18" FontWeight="DemiBold"
-               VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" Margin="5" />
+        <Grid Grid.Row="2"
+              HorizontalAlignment="Right">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button Name="btnSave" Grid.Column="0" Content="Save" 
+                    Width="75"
+                    Margin="3" Click="btnSave_Click"/>
+            <Button Name="btnCancel" Grid.Column="1" Content="Cancel" 
+                    Width="75"
+                    Margin="3" Click="btnCancel_Click"/>
+        </Grid>
         <Border Name="WaitScreen" BorderBrush="{StaticResource MainBGBrush}" BorderThickness="0"
-            Background="{StaticResource MainWaitBrush}" Visibility="Collapsed" Grid.Row="1" Grid.ColumnSpan="3">
+            Background="{StaticResource MainWaitBrush}" Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3">
             <Grid x:Name="Spinner" Background="{StaticResource TransparencyShadeBrush}">
                 <Controls:ContentSpinner Margin="10" Width="190" ContentScale="1" />
             </Grid>

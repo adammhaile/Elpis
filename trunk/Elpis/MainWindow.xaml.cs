@@ -78,6 +78,7 @@ namespace Elpis
         private bool _configError = false;
 
         private StationList _stationPage;
+        private QuickMixPage _quickMixPage;
         private UpdateCheck _update;
         private UpdatePage _updatePage;
 
@@ -224,6 +225,9 @@ namespace Elpis
             _settingsPage.Logout += _settingsPage_Logout;
             _searchPage.Loaded += _searchPage_Loaded;
             _stationPage.Loaded += _stationPage_Loaded;
+            _stationPage.EditQuickMixEvent += _stationPage_EditQuickMixEvent;
+            _quickMixPage.CancelEvent += _quickMixPage_CancelEvent;
+            _quickMixPage.CloseEvent += _quickMixPage_CloseEvent;
             _playlistPage.Loaded += _playlistPage_Loaded;
         }
 
@@ -240,6 +244,9 @@ namespace Elpis
 
             _stationPage = new StationList(_player);
             transitionControl.AddPage(_stationPage);
+
+            _quickMixPage = new QuickMixPage(_player);
+            transitionControl.AddPage(_quickMixPage);
 
             _loginPage = new LoginPage(_player, _config);
             transitionControl.AddPage(_loginPage);
@@ -753,7 +760,8 @@ namespace Elpis
                                        if (_prevPage == _stationPage)
                                            ShowStationList();
                                        else
-                                           transitionControl.ShowPage(_playlistPage);
+                                           RestorePrevPage();
+                                           //transitionControl.ShowPage(_playlistPage);
                                    });
         }
 
@@ -810,6 +818,21 @@ namespace Elpis
             _loadingPage.UpdateStatus(status);
         }
 
+        void _stationPage_EditQuickMixEvent()
+        {
+            transitionControl.ShowPage(_quickMixPage);
+        }
+
+        void _quickMixPage_CloseEvent()
+        {
+            ShowStationList();
+        }
+
+        void _quickMixPage_CancelEvent()
+        {
+            ShowStationList();
+        }
+
         private void _playlistPage_Loaded(object sender, RoutedEventArgs e)
         {
             Log.O("Show Playlist");
@@ -855,7 +878,7 @@ namespace Elpis
         private void mainBar_stationPageClick()
         {
             //_prevPage = transitionControl.CurrentPage;
-            if (transitionControl.CurrentPage == _stationPage)
+            if (transitionControl.CurrentPage == _stationPage || transitionControl.CurrentPage == _quickMixPage)
             {
                 if (_stationLoaded)
                     transitionControl.ShowPage(_playlistPage);

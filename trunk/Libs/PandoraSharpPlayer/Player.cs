@@ -76,6 +76,8 @@ namespace PandoraSharpPlayer
 
         public delegate void StationsRefreshingHandler(object sender);
 
+        public delegate void QuickMixSavedEventHandler(object sender);
+
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -111,6 +113,8 @@ namespace PandoraSharpPlayer
 
         public event StationCreatedHandler StationCreated;
 
+        public event QuickMixSavedEventHandler QuickMixSavedEvent;
+
         public event LoginStatusEventHandler LoginStatusEvent;
 
         private void NotifyPropertyChanged(String info)
@@ -131,6 +135,7 @@ namespace PandoraSharpPlayer
             _pandora.FeedbackUpdateEvent += _pandora_FeedbackUpdateEvent;
             _pandora.LoginStatusEvent += _pandora_LoginStatusEvent;
             _pandora.StationsUpdatingEvent += _pandora_StationsUpdatingEvent;
+            _pandora.QuickMixSavedEvent += _pandora_QuickMixSavedEvent;
 
             _bass = new BassAudioEngine(bassRegEmail, bassRegKey);
             _bass.PlaybackProgress += bass_PlaybackProgress;
@@ -147,8 +152,7 @@ namespace PandoraSharpPlayer
 
             LoggedIn = false;
             return true;
-        }
-        
+        }        
 
         #region Properties
 
@@ -569,6 +573,14 @@ namespace PandoraSharpPlayer
                         });
         }
 
+        public void SaveQuickMix()
+        {
+            RunTask(() =>
+            {
+                _pandora.SaveQuickMix();
+            });
+        }
+
         public void PlayPause()
         {
             RunTask(() => _bass.PlayPause());
@@ -595,6 +607,12 @@ namespace PandoraSharpPlayer
         {
             if (StationsRefreshing != null)
                 StationsRefreshing(this);
+        }
+
+        void _pandora_QuickMixSavedEvent(object sender)
+        {
+            if (QuickMixSavedEvent != null)
+                QuickMixSavedEvent(this);
         }
 
         private void _pandora_LoginStatusEvent(object sender, string status)
