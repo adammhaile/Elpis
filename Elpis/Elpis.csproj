@@ -82,6 +82,7 @@
     </Page>
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\TextBlockUtils.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Errors.cs" />
     <Compile Include="KeyboardHook.cs" />
     <Compile Include="Pages\About.xaml.cs">

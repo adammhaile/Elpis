@@ -36,12 +36,16 @@ namespace Elpis
         public delegate void EditQuickMixEventHandler();
         public event EditQuickMixEventHandler EditQuickMixEvent;
 
+        public delegate void AddVarietyEventHandler(Station station);
+        public event AddVarietyEventHandler AddVarietyEvent;
+
         private readonly Player _player;
 
         private ContextMenu _stationMenu;
         private MenuItem _mnuRename;
         private MenuItem _mnuDelete;
         private MenuItem _mnuEditQuickMix;
+        private MenuItem _mnuAddVariety;
         private MenuItem _mnuInfo;
         private Station _currMenuStation = null;
         private Control _currStationItem = null;
@@ -60,7 +64,8 @@ namespace Elpis
             _mnuRename = _stationMenu.Items[0] as MenuItem; //mnuRename
             _mnuDelete = _stationMenu.Items[1] as MenuItem; //mnuDelete
             _mnuEditQuickMix = _stationMenu.Items[2] as MenuItem; //mnuEditQuickMix
-            _mnuInfo = _stationMenu.Items[3] as MenuItem; //mnuInfo
+            _mnuAddVariety = _stationMenu.Items[3] as MenuItem; //mnuAddVariety
+            _mnuInfo = _stationMenu.Items[4] as MenuItem; //mnuInfo
         }
 
         public List<Station> Stations
@@ -172,6 +177,7 @@ namespace Elpis
             {
                 _mnuRename.Visibility = _currMenuStation.IsQuickMix ? Visibility.Collapsed : Visibility.Visible;
                 _mnuDelete.Visibility = _currMenuStation.IsQuickMix ? Visibility.Collapsed : Visibility.Visible;
+                _mnuAddVariety.Visibility = _currMenuStation.IsQuickMix ? Visibility.Collapsed : Visibility.Visible;
                 _mnuEditQuickMix.Visibility = _currMenuStation.IsQuickMix ? Visibility.Visible : Visibility.Collapsed;
             }
 
@@ -239,6 +245,15 @@ namespace Elpis
         {
             if (_currMenuStation != null && _currMenuStation.InfoUrl.StartsWith("http"))
                 Process.Start(_currMenuStation.InfoUrl);
+        }
+
+        private void mnuAddVariety_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currMenuStation != null)
+            {
+                if (AddVarietyEvent != null)
+                    AddVarietyEvent(_currMenuStation);
+            }
         }
     }
 }

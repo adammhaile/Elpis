@@ -226,6 +226,18 @@ namespace PandoraSharp
             }
         }
 
+        public void AddVariety(SearchResult item)
+        {
+            Log.O("Pandora: Adding {0} to {1}", item.DisplayName, this.Name);
+
+            try
+            {
+                _pandora.CallRPC("station.addSeed",
+                                 new object[] { this.ID, item.MusicID });
+            }
+            catch{} // eventually do something with this
+        }
+
         public void Rename(string newName)
         {
             if (newName == Name)

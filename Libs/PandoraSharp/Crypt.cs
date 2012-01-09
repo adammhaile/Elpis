@@ -64,6 +64,7 @@ namespace PandoraSharp
     {
         private static readonly BlowFish bf_enc = new BlowFish(CryptType.Encrypt);
         private static readonly BlowFish bf_dec = new BlowFish(CryptType.Decrypt);
+        private static readonly BlowFish bf_dec_req = new BlowFish(CryptType.Encrypt);
 
         public static string Encrypt(string s)
         {
@@ -73,6 +74,11 @@ namespace PandoraSharp
         public static string Decrypt(string s)
         {
             return bf_dec.Decrypt_ECB(s).TrimEnd('\b');
+        }
+
+        public static string DecryptRPCRequest(string s)
+        {
+            return bf_dec_req.Decrypt_ECB(s).TrimEnd('\b');
         }
     }
 

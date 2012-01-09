@@ -35,12 +35,15 @@ namespace Elpis
 
         public delegate void CancelHandler(object sender);
 
-        public delegate void StationCreatedHandler(object sender, Station station);
+        public delegate void AddVarietyHandler(object sender);
 
         #endregion
 
         private readonly Player _player;
         private const string initialSearchText = "Enter Artist, Track or Composer";
+
+        public SearchMode SearchMode { get; set; }
+        public Station VarietyStation { get; set; }
 
         public Search(Player player)
         {
@@ -48,12 +51,11 @@ namespace Elpis
             InitializeComponent();
 
             _player.SearchResult += _player_SearchResult;
-            //_player.StationCreated += _player_StationCreated;
             _player.ExceptionEvent += _player_ExceptionEvent;
         }
 
         public event CancelHandler Cancel;
-        public event StationCreatedHandler StationCreated;
+        public event AddVarietyHandler AddVariety;
 
         void _player_ExceptionEvent(object sender, string code, System.Exception ex)
         {
@@ -107,8 +109,21 @@ namespace Elpis
         private void Grid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var result = (SearchResult) ((Grid) sender).DataContext;
-            ShowWait(true);
-            _player.CreateStation(result);
+
+            if (SearchMode == Elpis.SearchMode.NewStation)
+            {
+                ShowWait(true);
+                _player.CreateStation(result); 
+            }
+            else
+            {
+                if (VarietyStation != null)
+                    VarietyStation.AddVariety(result);
+
+                if (AddVariety != null)
+                    AddVariety(this);
+            }
+
         }
 
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)

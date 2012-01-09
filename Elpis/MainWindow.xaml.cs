@@ -75,6 +75,8 @@ namespace Elpis
         private bool _showingError;
         private bool _stationLoaded;
 
+        private SearchMode _searchMode = SearchMode.NewStation;
+
         private bool _configError = false;
 
         private StationList _stationPage;
@@ -195,6 +197,7 @@ namespace Elpis
             _aboutPage.Close += RestorePrevPage;
 
             _searchPage.Cancel += _searchPage_Cancel;
+            _searchPage.AddVariety += _searchPage_AddVariety;
             _loginPage.ConnectingEvent += _loginPage_ConnectingEvent;
         }
 
@@ -226,6 +229,7 @@ namespace Elpis
             _searchPage.Loaded += _searchPage_Loaded;
             _stationPage.Loaded += _stationPage_Loaded;
             _stationPage.EditQuickMixEvent += _stationPage_EditQuickMixEvent;
+            _stationPage.AddVarietyEvent += _stationPage_AddVarietyEvent;
             _quickMixPage.CancelEvent += _quickMixPage_CancelEvent;
             _quickMixPage.CloseEvent += _quickMixPage_CloseEvent;
             _playlistPage.Loaded += _playlistPage_Loaded;
@@ -757,12 +761,22 @@ namespace Elpis
         {
             this.BeginDispatch(() =>
                                    {
-                                       if (_prevPage == _stationPage)
+                                       if (_searchMode == SearchMode.AddVariety)
                                            ShowStationList();
                                        else
-                                           RestorePrevPage();
+                                       {
+                                           if (_prevPage == _stationPage)
+                                               ShowStationList();
+                                           else
+                                               RestorePrevPage();
                                            //transitionControl.ShowPage(_playlistPage);
+                                       }
                                    });
+        }
+
+        void _searchPage_AddVariety(object sender)
+        {
+            ShowStationList();
         }
 
         private void _player_PlaybackStart(object sender, double duration)
@@ -821,6 +835,13 @@ namespace Elpis
         void _stationPage_EditQuickMixEvent()
         {
             transitionControl.ShowPage(_quickMixPage);
+        }
+
+        void _stationPage_AddVarietyEvent(Station station)
+        {
+            _searchPage.SearchMode = _searchMode = SearchMode.AddVariety;
+            _searchPage.VarietyStation = station;
+            transitionControl.ShowPage(_searchPage);
         }
 
         void _quickMixPage_CloseEvent()
@@ -892,6 +913,7 @@ namespace Elpis
         private void mainBar_searchPageClick()
         {
             _prevPage = transitionControl.CurrentPage;
+            _searchPage.SearchMode = _searchMode = SearchMode.NewStation;
             transitionControl.ShowPage(_searchPage, PageTransitionType.Previous);
         }
 
