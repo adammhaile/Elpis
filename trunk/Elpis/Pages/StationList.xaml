@@ -19,6 +19,7 @@
                 <MenuItem Name="mnuRename" Click="mnuRename_Click" Header="Rename"/>
                 <MenuItem Name="mnuDelete" Click="mnuDelete_Click" Header="Delete"/>
                 <MenuItem Name="mnuEditQuickMix" Click="mnuEditQuickMix_Click" Header="Edit QuickMix"/>
+                <MenuItem Name="mnuAddVariety" Click="mnuAddVariety_Click" Header="Add Variety"/>
                 <MenuItem Name="mnuInfo" Click="mnuInfo_Click" Header="Station Info"/>
             </ContextMenu>
         </ResourceDictionary>

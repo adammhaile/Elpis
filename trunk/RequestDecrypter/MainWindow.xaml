@@ -1,0 +1,17 @@
+﻿<Window x:Class="RequestDecrypter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Pandora Request Decrypter" Height="506" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBox Name="txtEncrypted" Grid.Row="0" TextWrapping="Wrap" />
+        <Button Name="btnDecrypt" Grid.Row="1" 
+                Click="btnDecrypt_Click"
+                Content="Decrypt Request String" />
+        <TextBox Name="txtDecrypted" Grid.Row="2" TextWrapping="Wrap" />
+    </Grid>
+</Window>
