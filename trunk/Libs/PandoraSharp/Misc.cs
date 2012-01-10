@@ -42,7 +42,7 @@ namespace PandoraSharp
     internal class Const
     {
         public static readonly string PROTOCOL_VERSION = "33";
-        public static readonly string RPC_URL = @"https://www.pandora.com/radio/xmlrpc/v" + PROTOCOL_VERSION + "?";
+        public static readonly string RPC_URL = @"www.pandora.com/radio/xmlrpc/v" + PROTOCOL_VERSION + "?";
         public static readonly string USER_AGENT = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7";
         public static readonly int HTTP_TIMEOUT = 30;
         public static readonly string AUDIO_FORMAT = PAudioFormat.AACPlus;
