@@ -11,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Adam Haile")]
 [assembly: AssemblyProduct("Elpis")]
-[assembly: AssemblyCopyright("Copyright © Adam Haile 2011")]
+[assembly: AssemblyCopyright("Copyright © Adam Haile 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -52,5 +52,5 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("0.8.9.0")]
+[assembly: AssemblyVersion("0.9.0.0")]
 //[assembly: AssemblyFileVersion("0.0.0.0")]
