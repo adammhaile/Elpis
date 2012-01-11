@@ -163,7 +163,7 @@ namespace PandoraSharp
         }
 
         protected internal string CallRPC_Internal(string method, object[] args, bool b_url_args, bool isAuth,
-                                                   bool insertTime = true)
+                                                   bool useSSL = false, bool insertTime = true)
         {
             int callID = 0;
             lock (_rpcCountLock)
@@ -208,7 +208,7 @@ namespace PandoraSharp
                 }
             }
 
-            string url = Const.RPC_URL + string.Join("&", url_arg_strings);
+            string url = (useSSL ? "https://" : "http://") + Const.RPC_URL + string.Join("&", url_arg_strings);
 
             Log.O("[" + callID + ":url]: " + url);
             Log.O("[" + callID + ":data]: " + xml);
@@ -233,9 +233,9 @@ namespace PandoraSharp
         }
 
         protected internal object CallRPC(string method, object[] args = null, bool b_url_args = false,
-                                          bool isAuth = false, bool insertTime = true)
+                                          bool isAuth = false, bool useSSL = false, bool insertTime = true)
         {
-            string response = CallRPC_Internal(method, args, b_url_args, isAuth, insertTime);
+            string response = CallRPC_Internal(method, args, b_url_args, isAuth, useSSL, insertTime);
             if (method == "listener.authenticateListener")
             {
                 return XmlRPC.ParseXML(response);
@@ -251,7 +251,7 @@ namespace PandoraSharp
                     }
                     else
                     {
-                        response = CallRPC_Internal(method, args, b_url_args, isAuth, insertTime);
+                        response = CallRPC_Internal(method, args, b_url_args, isAuth, useSSL, insertTime);
                         HandleFaults(response, true);
                     }
                 }
@@ -321,7 +321,7 @@ namespace PandoraSharp
             _rid = string.Format("{0:d7}P", (Time.Unix()%10000000));
 
             //Sync with server
-            var crypt_time = (string) CallRPC("misc.sync", new object[] {}, false, true, false);
+            var crypt_time = (string) CallRPC("misc.sync", new object[] {}, false, true, true, false);
             int realTime = Time.Unix();
 
             var stx = new string((char) 2, 1);
@@ -331,7 +331,7 @@ namespace PandoraSharp
             if (decrypt_time != string.Empty)
                 _timeOffset = realTime - int.Parse(decrypt_time);
 
-            object userData = CallRPC("listener.authenticateListener", new object[] {_user, _password}, false, true);
+            object userData = CallRPC("listener.authenticateListener", new object[] {_user, _password}, false, true, true);
             if (userData == null) return false;
 
             try

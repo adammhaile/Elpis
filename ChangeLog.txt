@@ -1,3 +1,10 @@
+v0.9.0
+Added QuickMix editing (QuickMix station Menu > Edit QuickMix)
+Added Create Station from Song/Artist in Song Menu
+Added "Add Variety" in Station Menu
+Enforced single instance running per user session
+Fixed PLAYLIST_EMPTY bug 
+
 v0.8.9
 Added close button for when station list is shown and station is already loaded
 Fixed issue where it wouldn't always start a new song after having been paused for several hours

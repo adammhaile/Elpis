@@ -692,6 +692,11 @@ namespace Elpis
                         _lastError = code;
                         _lastException = ex;
                         mainBar.ShowError(err.Description);
+
+                        if (transitionControl.CurrentPage == _loadingPage)
+                        {
+                            transitionControl.ShowPage(_loginPage);
+                        }
                     }
                 }
             }
