@@ -65,7 +65,7 @@ namespace Elpis
                         new ErrorCode
                             {
                                 Description =
-                                    "Error communicating with the server. The issue may be temporary. \r\nTry again, check your connection or try restarting.",
+                                    "Error communicating with the server. \r\nTry again, check your connection or try restarting.",
                                 HardFail = false
                             }
                         },

@@ -211,7 +211,12 @@ namespace PandoraSharp
             string url = (useSSL ? "https://" : "http://") + Const.RPC_URL + string.Join("&", url_arg_strings);
 
             Log.O("[" + callID + ":url]: " + url);
-            Log.O("[" + callID + ":data]: " + xml);
+
+
+            if (isAuth)
+                Log.O("[" + callID + ":data]: " + xml.Replace(_password, "********").Replace(_user, "********"));
+            else
+                Log.O("[" + callID + ":data]: " + xml);
 
             //if reauthorizing, wait until it completes.
             if (!isAuth)
