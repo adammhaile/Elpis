@@ -81,7 +81,9 @@ namespace Elpis.UpdateSystem
 
         private void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
-            _downloadString = e.Result;
+            try { _downloadString = e.Result; }
+            catch { _downloadString = string.Empty; }
+
             _downloadComplete = true;
         }
 

@@ -41,7 +41,7 @@
                 </TextBlock>
             </TextBlock>
             <TextBlock Grid.Row="1" Name="lblError" Text="Error Goes Here" TextWrapping="Wrap" TextAlignment="Center"
-                 Foreground="{StaticResource ErrorBrush}" FontSize="18" FontWeight="DemiBold" VerticalAlignment="Bottom"
+                 Foreground="{StaticResource ErrorBrush}" FontSize="16" FontWeight="DemiBold" VerticalAlignment="Bottom"
                  HorizontalAlignment="Center" Visibility="Visible" Margin="5" />
         </Grid>
         <TextBox Grid.Row="1" Grid.Column="1" Name="txtEmail" Margin="3" TextAlignment="Center" FontSize="18"
