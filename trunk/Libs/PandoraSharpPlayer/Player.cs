@@ -150,6 +150,9 @@ namespace PandoraSharpPlayer
             _playlist.PlayedSongQueued += _playlist_PlayedSongQueued;
             _playlist.PlayedSongDequeued += _playlist_PlayedSongDequeued;
 
+            DailySkipLimitReached = false;
+            DailySkipLimitTime = DateTime.MinValue;
+
             LoggedIn = false;
             return true;
         }        
@@ -287,6 +290,9 @@ namespace PandoraSharpPlayer
             }
         }
 
+        public bool DailySkipLimitReached { get; set; }
+        public DateTime DailySkipLimitTime { get; set; }
+
         #endregion
 
         #region Private Methods
@@ -355,6 +361,18 @@ namespace PandoraSharpPlayer
 
         private int UpdatePlaylist()
         {
+            try
+            {
+                var result = CurrentStation.GetPlaylist();
+            }
+            catch (PandoraException ex)
+            {
+                if (ex.Message == "DAILY_SKIP_LIMIT_REACHED")
+                {
+                    DailySkipLimitReached = true;
+                    DailySkipLimitTime = DateTime.Now;
+                }
+            }
             return _playlist.AddSongs(CurrentStation.GetPlaylist());
         }
 

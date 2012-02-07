@@ -35,6 +35,9 @@ namespace PandoraSharp
 
         public Station(Pandora p, PDict d)
         {
+            SkipLimitReached = false;
+            SkipLimitTime = DateTime.MinValue;
+
             _pandora = p;
             
             ID = (string) d["stationId"];
@@ -175,6 +178,9 @@ namespace PandoraSharp
             get { return Path.Combine(_pandora.ImageCachePath, "Station_" + IdToken); }
         }
 
+        public bool SkipLimitReached { get; set; }
+        public DateTime SkipLimitTime { get; set; }
+
         private void StationArtDownloadHandler(object sender, DownloadDataCompletedEventArgs e)
         {
             if (e.Result.Length == 0)
@@ -221,6 +227,17 @@ namespace PandoraSharp
             catch (PandoraException ex) 
             {
                 _gettingPlaylist = false;
+                if (ex.Message == "PLAYLIST_END" || ex.Message == "DAILY_SKIP_LIMIT_REACHED")
+                {
+                    if (ex.Message == "PLAYLIST_END")
+                    {
+                        SkipLimitReached = true;
+                        SkipLimitTime = DateTime.Now;
+                    }
+                    else
+                        throw;
+                }
+
                 Log.O("Error getting playlist, will try again next time: " + ex.FaultCode);
                 return results;
             }

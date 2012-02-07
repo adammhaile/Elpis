@@ -151,7 +151,7 @@ namespace PandoraSharp
             string fault = XmlRPC.ResponseFaultCheck(response);
             if (fault != string.Empty)
             {
-                if (fault == "AUTH_INVALID_TOKEN")
+                if (fault == "AUTH_INVALID_TOKEN" || fault == "DAILY_SKIP_LIMIT_REACHED")
                     if (!secondTry)
                         return false; //auth fault, signal a re-auth
 
@@ -312,6 +312,30 @@ namespace PandoraSharp
                 StationUpdateEvent(this);
         }
 
+        private string getSyncKey()
+        {
+            string result = string.Empty;
+
+            try
+            {
+                var keyArray = new Util.Downloader().DownloadString(Const.SYNC_KEY_URL);
+
+                var vals = keyArray.Split('|');
+                if (vals.Length < 3) return result;
+                var len = 48;
+                if (!Int32.TryParse(vals[1], out len)) return result;
+                if (vals[2].Length != len) return result;
+
+                result = vals[2];
+            }
+            catch(Exception ex)
+            {
+                Log.O(ex.ToString());
+            }
+
+            return result;
+        }
+
         public bool AuthenticateUser()
         {
             _authorizing = true;
@@ -325,8 +349,10 @@ namespace PandoraSharp
             //reset the unique tokens
             _rid = string.Format("{0:d7}P", (Time.Unix()%10000000));
 
+            var syncKey = getSyncKey();
+            var syncParams = syncKey != string.Empty ? new object[] { syncKey } : new object[] { };
             //Sync with server
-            var crypt_time = (string) CallRPC("misc.sync", new object[] {}, false, true, true, false);
+            var crypt_time = (string)CallRPC("misc.sync", syncParams, false, true, true, false);
             int realTime = Time.Unix();
 
             var stx = new string((char) 2, 1);

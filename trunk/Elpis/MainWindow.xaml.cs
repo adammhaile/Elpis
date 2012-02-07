@@ -695,6 +695,7 @@ namespace Elpis
 
                         if (transitionControl.CurrentPage == _loadingPage)
                         {
+                            _loginPage.LoginFailed = true;
                             transitionControl.ShowPage(_loginPage);
                         }
                     }
