@@ -181,7 +181,7 @@ namespace PandoraSharpPlayer
 
             Current = next;
 
-            if (_nextSongs.Count <= 2)
+            if (_nextSongs.Count <= LowPlaylistCount)
             {
                 Log.O("PlaylistLow");
                 SendPlaylistLow();

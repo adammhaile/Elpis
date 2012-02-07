@@ -44,6 +44,7 @@ namespace Elpis
         private const string _initEmail = "enter email address";
         private const string _initPass = "enter password";
 
+        public bool LoginFailed { get { return _loginFailed; } set { _loginFailed = value; } }
         public LoginPage(Player player, Config config)
         {
             _config = config;

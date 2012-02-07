@@ -22,6 +22,8 @@ namespace RequestDecrypter
         public MainWindow()
         {
             InitializeComponent();
+            var unix = PandoraSharp.Time.Unix();
+            Console.WriteLine(unix);
         }
 
         private void btnDecrypt_Click(object sender, RoutedEventArgs e)
