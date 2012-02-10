@@ -326,6 +326,10 @@ namespace PandoraSharp
                 if (!Int32.TryParse(vals[1], out len)) return result;
                 if (vals[2].Length != len) return result;
 
+                Log.O("Sync Key Age (sec): " + vals[0]);
+                Log.O("Sync Key Length: " + vals[1]);
+                Log.O("Sync Key: " + vals[2]);
+
                 result = vals[2];
             }
             catch(Exception ex)
