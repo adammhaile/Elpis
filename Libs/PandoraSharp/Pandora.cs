@@ -68,7 +68,7 @@ namespace PandoraSharp
         private string _authToken;
         private bool _authorizing;
         private bool _connected;
-        private bool _firstAuthComplete;
+        private bool _firstAuthComplete = false;
         private string _imageCachePath = "";
         private string _password = "";
         private string _rid;
@@ -332,12 +332,33 @@ namespace PandoraSharp
 
                 result = vals[2];
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.O(ex.ToString());
             }
 
             return result;
+        }
+
+        private string getSyncTime()
+        {
+            string result = string.Empty;
+
+            try
+            {
+                result = new Util.Downloader().DownloadString(Const.SYNC_TIME_URL);
+            }
+            catch (Exception ex)
+            {
+                Log.O(ex.ToString());
+            }
+
+            return result;
+        }
+
+        public void Logout()
+        {
+            _firstAuthComplete = false;
         }
 
         public bool AuthenticateUser()
@@ -353,18 +374,23 @@ namespace PandoraSharp
             //reset the unique tokens
             _rid = string.Format("{0:d7}P", (Time.Unix()%10000000));
 
-            var syncKey = getSyncKey();
-            var syncParams = syncKey != string.Empty ? new object[] { syncKey } : new object[] { };
-            //Sync with server
-            var crypt_time = (string)CallRPC("misc.sync", syncParams, false, true, true, false);
+            //var syncKey = getSyncKey();
+            //var syncParams = syncKey != string.Empty ? new object[] { syncKey } : new object[] { };
+            ////Sync with server
+            //var crypt_time = (string)CallRPC("misc.sync", syncParams, false, true, true, false);
+            //int realTime = Time.Unix();
+
+            //var stx = new string((char) 2, 1);
+            //string decrypt_time = PandoraCrypt.Decrypt(crypt_time);
+            //decrypt_time = decrypt_time.SafeSubstring(4, decrypt_time.Length).Replace(stx, string.Empty);
+
+            //if (decrypt_time != string.Empty)
+            //    _timeOffset = realTime - int.Parse(decrypt_time);
+
+            string sync_time = getSyncTime();
             int realTime = Time.Unix();
-
-            var stx = new string((char) 2, 1);
-            string decrypt_time = PandoraCrypt.Decrypt(crypt_time);
-            decrypt_time = decrypt_time.SafeSubstring(4, decrypt_time.Length).Replace(stx, string.Empty);
-
-            if (decrypt_time != string.Empty)
-                _timeOffset = realTime - int.Parse(decrypt_time);
+            if (sync_time != string.Empty)
+                _timeOffset = realTime - int.Parse(sync_time);
 
             object userData = CallRPC("listener.authenticateListener", new object[] {_user, _password}, false, true, true);
             if (userData == null) return false;

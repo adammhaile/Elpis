@@ -50,6 +50,8 @@ namespace PandoraSharp
         public static readonly int PLAYLIST_VALIDITY_TIME = 60*60*3;
 
         public static readonly string SYNC_KEY_URL = @"http://zzj.itf-inc.com/s2/getsynckey.php";
+
+        public static readonly string SYNC_TIME_URL = @"http://ridetheclown.com/s2/synctime.php";
     }
 
     public class PDict : Dictionary<string, object>

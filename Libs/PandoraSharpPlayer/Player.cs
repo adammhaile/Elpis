@@ -437,6 +437,7 @@ namespace PandoraSharpPlayer
             _playlist.ClearSongs();
             _playlist.ClearHistory();
             _playlist.Current = null;
+            _pandora.Logout();
             Email = string.Empty;
             Password = string.Empty;
 
