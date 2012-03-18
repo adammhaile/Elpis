@@ -138,6 +138,28 @@
                       Content="Show Song Notifications" />
                     </Grid>
                 </GroupBox>
+                <GroupBox Header="Misc" Margin="5" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Name="chkForceSSL" Grid.Row="0" Grid.Column="1" Margin="4"
+                      IsChecked="{Binding Path=Misc_ForceSSL, 
+                                    UpdateSourceTrigger=PropertyChanged}"
+                      Content="Force SSL (HTTPS)">
+                            <CheckBox.ToolTip>
+                                <TextBlock FontSize="14">
+                                    Force SSL (HTTPS) to be used for all API requests.
+                                    <LineBreak />
+                                    In some instances, this fixes certain connection issues.
+                                </TextBlock>
+                            </CheckBox.ToolTip>
+                        </CheckBox>
+                    </Grid>
+                </GroupBox>
             </StackPanel>
         </ScrollViewer>
         <Grid Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">

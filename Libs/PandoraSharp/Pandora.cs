@@ -121,6 +121,13 @@ namespace PandoraSharp
             set { SetAudioFormat(value); }
         }
 
+        private bool _forceSSL = false;
+        public bool ForceSSL
+        {
+            get { return _forceSSL; }
+            set { _forceSSL = value; }
+        }
+
         public SortOrder StationSortOrder { get; set; }
         public event ConnectionEventHandler ConnectionEvent;
         public event StationsUpdatedEventHandler StationUpdateEvent;
@@ -208,7 +215,7 @@ namespace PandoraSharp
                 }
             }
 
-            string url = (useSSL ? "https://" : "http://") + Const.RPC_URL + string.Join("&", url_arg_strings);
+            string url = (useSSL || _forceSSL ? "https://" : "http://") + Const.RPC_URL + string.Join("&", url_arg_strings);
 
             Log.O("[" + callID + ":url]: " + url);
 

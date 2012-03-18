@@ -1,3 +1,7 @@
+v0.9.3
+Fixed bug where playlist would load twice
+Added "Force SSL" option for API calls.
+
 v0.9.2
 Premptive API change fix
 
