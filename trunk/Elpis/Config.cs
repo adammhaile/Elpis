@@ -52,6 +52,8 @@ namespace Elpis
         public static MapConfigEntry Elpis_ShowTrayNotifications = new MapConfigEntry("Elpis_ShowTrayNotifications", true);
         public static MapConfigEntry Elpis_StartupLocation = new MapConfigEntry("Elpis_StartupLocation", "");
         public static MapConfigEntry Elpis_StartupSize = new MapConfigEntry("Elpis_StartupSize", "");
+
+        public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
     }
 
     public struct ConfigDropDownItem
@@ -81,6 +83,8 @@ namespace Elpis
         public bool Elpis_GlobalMediaKeys { get; set; }
         public bool Elpis_MinimizeToTray { get; set; }
         public bool Elpis_ShowTrayNotifications { get; set; }
+
+        public bool Misc_ForceSSL { get; set; }
 
         public Point Elpis_StartupLocation { get; set; }
         public Size Elpis_StartupSize { get; set; }
@@ -167,6 +171,7 @@ namespace Elpis
             Fields.Elpis_GlobalMediaKeys = (bool) _c.GetValue(ConfigItems.Elpis_GlobalMediaKeys);
             Fields.Elpis_MinimizeToTray = (bool) _c.GetValue(ConfigItems.Elpis_MinimizeToTray);
             Fields.Elpis_ShowTrayNotifications = (bool) _c.GetValue(ConfigItems.Elpis_ShowTrayNotifications);
+            Fields.Misc_ForceSSL = (bool)_c.GetValue(ConfigItems.Misc_ForceSSL);
 
             var location = (string) _c.GetValue(ConfigItems.Elpis_StartupLocation);
             try
@@ -218,6 +223,7 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Elpis_GlobalMediaKeys, Fields.Elpis_GlobalMediaKeys);
                 _c.SetValue(ConfigItems.Elpis_MinimizeToTray, Fields.Elpis_MinimizeToTray);
                 _c.SetValue(ConfigItems.Elpis_ShowTrayNotifications, Fields.Elpis_ShowTrayNotifications);
+                _c.SetValue(ConfigItems.Misc_ForceSSL, Fields.Misc_ForceSSL);
                 _c.SetValue(ConfigItems.Elpis_StartupLocation, Fields.Elpis_StartupLocation.ToString());
                 _c.SetValue(ConfigItems.Elpis_StartupSize, Fields.Elpis_StartupSize.ToString());
             }

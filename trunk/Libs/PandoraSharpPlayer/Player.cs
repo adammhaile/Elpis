@@ -231,6 +231,23 @@ namespace PandoraSharpPlayer
             }
         }
 
+        public bool ForceSSL
+        {
+            get
+            {
+                if (_pandora != null) return _pandora.ForceSSL;
+                else return false;
+            }
+
+            set
+            {
+                if (_pandora != null)
+                {
+                    _pandora.ForceSSL = value;
+                }
+            }
+        }
+
         public Pandora.SortOrder StationSortOrder
         {
             get
@@ -361,9 +378,10 @@ namespace PandoraSharpPlayer
 
         private int UpdatePlaylist()
         {
+            List<Song> result = new List<Song>();
             try
             {
-                var result = CurrentStation.GetPlaylist();
+                result = CurrentStation.GetPlaylist();
             }
             catch (PandoraException ex)
             {
@@ -373,7 +391,11 @@ namespace PandoraSharpPlayer
                     DailySkipLimitTime = DateTime.Now;
                 }
             }
-            return _playlist.AddSongs(CurrentStation.GetPlaylist());
+
+            if (result.Count == 0)
+                result = CurrentStation.GetPlaylist();
+
+            return _playlist.AddSongs(result);
         }
 
         private void PlayThread()
