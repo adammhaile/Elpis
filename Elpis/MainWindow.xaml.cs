@@ -451,6 +451,8 @@ namespace Elpis
             _player.AudioFormat = _config.Fields.Pandora_AudioFormat;
             _player.SetStationSortOrder(_config.Fields.Pandora_StationSortOrder);
 
+            _player.ForceSSL = _config.Fields.Misc_ForceSSL;
+
             _loadingPage.UpdateStatus("Setting up cache...");
             string cachePath = Path.Combine(Config.ElpisAppData, "Cache");
             if (!Directory.Exists(cachePath)) Directory.CreateDirectory(cachePath);
