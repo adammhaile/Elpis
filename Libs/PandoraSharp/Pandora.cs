@@ -399,7 +399,7 @@ namespace PandoraSharp
             if (sync_time != string.Empty)
                 _timeOffset = realTime - int.Parse(sync_time);
 
-            object userData = CallRPC("listener.authenticateListener", new object[] {_user, _password}, false, true, true);
+            object userData = CallRPC("listener.authenticateListener", new object[] {"", _user, _password, "html5tuner", "", "", "HTML5", true }, false, true, true);
             if (userData == null) return false;
 
             try

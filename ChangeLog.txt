@@ -1,3 +1,6 @@
+v0.9.5
+Updated for Pandora API Change
+
 v0.9.4
 Minor bug fixes
 

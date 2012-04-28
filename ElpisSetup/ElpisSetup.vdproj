@@ -260,7 +260,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=0.33.4480.27183, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=0.33.4499.39662, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_219D2474510FB9396F76839D15068B72"
@@ -382,7 +382,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Util, Version=0.8.4480.27183, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Util, Version=0.8.4499.39662, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_B80C72A6FEB26F5A1D4C43849A0FF7B3"
@@ -413,7 +413,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=0.8.4480.27183, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=0.8.4499.39662, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_B9F27FF9ED2B7E2D00568969C84F4D9D"
@@ -444,7 +444,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=0.33.4480.27183, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=0.33.4499.39662, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_E0BC3D5FD11BDEC07ED1BDAEB725307E"
@@ -578,15 +578,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Elpis"
-        "ProductCode" = "8:{B1B6E232-0EDA-42AD-9C31-3143F5ED5F9A}"
-        "PackageCode" = "8:{FEBFD020-CAA6-43C1-8E61-4ADAEED25476}"
+        "ProductCode" = "8:{DE747A07-CFD8-4E11-BBFF-7EE03B296F2E}"
+        "PackageCode" = "8:{5E51286C-5913-4793-8FA0-7CCAA00B275A}"
         "UpgradeCode" = "8:{F0962B86-5C6F-4A2C-98F4-2FF9D0AC46AD}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.9.4"
+        "ProductVersion" = "8:0.9.6"
         "Manufacturer" = "8:Adam Haile"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
