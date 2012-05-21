@@ -387,7 +387,7 @@
     <ControlTemplate x:Key="{x:Static MenuItem.SubmenuHeaderTemplateKey}"
                  TargetType="{x:Type MenuItem}">
         <Border x:Name="Border"
-          BorderThickness="1">
+          BorderThickness="2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"
@@ -422,16 +422,15 @@
              Placement="Right"
              HorizontalOffset="-4"
              IsOpen="{TemplateBinding IsSubmenuOpen}"
-             AllowsTransparency="True"
+             AllowsTransparency="False"
              Focusable="False"
              PopupAnimation="Fade">
                     <Border x:Name="SubmenuBorder"
                 SnapsToDevicePixels="True"
                 Background="{DynamicResource MenuPopupBrush}"
-                BorderThickness="1">
-                        <Border.BorderBrush>
-                            <SolidColorBrush Color="{DynamicResource ShadeMedium}" />
-                        </Border.BorderBrush>
+                BorderBrush="{StaticResource ControlBorderBrush}"
+                BorderThickness="2">
+
                         <ScrollViewer CanContentScroll="True"
                         Style="{StaticResource MenuScrollViewer}">
                             <StackPanel IsItemsHost="True"

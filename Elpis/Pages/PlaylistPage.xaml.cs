@@ -46,6 +46,9 @@ namespace Elpis
         private Song _currMenuSong;
 
         private ContextMenu _songMenu;
+        private MenuItem _purchaseMenu;
+        private MenuItem _purchaseAmazonAlbum;
+        private MenuItem _purchaseAmazonTrack;
 
         public PlaylistPage(Player player)
         {
@@ -66,6 +69,10 @@ namespace Elpis
             _feedbackMap = new Dictionary<Song, ImageButton[]>();
 
             _songMenu = this.Resources["SongMenu"] as ContextMenu;
+            //This would need to be changed if the menu order is ever changed
+            _purchaseMenu = _songMenu.Items[0] as MenuItem;
+            _purchaseAmazonAlbum = _purchaseMenu.Items[0] as MenuItem;
+            _purchaseAmazonTrack = _purchaseMenu.Items[1] as MenuItem;
         }
 
         private void ShowWait(bool state)
@@ -328,6 +335,15 @@ namespace Elpis
         private void ShowMenu(object sender)
         {
             _songMenu.PlacementTarget = sender as UIElement;
+            bool showAmazonAlbum = (_currMenuSong.AmazonAlbumID != string.Empty);
+            bool showAmazonTrack = (_currMenuSong.AmazonTrackID != string.Empty);
+            bool showPurchase = (showAmazonAlbum || showAmazonTrack);
+
+            _purchaseAmazonAlbum.Visibility = showAmazonAlbum ? Visibility.Visible : Visibility.Hidden;
+            _purchaseAmazonTrack.Visibility = showAmazonTrack ? Visibility.Visible : Visibility.Hidden;
+
+            _purchaseMenu.Visibility = showPurchase ? Visibility.Visible : Visibility.Hidden;
+
             _songMenu.IsOpen = true;
         }
 
@@ -386,6 +402,38 @@ namespace Elpis
             if (_currMenuSong != null)
             {
                 _player.CreateStationFromSong(_currMenuSong);
+            }
+        }
+
+        private void LaunchAmazonURL(string ID)
+        {
+            if (ID != string.Empty)
+            {
+                string url = @"http://www.amazon.com/dp/" + ID;
+#if APP_RELEASE
+                if (ReleaseData.AmazonTag != string.Empty)
+                {
+                    url += (@"/?tag=" + ReleaseData.AmazonTag);
+                }
+#endif
+
+                Process.Start(url);
+            }
+        }
+
+        private void mnuPurchaseAmazonAlbum_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currMenuSong != null)
+            {
+                LaunchAmazonURL(_currMenuSong.AmazonAlbumID);
+            }
+        }
+
+        private void mnuPurchaeAmazonTrack_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currMenuSong != null)
+            {
+                LaunchAmazonURL(_currMenuSong.AmazonTrackID);
             }
         }
     }

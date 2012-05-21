@@ -58,6 +58,9 @@ namespace PandoraSharp
             ArtRadio = (string) d["artRadio"];
             //SongType = (int) d["songType"];
 
+            AmazonAlbumID = (string) d["albumAmazonDigitalAsin"];
+            AmazonTrackID = (string) d["amazonDigitalAsin"];
+
             Tired = false;
             Message = "";
             StartTime = DateTime.MinValue;
@@ -109,6 +112,9 @@ namespace PandoraSharp
         public string ArtistDetailUrl { get; set; }
         public string AlbumDetailUrl { get; private set; }
         public string ArtRadio { get; private set; }
+
+        public string AmazonAlbumID { get; private set; }
+        public string AmazonTrackID { get; private set; }
 
         public byte[] AlbumImage
         {
