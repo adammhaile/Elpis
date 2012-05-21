@@ -14,7 +14,16 @@
                 <ResourceDictionary Source="/Elpis;component/Styles/Misc.xaml" />
                 <ResourceDictionary Source="/Elpis;component/Styles/Images.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <ContextMenu x:Key="SongMenu" Closed="SongMenu_Closed">           
+            <ContextMenu x:Key="SongMenu" Closed="SongMenu_Closed">    
+                <!-- Must changes inits in constructor if the order of these changes -->
+                <MenuItem x:Name="mnuPurchase" Header="Purchase">
+                    <MenuItem x:Name="mnuPurchaseAmazonAlbum" 
+                              Click="mnuPurchaseAmazonAlbum_Click"
+                              Header="Album from Amazon"/>
+                    <MenuItem x:Name="mnuPurchaeAmazonTrack" 
+                              Click="mnuPurchaeAmazonTrack_Click"
+                              Header="Track from Amazon"/>
+                </MenuItem>
                 <MenuItem Click="mnuTired_Click" Header="Tired of This Song"/>
                 <MenuItem Click="mnuBookArtist_Click" Header="Bookmark Artist"/>
                 <MenuItem Click="mnuBookSong_Click" Header="Bookmark Song"/>
