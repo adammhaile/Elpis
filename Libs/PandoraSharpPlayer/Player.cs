@@ -307,6 +307,12 @@ namespace PandoraSharpPlayer
             }
         }
 
+        public int Volume
+        {
+            get { return _bass.Volume; }
+            set { _bass.Volume = value; }
+        }
+
         public bool DailySkipLimitReached { get; set; }
         public DateTime DailySkipLimitTime { get; set; }
 

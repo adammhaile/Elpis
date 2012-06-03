@@ -56,7 +56,7 @@ namespace PandoraSharp
             if (_proxy != null)
                 wc.Proxy = _proxy;
 
-            wc.Headers.Add("Content-Type", "text/xml");
+            wc.Headers.Add("Content-Type", "text/plain");
             wc.Headers.Add("User-Agent", Const.USER_AGENT);
 
             string response = string.Empty;
@@ -75,44 +75,6 @@ namespace PandoraSharp
             //Log.O(response);
             return response;
         }
-
-        //public static string StringRequest(string url, string data)
-        //{
-        //    var request = (HttpWebRequest) WebRequest.Create(url);
-        //    request.UserAgent = Const.USER_AGENT;
-        //    request.Method = "POST";
-        //    request.ContentType = "text/xml";
-        //    if (_proxy != null)
-        //        request.Proxy = _proxy;
-
-        //    byte[] byteArray = Encoding.UTF8.GetBytes(data);
-        //    request.ContentLength = byteArray.Length;
-        //    Stream dataStream = request.GetRequestStream();
-        //    dataStream.Write(byteArray, 0, byteArray.Length);
-        //    dataStream.Close();
-        //    WebResponse response = null;
-        //    try
-        //    {
-        //        response = request.GetResponse();
-        //    }
-        //    catch (WebException wex)
-        //    {
-        //        Log.O("StringRequest Error: " + wex);
-        //        //Wait and Try again, just in case
-        //        Thread.Sleep(500);
-        //        response = request.GetResponse();
-        //    }
-
-        //    Log.O(((HttpWebResponse) response).StatusDescription);
-        //    dataStream = response.GetResponseStream();
-        //    var reader = new StreamReader(dataStream);
-        //    string result = reader.ReadToEnd();
-        //    reader.Close();
-        //    dataStream.Close();
-        //    response.Close();
-
-        //    return result;
-        //}
 
         public static void ByteRequestAsync(string url, DownloadDataCompletedEventHandler dataHandler)
         {
