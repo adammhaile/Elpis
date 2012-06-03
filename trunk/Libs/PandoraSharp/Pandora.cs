@@ -24,6 +24,7 @@ using System.Linq;
 using System.Threading;
 using PandoraSharp.Exceptions;
 using Util;
+using Newtonsoft.Json.Linq;
 
 namespace PandoraSharp
 {
@@ -60,12 +61,17 @@ namespace PandoraSharp
         #endregion
 
         private readonly object _authTokenLock = new object();
+        private readonly object _partnerIDLock = new object();
+        private readonly object _userIDLock = new object();
         private readonly object _rpcCountLock = new object();
 
         protected internal List<string> QuickMixStationIDs = new List<string>();
         private string _audioFormat = PAudioFormat.MP3;
 
         private string _authToken;
+        private string _partnerID;
+        private string _userID;
+
         private bool _authorizing;
         private bool _connected;
         private bool _firstAuthComplete = false;
@@ -73,7 +79,8 @@ namespace PandoraSharp
         private string _password = "";
         private string _rid;
         private int _rpcCount;
-        private int _timeOffset;
+        private long _syncTime;
+        private long _timeSynced;
 
         private string _user = "";
         private string listenerId;
@@ -100,6 +107,42 @@ namespace PandoraSharp
                 lock (_authTokenLock)
                 {
                     _authToken = value;
+                }
+            }
+        }
+
+        private string PartnerID
+        {
+            get
+            {
+                lock (_partnerIDLock)
+                {
+                    return _partnerID;
+                }
+            }
+            set
+            {
+                lock (_partnerIDLock)
+                {
+                    _partnerID = value;
+                }
+            }
+        }
+
+        private string UserID
+        {
+            get
+            {
+                lock (_userIDLock)
+                {
+                    return _userID;
+                }
+            }
+            set
+            {
+                lock (_userIDLock)
+                {
+                    _userID = value;
                 }
             }
         }
@@ -153,24 +196,23 @@ namespace PandoraSharp
         //return false, which signals that a re-auth and retry needs to be done
         //otherwise return true signalling all clear.
         //All other faults will be thrown
-        protected internal bool HandleFaults(string response, bool secondTry)
+        protected internal bool HandleFaults(JSONResult result, bool secondTry)
         {
-            string fault = XmlRPC.ResponseFaultCheck(response);
-            if (fault != string.Empty)
+            if (result.Fault)
             {
-                if (fault == "AUTH_INVALID_TOKEN" || fault == "DAILY_SKIP_LIMIT_REACHED")
+                if (result.FaultCode == Errors.INVALID_AUTH_TOKEN)
                     if (!secondTry)
                         return false; //auth fault, signal a re-auth
 
-                Log.O("Fault: " + fault);
-                throw new PandoraException(fault); //other, throw the exception
+                Log.O("Fault: " + result.FaultString);
+                throw new PandoraException(result.FaultString); //other, throw the exception
             }
 
             return true; //no fault
         }
 
-        protected internal string CallRPC_Internal(string method, object[] args, bool b_url_args, bool isAuth,
-                                                   bool useSSL = false, bool insertTime = true)
+        protected internal string CallRPC_Internal(string method, JObject request, 
+            bool isAuth, bool useSSL = false)
         {
             int callID = 0;
             lock (_rpcCountLock)
@@ -178,52 +220,41 @@ namespace PandoraSharp
                 callID = _rpcCount++;
             }
 
-            if (args == null)
-                args = new object[] {};
+            string shortMethod = (method.Contains("&") ? 
+                method.Substring(0, method.IndexOf("&")) : method);
 
-            object[] url_args = args;
+            string url = (useSSL || _forceSSL ? "https://" : "http://") + Const.RPC_URL + "?method=" + method;
 
-            var arg_list = new List<object>(args);
-            if (insertTime)
-                arg_list.Insert(0, Time.Unix() - _timeOffset);
+            if (request == null) request = new JObject();
 
-            if (AuthToken != null)
-                arg_list.Insert(1, AuthToken);
-            args = arg_list.ToArray();
-
-            string xml = XmlRPC.GenerateRPCXml(method, args);
-            string data = PandoraCrypt.Encrypt(xml);
-
-            var url_arg_strings = new List<string>();
-            if (_rid != null)
-                url_arg_strings.Add("rid=" + _rid);
-
-            if (listenerId != null)
-                url_arg_strings.Add("lid=" + listenerId);
-
-            method = method.Split('.')[1];
-
-            url_arg_strings.Add("method=" + method);
-
-            if (b_url_args)
+            if(AuthToken != null && 
+                PartnerID != null)
             {
-                int count = 1;
-                foreach (object a in url_args)
+                //if (!url.EndsWith("?")) url += "?";
+                url += ("&partner_id=" + PartnerID);
+                url += ("&auth_token=" + Uri.EscapeDataString(AuthToken));
+
+                if (UserID != null)
                 {
-                    url_arg_strings.Add("arg" + count + "=" + format_url_arg(a));
-                    count++;
+                    url += ("&user_id=" + UserID);
+                    request["userAuthToken"] = AuthToken;
+                    request["syncTime"] = AdjustedSyncTime();
                 }
             }
 
-            string url = (useSSL || _forceSSL ? "https://" : "http://") + Const.RPC_URL + string.Join("&", url_arg_strings);
+            string json = request.ToString();
+            string data = string.Empty;
+            if(method == "auth.partnerLogin")
+                data = json;
+            else
+                data = Crypto.out_key.Encrypt(json);
 
             Log.O("[" + callID + ":url]: " + url);
 
-
             if (isAuth)
-                Log.O("[" + callID + ":data]: " + xml.Replace(_password, "********").Replace(_user, "********"));
+                Log.O("[" + callID + ":json]: " + json.SanitizeJSON().Replace(_password, "********").Replace(_user, "********"));
             else
-                Log.O("[" + callID + ":data]: " + xml);
+                Log.O("[" + callID + ":json]: " + json.SanitizeJSON());
 
             //if reauthorizing, wait until it completes.
             if (!isAuth)
@@ -240,36 +271,39 @@ namespace PandoraSharp
             }
 
             string response = RPCRequest(url, data);
-            Log.O("[" + callID + ":response]: " + response);
+            Log.O("[" + callID + ":response]: " + response.SanitizeJSON());
             return response;
         }
 
-        protected internal object CallRPC(string method, object[] args = null, bool b_url_args = false,
-                                          bool isAuth = false, bool useSSL = false, bool insertTime = true)
+        protected internal JSONResult CallRPC(string method, JObject request = null, 
+                                          bool isAuth = false, bool useSSL = false)
         {
-            string response = CallRPC_Internal(method, args, b_url_args, isAuth, useSSL, insertTime);
-            if (method == "listener.authenticateListener")
+            string response = CallRPC_Internal(method, request, isAuth, useSSL);
+            JSONResult result = new JSONResult(response);
+            if (result.Fault)
             {
-                return XmlRPC.ParseXML(response);
-            }
-            else
-            {
-                if (!HandleFaults(response, false))
+                if (!HandleFaults(result, false))
                 {
                     Log.O("Reauth Required");
-                    if (!AuthenticateUser()) //re-auth
+                    if (!AuthenticateUser())
                     {
-                        HandleFaults(response, true);
+                        HandleFaults(result, true);
                     }
                     else
                     {
-                        response = CallRPC_Internal(method, args, b_url_args, isAuth, useSSL, insertTime);
-                        HandleFaults(response, true);
+                        response = CallRPC_Internal(method, request, isAuth, useSSL);
+                        HandleFaults(result, true);
                     }
                 }
             }
 
-            return XmlRPC.ParseXML(response);
+            return result;
+        }
+
+        protected internal object CallRPC(string method, object[] args, bool b_url_args = false,
+                                          bool isAuth = false, bool useSSL = false, bool insertTime = true)
+        {
+            return null;
         }
 
         public void RefreshStations()
@@ -278,12 +312,20 @@ namespace PandoraSharp
             if (StationsUpdatingEvent != null)
                 StationsUpdatingEvent(this);
 
-            var stationList = (object[]) CallRPC("station.getStations");
+            JObject req = new JObject();
+            req["includeStationArtUrl"] = true;
+            var stationList = CallRPC("user.getStationList", req);
+
             QuickMixStationIDs.Clear();
 
             Stations = new List<Station>();
-            foreach (PDict s in stationList)
-                Stations.Add(new Station(this, s));
+            var stations = stationList.Result["stations"];
+            foreach (JToken d in stations)
+            {
+                Stations.Add(new Station(this, d));
+            }
+            //foreach (PDict s in stationList)
+            //    Stations.Add(new Station(this, s));
 
             if (QuickMixStationIDs.Count > 0)
             {
@@ -319,53 +361,58 @@ namespace PandoraSharp
                 StationUpdateEvent(this);
         }
 
-        private string getSyncKey()
-        {
-            string result = string.Empty;
+        //private string getSyncKey()
+        //{
+        //    string result = string.Empty;
 
-            try
-            {
-                var keyArray = new Util.Downloader().DownloadString(Const.SYNC_KEY_URL);
+        //    try
+        //    {
+        //        var keyArray = new Util.Downloader().DownloadString(Const.SYNC_KEY_URL);
 
-                var vals = keyArray.Split('|');
-                if (vals.Length < 3) return result;
-                var len = 48;
-                if (!Int32.TryParse(vals[1], out len)) return result;
-                if (vals[2].Length != len) return result;
+        //        var vals = keyArray.Split('|');
+        //        if (vals.Length < 3) return result;
+        //        var len = 48;
+        //        if (!Int32.TryParse(vals[1], out len)) return result;
+        //        if (vals[2].Length != len) return result;
 
-                Log.O("Sync Key Age (sec): " + vals[0]);
-                Log.O("Sync Key Length: " + vals[1]);
-                Log.O("Sync Key: " + vals[2]);
+        //        Log.O("Sync Key Age (sec): " + vals[0]);
+        //        Log.O("Sync Key Length: " + vals[1]);
+        //        Log.O("Sync Key: " + vals[2]);
 
-                result = vals[2];
-            }
-            catch (Exception ex)
-            {
-                Log.O(ex.ToString());
-            }
+        //        result = vals[2];
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.O(ex.ToString());
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        private string getSyncTime()
-        {
-            string result = string.Empty;
+        //private string getSyncTime()
+        //{
+        //    string result = string.Empty;
 
-            try
-            {
-                result = new Util.Downloader().DownloadString(Const.SYNC_TIME_URL);
-            }
-            catch (Exception ex)
-            {
-                Log.O(ex.ToString());
-            }
+        //    try
+        //    {
+        //        result = new Util.Downloader().DownloadString(Const.SYNC_TIME_URL);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.O(ex.ToString());
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         public void Logout()
         {
             _firstAuthComplete = false;
+        }
+
+        public long AdjustedSyncTime()
+        {
+            return _syncTime + (Time.Unix() - _timeSynced);
         }
 
         public bool AuthenticateUser()
@@ -377,69 +424,113 @@ namespace PandoraSharp
             listenerId = null;
             //webAuthToken = null;
             AuthToken = null;
+            PartnerID = null;
+            UserID = null;
 
-            //reset the unique tokens
-            _rid = string.Format("{0:d7}P", (Time.Unix()%10000000));
+            JObject req = new JObject();
+            req["username"] = "android";
+            req["password"] = "AC7IBG09A3DTSYM4R41UJWL07VLN8JI7";
+            req["deviceModel"] = "android-generic";
 
-            //var syncKey = getSyncKey();
-            //var syncParams = syncKey != string.Empty ? new object[] { syncKey } : new object[] { };
-            ////Sync with server
-            //var crypt_time = (string)CallRPC("misc.sync", syncParams, false, true, true, false);
-            //int realTime = Time.Unix();
+            req["version"] = "5";
+            req["includeUrls"] = true;
 
-            //var stx = new string((char) 2, 1);
-            //string decrypt_time = PandoraCrypt.Decrypt(crypt_time);
-            //decrypt_time = decrypt_time.SafeSubstring(4, decrypt_time.Length).Replace(stx, string.Empty);
-
-            //if (decrypt_time != string.Empty)
-            //    _timeOffset = realTime - int.Parse(decrypt_time);
-
-            string sync_time = getSyncTime();
-            int realTime = Time.Unix();
-            if (sync_time != string.Empty)
-                _timeOffset = realTime - int.Parse(sync_time);
-
-            object userData = CallRPC("listener.authenticateListener", new object[] {"", _user, _password, "html5tuner", "", "", "HTML5", true }, false, true, true);
-            if (userData == null) return false;
+            JSONResult ret;
 
             try
             {
-                var userDict = (PDict) userData;
-                string fault = string.Empty;
-                if ((fault = XmlRPC.GetFaultString(userDict)) != string.Empty)
+                ret = CallRPC("auth.partnerLogin", req, true, true);
+                if (ret.Fault)
                 {
-                    throw new PandoraException(fault);
+                    Log.O("PartnerLogin Error: " + ret.FaultString);
+                    return false;
                 }
-
-                //webAuthToken = (string) userDict["webAuthToken"];
-                listenerId = (string) userDict["listenerId"];
-                AuthToken = (string) userDict["authToken"];
-
-                if (!_firstAuthComplete)
-                {
-                    HasSubscription = ((int) userDict["subscriptionDaysLeft"]) > 0;
-
-                    if (!HasSubscription && _audioFormat == PAudioFormat.MP3_HIFI)
-                        _audioFormat = PAudioFormat.MP3;
-                }
-
-                _firstAuthComplete = true;
-
-                _authorizing = false;
-                return true;
             }
-            catch (PandoraException pex)
+            catch (Exception e)
             {
-                throw;
+                Log.O(e.ToString());
+                return false;
             }
-            catch (Exception ex)
+
+            JToken result = ret["result"];
+
+            _syncTime = Crypto.DecryptSyncTime(result["syncTime"].ToString());
+            _timeSynced = Time.Unix();
+
+            PartnerID = result["partnerId"].ToString();
+            AuthToken = result["partnerAuthToken"].ToString();
+
+            req = new JObject();
+
+            req["loginType"] = "user";
+            req["username"] = _user;
+            req["password"] = _password;
+
+            req["includePandoraOneInfo"] = true;
+            req["includeAdAttributes"] = true;
+            req["includeSubscriptionExpiration"] = true;
+            req["includeStationArtUrl"] = true;
+            req["returnStationList"] = true;
+
+            req["partnerAuthToken"] = AuthToken;
+            req["syncTime"] = _syncTime;// AdjustedSyncTime();
+
+            ret = null;
+
+            ret = CallRPC("auth.userLogin", req, true, true);
+            if (ret.Fault)
             {
-                throw;
+                Log.O("UserLogin Error: " + ret.FaultString);
+                return false;
             }
-            finally
-            {
-                _authorizing = false;
-            }
+
+            result = ret["result"];
+            AuthToken = result["userAuthToken"].ToString();
+            UserID = result["userId"].ToString();
+
+            _authorizing = false;
+            return true;
+            //object userData = CallRPC("listener.authenticateListener", new object[] {"", _user, _password, "html5tuner", "", "", "HTML5", true }, false, true, true);
+            //if (userData == null) return false;
+
+            //try
+            //{
+            //    var userDict = (PDict)userData;
+            //    string fault = string.Empty;
+            //    if ((fault = XmlRPC.GetFaultString(userDict)) != string.Empty)
+            //    {
+            //        throw new PandoraException(fault);
+            //    }
+
+            //    //webAuthToken = (string) userDict["webAuthToken"];
+            //    listenerId = (string)userDict["listenerId"];
+            //    AuthToken = (string)userDict["authToken"];
+
+            //    if (!_firstAuthComplete)
+            //    {
+            //        HasSubscription = ((int)userDict["subscriptionDaysLeft"]) > 0;
+
+            //        if (!HasSubscription && _audioFormat == PAudioFormat.MP3_HIFI)
+            //            _audioFormat = PAudioFormat.MP3;
+            //    }
+
+            //    _firstAuthComplete = true;
+
+            //    _authorizing = false;
+            //    return true;
+            //}
+            //catch (PandoraException pex)
+            //{
+            //    throw;
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw;
+            //}
+            //finally
+            //{
+            //    _authorizing = false;
+            //}
         }
 
         private void SendLoginStatus(string status)
@@ -538,10 +629,11 @@ namespace PandoraSharp
             var result = (PDict) CallRPC("station.createStation",
                                          new object[] {reqType + id, ""});
 
-            var station = new Station(this, result);
-            Stations.Add(station);
+            //var station = new Station(this, result);
+            //Stations.Add(station);
 
-            return station;
+            //return station;
+            return null;
         }
 
         public Station CreateStationFromMusic(string id)
@@ -615,29 +707,29 @@ namespace PandoraSharp
             return string.Empty;
         }
 
-        private string format_url_arg(object v)
-        {
-            string result = string.Empty;
-            Type t = v.GetType();
-            if (t == typeof (bool))
-            {
-                if ((bool) v)
-                    result = "true";
-                else
-                    result = "false";
-            }
-            else if (t == typeof (string[]))
-                result = string.Join("%2C", (string[]) v);
-            else if (t == typeof (int))
-            {
-                result = ((int) v).ToString();
-            }
-            else
-            {
-                result = Uri.EscapeUriString((string) v);
-            }
+        //private string format_url_arg(object v)
+        //{
+        //    string result = string.Empty;
+        //    Type t = v.GetType();
+        //    if (t == typeof (bool))
+        //    {
+        //        if ((bool) v)
+        //            result = "true";
+        //        else
+        //            result = "false";
+        //    }
+        //    else if (t == typeof (string[]))
+        //        result = string.Join("%2C", (string[]) v);
+        //    else if (t == typeof (int))
+        //    {
+        //        result = ((int) v).ToString();
+        //    }
+        //    else
+        //    {
+        //        result = Uri.EscapeUriString((string) v);
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
     }
 }

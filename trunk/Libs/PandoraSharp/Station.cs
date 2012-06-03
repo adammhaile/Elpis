@@ -24,6 +24,7 @@ using System.IO;
 using System.Net;
 using Util;
 using PandoraSharp.Exceptions;
+using Newtonsoft.Json.Linq;
 
 namespace PandoraSharp
 {
@@ -33,87 +34,136 @@ namespace PandoraSharp
         private readonly Pandora _pandora;
         private byte[] _artImage;
 
-        public Station(Pandora p, PDict d)
+        public Station(Pandora p, JToken d)
         {
             SkipLimitReached = false;
             SkipLimitTime = DateTime.MinValue;
 
             _pandora = p;
             
-            ID = (string) d["stationId"];
-            IdToken = (string) d["stationIdToken"];
-            IsCreator = (bool) d["isCreator"];
-            IsQuickMix = (bool) d["isQuickMix"];
-            Name = (string) d["stationName"];
+            ID = d["stationId"].ToString();
+            IdToken = d["stationToken"].ToString();
+            IsCreator = true;// d["isCreator"].ToObject<bool>();
+            IsQuickMix = d["isQuickMix"].ToObject<bool>();
+            Name = d["stationName"].ToString();
 
             if (IsQuickMix)
             {
                 Name = "Quick Mix";
                 _pandora.QuickMixStationIDs.Clear();
-                var qmIDs = (object[]) d["quickMixStationIds"];
+                var qmIDs = d["quickMixStationIds"].ToObject<string[]>();
                 foreach(var qmid in qmIDs)
                     _pandora.QuickMixStationIDs.Add((string) qmid);
             }
 
-            try
+            //var req = new JObject();
+            //req["stationToken"] = IdToken;
+            //req["includeExtendedAttributes"] = true;
+            //var ret = _pandora.CallRPC("station.getStation", req);
+            //if (!ret.Fault)
+            //{
+            bool downloadArt = true;
+            if (!_pandora.ImageCachePath.Equals("") && File.Exists(ArtCacheFile))
             {
-                if (d.ContainsKey("initialSeed"))
+                try
                 {
-                    var seed = (PDict) d["initialSeed"];
+                    ArtImage = File.ReadAllBytes(ArtCacheFile);
+                }
+                catch (Exception)
+                {
+                    Log.O("Error retrieving image cache file: " + ArtCacheFile);
+                    downloadArt = true;
+                }
 
-                    bool getArt = true;
-                    PDict entry = null;
-                    if (seed.ContainsKey("artist"))
-                        entry = (PDict) seed["artist"];
-                    else if (seed.ContainsKey("song"))
-                        entry = (PDict) seed["song"];
-                    else
-                        getArt = false;
+                downloadArt = false;
+            }
 
-                    if (getArt)
+            if (downloadArt)
+            {
+                var value = d.SelectToken("artUrl");
+                if (value != null)
+                {
+                    ArtUrl = value.ToString();
+
+                    if (ArtUrl != string.Empty)
                     {
-                        ArtUrl = (string) entry["artUrl"];
-
-                        if (ArtUrl != string.Empty)
+                        try
                         {
-                            bool download = true;
-                            if (!_pandora.ImageCachePath.Equals("") && File.Exists(ArtCacheFile))
-                            {
-                                try
-                                {
-                                    ArtImage = File.ReadAllBytes(ArtCacheFile);
-                                }
-                                catch (Exception)
-                                {
-                                    Log.O("Error retrieving image cache file: " + ArtCacheFile);
-                                    download = true;
-                                }
-
-                                download = false;
-                            }
-
-                            if (download)
-                            {  
-                                try
-                                {
-                                    ArtImage = PRequest.ByteRequest(ArtUrl);
-                                    if(ArtImage.Length > 0)
-                                        File.WriteAllBytes(ArtCacheFile, ArtImage);
-                                }
-                                catch (Exception)
-                                {
-                                    Log.O("Error saving image cache file: " + ArtCacheFile);
-                                }
-                                //PRequest.ByteRequestAsync(ArtUrl, StationArtDownloadHandler);
-                            }
+                            ArtImage = PRequest.ByteRequest(ArtUrl);
+                            if (ArtImage.Length > 0)
+                                File.WriteAllBytes(ArtCacheFile, ArtImage);
+                        }
+                        catch (Exception)
+                        {
+                            Log.O("Error saving image cache file: " + ArtCacheFile);
                         }
                     }
                 }
+                //}
+                
             }
-            catch
-            {
-                Log.O("Error getting station art.");
-            }
+
+            
+
+            //try
+            //{
+            //    if (d.ContainsKey("initialSeed"))
+            //    {
+            //        var seed = (PDict) d["initialSeed"];
+
+            //        bool getArt = true;
+            //        PDict entry = null;
+            //        if (seed.ContainsKey("artist"))
+            //            entry = (PDict) seed["artist"];
+            //        else if (seed.ContainsKey("song"))
+            //            entry = (PDict) seed["song"];
+            //        else
+            //            getArt = false;
+
+            //        if (getArt)
+            //        {
+            //            ArtUrl = (string) entry["artUrl"];
+
+            //            if (ArtUrl != string.Empty)
+            //            {
+            //                bool download = true;
+            //                if (!_pandora.ImageCachePath.Equals("") && File.Exists(ArtCacheFile))
+            //                {
+            //                    try
+            //                    {
+            //                        ArtImage = File.ReadAllBytes(ArtCacheFile);
+            //                    }
+            //                    catch (Exception)
+            //                    {
+            //                        Log.O("Error retrieving image cache file: " + ArtCacheFile);
+            //                        download = true;
+            //                    }
+
+            //                    download = false;
+            //                }
+
+            //                if (download)
+            //                {  
+            //                    try
+            //                    {
+            //                        ArtImage = PRequest.ByteRequest(ArtUrl);
+            //                        if(ArtImage.Length > 0)
+            //                            File.WriteAllBytes(ArtCacheFile, ArtImage);
+            //                    }
+            //                    catch (Exception)
+            //                    {
+            //                        Log.O("Error saving image cache file: " + ArtCacheFile);
+            //                    }
+            //                    //PRequest.ByteRequestAsync(ArtUrl, StationArtDownloadHandler);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //catch
+            //{
+            //    Log.O("Error getting station art.");
+            //}
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

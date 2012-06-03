@@ -32,6 +32,11 @@ namespace Util
 
     public static class StringExtensions
     {
+        public static string SanitizeJSON(this string json)
+        {
+            return json.Replace("{", "<").Replace("}", ">");
+        }
+
         public static string MD5Hash(this string data)
         {
             return HashHelper.GetStringHash(data);

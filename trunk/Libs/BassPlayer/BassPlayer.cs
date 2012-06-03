@@ -456,7 +456,7 @@ namespace BassPlayer
 
                     _StreamVolume = value;
                     _StreamVolume = value;
-                    Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_GVOL_STREAM, _StreamVolume);
+                    Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_GVOL_STREAM, _StreamVolume*100);
                 }
             }
         }

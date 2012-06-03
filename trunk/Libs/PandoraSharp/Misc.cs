@@ -42,7 +42,8 @@ namespace PandoraSharp
     internal class Const
     {
         public static readonly string PROTOCOL_VERSION = "34";
-        public static readonly string RPC_URL = @"www.pandora.com/radio/xmlrpc/v" + PROTOCOL_VERSION + "?";
+        //public static readonly string RPC_URL = @"www.pandora.com/radio/xmlrpc/v" + PROTOCOL_VERSION + "?";
+        public static readonly string RPC_URL = @"tuner.pandora.com/services/json/";
         public static readonly string USER_AGENT = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7";
         public static readonly int HTTP_TIMEOUT = 30;
         public static readonly string AUDIO_FORMAT = PAudioFormat.AACPlus;
@@ -52,6 +53,9 @@ namespace PandoraSharp
         public static readonly string SYNC_KEY_URL = @"http://zzj.itf-inc.com/s2/getsynckey.php";
 
         public static readonly string SYNC_TIME_URL = @"http://ridetheclown.com/s2/synctime.php";
+
+        public static readonly string CRYPT_IN_KEY = @"R=U!LH$O2B#";
+        public static readonly string CRYPT_OUT_KEY = @"6#26FRL$ZWD";
     }
 
     public class PDict : Dictionary<string, object>
