@@ -20,6 +20,8 @@
 using System;
 using System.Net;
 using Util;
+using Newtonsoft.Json.Linq;
+using PandoraSharp.Exceptions;
 
 namespace PandoraSharp
 {
@@ -29,52 +31,75 @@ namespace PandoraSharp
         private readonly Pandora _pandora;
         private byte[] _albumImage;
 
-        public Song(Pandora p, PDict d)
+        public Song(Pandora p, JToken song)
         {
             _pandora = p;
 
-            Album = (string) d["albumTitle"];
-            Artist = (string) d["artistSummary"];
-            ArtistMusicID = (string) d["artistMusicId"];
+            TrackToken = (string)song["trackToken"];
+            Artist = (string)song["artistName"];
+            Album = (string)song["albumName"];
 
-            var aUrl = (string) d["audioURL"];
-            AudioUrl = aUrl.Substring(0, aUrl.Length - 48) +
-                       PandoraCrypt.Decrypt(aUrl.Substring(aUrl.Length - 48, 48));
+            AmazonAlbumID = (string)song["amazonAlbumDigitalAsin"];
+            AmazonTrackID = (string)song["amazonSongDigitalAsin"];
+
+            //"HTTP_64_AACPLUS_ADTS,HTTP_128_MP3,HTTP_192_MP3";
+                
+            //var aUrl = (string) song["audioURL"];
+            //AudioUrl = aUrl.Substring(0, aUrl.Length - 48) +
+            //           PandoraCrypt.Decrypt(aUrl.Substring(aUrl.Length - 48, 48));
+
+            var songUrls = song["additionalAudioUrl"].ToObject<string[]>();
+            if(songUrls.Length == 0)
+            {                
+                throw new PandoraException(ErrorCodes.NO_AUDIO_URLS);
+            }
+            else if (songUrls.Length == 1)
+            {
+                AudioUrl = songUrls[0];
+            }
+            else if(songUrls.Length > 1)
+            {
+                if (_pandora.AudioFormat == PAudioFormat.MP3_HIFI)
+                {
+                    if (songUrls.Length >= 3)
+                        AudioUrl = songUrls[2];
+                    else
+                        AudioUrl = songUrls[1];
+                }
+                else if (_pandora.AudioFormat == PAudioFormat.AACPlus)
+                {
+                    AudioUrl = songUrls[0];
+                }
+                else //default to PAudioFormat.MP3
+                {
+                    AudioUrl = songUrls[1];
+                }
+            }
 
             double gain = 0.0;
-            double.TryParse(((string) d["fileGain"]), out gain);
+            double.TryParse(((string)song["trackGain"]), out gain);
             FileGain = gain;
 
-            Identity = (string) d["identity"];
-            MusicID = (string) d["musicId"];
-            TrackToken = (string) d["trackToken"];
-            Rating = (((int) d["rating"]) > 0 ? SongRating.love : SongRating.none);
-            StationID = (string) d["stationId"];
-            SongTitle = (string) d["songTitle"];
-            UserSeed = (string) d["userSeed"];
-            SongDetailUrl = (string) d["songDetailURL"];
-            ArtistDetailUrl = (string) d["artistDetailURL"];
-            AlbumDetailUrl = (string) d["albumDetailURL"];
-            ArtRadio = (string) d["artRadio"];
-            //SongType = (int) d["songType"];
-
-            AmazonAlbumID = (string) d["albumAmazonDigitalAsin"];
-            AmazonTrackID = (string) d["amazonDigitalAsin"];
-
+            Rating = (((int)song["songRating"]) > 0 ? SongRating.love : SongRating.none);
+            StationID = (string)song["stationId"];
+            SongTitle = (string)song["songName"];
+            SongDetailUrl = (string)song["songDetailUrl"];
+            ArtistDetailUrl = (string)song["artistDetailUrl"];
+            AlbumDetailUrl = (string)song["albumDetailUrl"];
+            AlbumArtUrl = (string)song["albumArtUrl"];
+  
             Tired = false;
-            Message = "";
             StartTime = DateTime.MinValue;
             Finished = false;
             PlaylistTime = Time.Unix();
 
-            if (ArtRadio != string.Empty)
+            if (!AlbumArtUrl.IsNullOrEmpty())
             {
                 try
                 {
-                    AlbumImage = PRequest.ByteRequest(ArtRadio);
+                    AlbumImage = PRequest.ByteRequest(AlbumArtUrl);
                 }
                 catch { }
-                //PRequest.ByteRequestAsync(this.ArtRadio, AlbumArtDownloadHandler);
             }
         }
 
@@ -82,11 +107,8 @@ namespace PandoraSharp
 
         public string Album { get; private set; }
         public string Artist { get; private set; }
-        public string ArtistMusicID { get; private set; }
         public string AudioUrl { get; private set; }
         public double FileGain { get; private set; }
-        public string Identity { get; private set; }
-        public string MusicID { get; private set; }
         public SongRating Rating { get; private set; }
 
         public bool Loved
@@ -107,11 +129,10 @@ namespace PandoraSharp
         public string StationID { get; private set; }
         public string TrackToken { get; private set; }
         public string SongTitle { get; private set; }
-        public string UserSeed { get; private set; }
         public string SongDetailUrl { get; private set; }
         public string ArtistDetailUrl { get; set; }
         public string AlbumDetailUrl { get; private set; }
-        public string ArtRadio { get; private set; }
+        public string AlbumArtUrl { get; private set; }
 
         public string AmazonAlbumID { get; private set; }
         public string AmazonTrackID { get; private set; }
@@ -137,7 +158,6 @@ namespace PandoraSharp
         //public int SongType { get; private set; }
 
         public bool Tired { get; private set; }
-        public string Message { get; private set; }
         public DateTime StartTime { get; private set; }
         public bool Finished { get; private set; }
         public int PlaylistTime { get; private set; }
@@ -149,7 +169,7 @@ namespace PandoraSharp
 
         public string FeedbackID
         {
-            get { return _pandora.GetFeedbackID(StationID, MusicID); }
+            get { return ""; }// _pandora.GetFeedbackID(StationID, MusicID); }
         }
 
         public bool IsStillValid
@@ -176,7 +196,7 @@ namespace PandoraSharp
                     if (rating == SongRating.none)
                         _pandora.DeleteFeedback(FeedbackID);
                     else
-                        _pandora.AddFeedback(StationID, TrackToken, rating);
+                        _pandora.AddFeedback(Station.IdToken, TrackToken, rating);
 
                     Rating = rating;
                     _pandora.CallFeedbackUpdateEvent(this, true);
@@ -195,7 +215,7 @@ namespace PandoraSharp
             {
                 try
                 {
-                    _pandora.CallRPC("listener.addTiredSong", new object[] { Identity });
+                    _pandora.CallRPC("user.sleepSong", "trackToken", TrackToken);
                     Tired = true;
                 }
                 catch { } //TODO: Give this a failed event to notify UI
@@ -206,7 +226,7 @@ namespace PandoraSharp
         {
             try
             {
-                _pandora.CallRPC("station.createBookmark", new object[] { StationID, MusicID });
+                _pandora.CallRPC("bookmark.addSongBookmark", "trackToken", TrackToken);
             }
             catch { } //TODO: Give this a failed event to notify UI
         }
@@ -215,7 +235,7 @@ namespace PandoraSharp
         {
             try
             {
-                _pandora.CallRPC("station.createArtistBookmark", new object[] { ArtistMusicID });
+                _pandora.CallRPC("bookmark.addArtistBookmark", "trackToken", TrackToken);
             }
             catch { } //TODO: Give this a failed event to notify UI
         }

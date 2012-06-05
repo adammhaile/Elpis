@@ -107,5 +107,33 @@
         /Elpis;component/Images/background.png
     </System:Uri>
 
+    <System:Uri x:Key="Image_Volume_0">
+        /Elpis;component/Images/volume_0.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Volume_0_Hover">
+        /Elpis;component/Images/volume_0_hover.png
+    </System:Uri>
+
+    <System:Uri x:Key="Image_Volume_33">
+        /Elpis;component/Images/volume_33.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Volume_33_Hover">
+        /Elpis;component/Images/volume_33_hover.png
+    </System:Uri>
+
+    <System:Uri x:Key="Image_Volume_66">
+        /Elpis;component/Images/volume_66.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Volume_66_Hover">
+        /Elpis;component/Images/volume_66_hover.png
+    </System:Uri>
+
+    <System:Uri x:Key="Image_Volume_100">
+        /Elpis;component/Images/volume_100.png
+    </System:Uri>
+    <System:Uri x:Key="Image_Volume_100_Hover">
+        /Elpis;component/Images/volume_100_hover.png
+    </System:Uri>
+
     <BitmapImage x:Key="Image_UnknownArt" UriSource="/Elpis;component/Images/unknown_art.png" />
 </ResourceDictionary>

@@ -32,7 +32,7 @@ namespace PandoraSharp
     {
         #region Delegates
 
-        public delegate void ConnectionEventHandler(object sender, bool state, string msg);
+        public delegate void ConnectionEventHandler(object sender, bool state, ErrorCodes code);
 
         public delegate void FeedbackUpdateEventHandler(object sender, Song song, bool success);
 
@@ -188,7 +188,7 @@ namespace PandoraSharp
             catch (Exception e)
             {
                 Log.O(e.ToString());
-                throw new PandoraException("ERROR_RPC", e);
+                throw new PandoraException(ErrorCodes.ERROR_RPC, e);
             }
         }
 
@@ -200,12 +200,12 @@ namespace PandoraSharp
         {
             if (result.Fault)
             {
-                if (result.FaultCode == Errors.INVALID_AUTH_TOKEN)
+                if (result.FaultCode == ErrorCodes.INVALID_AUTH_TOKEN)
                     if (!secondTry)
                         return false; //auth fault, signal a re-auth
 
                 Log.O("Fault: " + result.FaultString);
-                throw new PandoraException(result.FaultString); //other, throw the exception
+                throw new PandoraException(result.FaultCode); //other, throw the exception
             }
 
             return true; //no fault
@@ -298,6 +298,28 @@ namespace PandoraSharp
             }
 
             return result;
+        }
+
+        protected internal JSONResult CallRPC(string method, params object[] args)
+        {
+            JObject req = new JObject();
+            if (args.Length % 2 != 0)
+            {
+                Log.O("CallRPC: Called with an uneven number of arguments!");
+                return null;
+            } 
+
+            for (int i=0; i < args.Length; i+=2)
+            {
+                if(args[i].GetType() != typeof(string) || args[i].GetType() != typeof(String))
+                {
+                    Log.O("CallRPC: Called with an incorrect parameter type!");
+                    return null;
+                }
+                req[(string)args[i]] = JToken.FromObject(args[i + 1]);
+            }
+
+            return CallRPC(method, req);
         }
 
         protected internal object CallRPC(string method, object[] args, bool b_url_args = false,
@@ -490,47 +512,6 @@ namespace PandoraSharp
 
             _authorizing = false;
             return true;
-            //object userData = CallRPC("listener.authenticateListener", new object[] {"", _user, _password, "html5tuner", "", "", "HTML5", true }, false, true, true);
-            //if (userData == null) return false;
-
-            //try
-            //{
-            //    var userDict = (PDict)userData;
-            //    string fault = string.Empty;
-            //    if ((fault = XmlRPC.GetFaultString(userDict)) != string.Empty)
-            //    {
-            //        throw new PandoraException(fault);
-            //    }
-
-            //    //webAuthToken = (string) userDict["webAuthToken"];
-            //    listenerId = (string)userDict["listenerId"];
-            //    AuthToken = (string)userDict["authToken"];
-
-            //    if (!_firstAuthComplete)
-            //    {
-            //        HasSubscription = ((int)userDict["subscriptionDaysLeft"]) > 0;
-
-            //        if (!HasSubscription && _audioFormat == PAudioFormat.MP3_HIFI)
-            //            _audioFormat = PAudioFormat.MP3;
-            //    }
-
-            //    _firstAuthComplete = true;
-
-            //    _authorizing = false;
-            //    return true;
-            //}
-            //catch (PandoraException pex)
-            //{
-            //    throw;
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw;
-            //}
-            //finally
-            //{
-            //    _authorizing = false;
-            //}
         }
 
         private void SendLoginStatus(string status)
@@ -542,7 +523,7 @@ namespace PandoraSharp
         public void Connect(string user, string password)
         {
             Log.O("Connect");
-            string statusMsg = "Connected";
+            ErrorCodes status = ErrorCodes.SUCCESS;
             _connected = false;
 
             _user = user;
@@ -559,14 +540,20 @@ namespace PandoraSharp
                     RefreshStations();
                 }
             }
+            catch (PandoraException ex)
+            {
+                status = ex.Fault;
+                _connected = false;
+            }
             catch (Exception ex)
             {
-                statusMsg = ex.Message;
+                status = ErrorCodes.UNKNOWN_ERROR;
+                Log.O("Connection Error: " + ex.ToString());
                 _connected = false;
             }
 
             if (ConnectionEvent != null)
-                ConnectionEvent(this, _connected, statusMsg);
+                ConnectionEvent(this, _connected, status);
         }
 
         //public void SetProxy()
@@ -596,7 +583,10 @@ namespace PandoraSharp
                     ids.Add(s.ID);
             }
 
-            CallRPC("station.setQuickMix", new object[] {"RANDOM", (object[])ids.ToArray()});
+            JObject req = new JObject();
+            req["quickMixStationIds"] = new JArray(ids.ToArray());
+
+            CallRPC("user.setQuickMix", req);
 
             if (QuickMixSavedEvent != null)
                 QuickMixSavedEvent(this);
@@ -605,15 +595,17 @@ namespace PandoraSharp
         public List<SearchResult> Search(string query)
         {
             Log.O("Search: " + query);
-            var results = (PDict) CallRPC("music.search", new object[] {query});
+            JObject req = new JObject();
+            req["searchText"] = query;
+            var search = CallRPC("music.search", req);
 
             var list = new List<SearchResult>();
-            var artists = ((object[]) (results)["artists"]);
-            var songs = ((object[]) (results)["songs"]);
-            foreach (PDict a in artists)
+            var artists = search.Result["artists"];
+            var songs = search.Result["songs"];
+            foreach (JToken a in artists)
                 list.Add(new SearchResult(SearchResultType.Artist, a));
 
-            foreach (PDict s in songs)
+            foreach (JToken s in songs)
                 list.Add(new SearchResult(SearchResultType.Song, s));
 
             list = list.OrderByDescending((i) => i.Score).ToList();
@@ -621,53 +613,43 @@ namespace PandoraSharp
             return list;
         }
 
-        private Station CreateStation(string reqType, string id)
+        public Station CreateStation(string token)
         {
-            if (reqType != "mi" && reqType != "sh")
-                throw new PandoraException("CreateStation: reqType must be mi or sh.");
+            //if (reqType != "mi" && reqType != "sh")
+            //    throw new PandoraException("CreateStation: reqType must be mi or sh.");
 
-            var result = (PDict) CallRPC("station.createStation",
-                                         new object[] {reqType + id, ""});
+            JObject req = new JObject();
+            req["musicToken"] = token;
+            var result = CallRPC("station.createStation", req);
 
-            //var station = new Station(this, result);
-            //Stations.Add(station);
+            var station = new Station(this, result.Result);
+            Stations.Add(station);
 
-            //return station;
-            return null;
+            return station;
         }
 
-        public Station CreateStationFromMusic(string id)
+        public Station CreateStation(Song song)
         {
-            return CreateStation("mi", id);
-        }
-
-        public Station CreateStationFromShared(string id)
-        {
-            return CreateStation("sh", id);
-        }
-
-        public Station CreateStationFromSong(Song song)
-        {
-            return CreateStationFromMusic(song.MusicID);
+            return CreateStation(song.TrackToken);
         }
 
         public Station CreateStationFromArtist(Song song)
         {
-            return CreateStationFromMusic(song.ArtistMusicID);
+            return null;// CreateStationFromMusic(song.ArtistMusicID);
         }
 
-        public void AddFeedback(string stationID, string trackToken, SongRating rating)
+        public void AddFeedback(string stationToken, string trackToken, SongRating rating)
         {
             Log.O("AddFeedback");
 
             bool rate = (rating == SongRating.love) ? true : false;
 
-            CallRPC("station.addFeedback", new object[]
-                                               {
-                                                   stationID,
-                                                   trackToken,
-                                                   rate
-                                               });
+            JObject req = new JObject();
+            req["stationToken"] = stationToken;
+            req["trackToken"] = trackToken;
+            req["isPositive"] = rate;
+
+            CallRPC("station.addFeedback", req);
         }
 
         public void DeleteFeedback(string feedbackID)
@@ -693,43 +675,18 @@ namespace PandoraSharp
             return null;
         }
 
-        public string GetFeedbackID(string stationID, string musicID)
+        public string GetFeedbackID(string stationToken, string musicID)
         {
-            var station = (PDict) CallRPC("station.getStation", new object[] {stationID});
-            var feedback = ((object[]) station["feedback"]);
+            //var station = CallRPC("station.getStation", new object[] {stationID});
+            //var feedback = ((object[]) station["feedback"]);
 
-            foreach (PDict d in feedback)
-            {
-                if (musicID == (string) d["musicId"])
-                    return (string) d["feedbackId"];
-            }
+            //foreach (PDict d in feedback)
+            //{
+            //    if (musicID == (string) d["musicId"])
+            //        return (string) d["feedbackId"];
+            //}
 
             return string.Empty;
         }
-
-        //private string format_url_arg(object v)
-        //{
-        //    string result = string.Empty;
-        //    Type t = v.GetType();
-        //    if (t == typeof (bool))
-        //    {
-        //        if ((bool) v)
-        //            result = "true";
-        //        else
-        //            result = "false";
-        //    }
-        //    else if (t == typeof (string[]))
-        //        result = string.Join("%2C", (string[]) v);
-        //    else if (t == typeof (int))
-        //    {
-        //        result = ((int) v).ToString();
-        //    }
-        //    else
-        //    {
-        //        result = Uri.EscapeUriString((string) v);
-        //    }
-
-        //    return result;
-        //}
     }
 }

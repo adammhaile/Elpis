@@ -18,51 +18,27 @@
 */
 
 using System;
+using Util;
 
 namespace PandoraSharp.Exceptions
 {
     public class PandoraException : Exception
     {
-        public PandoraException(string fault, Exception innerException) :
-            base(fault, innerException)
+        public PandoraException(ErrorCodes fault, Exception innerException) :
+            base(Errors.GetErrorMessage(fault), innerException)
         {
-            FaultCode = fault;
+            Fault = fault;
         }
 
-        public PandoraException(string fault) : base(fault)
+        public PandoraException(ErrorCodes fault)
+            : base(Errors.GetErrorMessage(fault))
         {
-            FaultCode = fault;
+            Fault = fault;
         }
 
-        public string FaultCode { get; set; }
+        public ErrorCodes Fault { get; set; }
+        public string FaultMessage { get { return Errors.GetErrorMessage(Fault); } }
     }
-
-    //public class PandoraAuthTokenException : PandoraException
-    //{
-    //    public PandoraAuthTokenException(string msg, Exception innerException)
-    //        : base(msg, innerException) { }
-
-    //    public PandoraAuthTokenException(string msg)
-    //        : base(msg) { }
-    //}
-
-    //public class PandoraNetException : PandoraException
-    //{
-    //    public PandoraNetException(string msg, Exception innerException)
-    //        : base(msg, innerException) { }
-
-    //    public PandoraNetException(string msg)
-    //        : base(msg) { }
-    //}
-
-    //public class PandoraTimeoutException : PandoraNetException
-    //{
-    //    public PandoraTimeoutException(string msg, Exception innerException)
-    //        : base(msg, innerException) { }
-
-    //    public PandoraTimeoutException(string msg)
-    //        : base(msg) { }
-    //}
 
     public class XmlRPCException : Exception
     {

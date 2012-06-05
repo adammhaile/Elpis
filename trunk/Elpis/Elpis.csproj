@@ -349,6 +349,16 @@
     <Resource Include="Images\close.png" />
     <Resource Include="Images\close_hover.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\volume_0.png" />
+    <Resource Include="Images\volume_0_hover.png" />
+    <Resource Include="Images\volume_100.png" />
+    <Resource Include="Images\volume_100_hover.png" />
+    <Resource Include="Images\volume_33.png" />
+    <Resource Include="Images\volume_33_hover.png" />
+    <Resource Include="Images\volume_66.png" />
+    <Resource Include="Images\volume_66_hover.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

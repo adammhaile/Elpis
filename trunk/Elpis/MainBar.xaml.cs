@@ -19,6 +19,9 @@
 
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Timers;
 
 namespace Elpis
 {
@@ -31,11 +34,14 @@ namespace Elpis
 
         public delegate void MainBarHandler();
 
+        public delegate void VolumeChangedHandler(double vol);
+
         public delegate void ErrorClickedHandler();
 
         #endregion
 
         private ContextMenu _errorMenu;
+        Timer volCloseTimer;
 
         public MainBar()
         {
@@ -43,6 +49,8 @@ namespace Elpis
 
             _errorMenu = this.Resources["ErrorMenu"] as ContextMenu;
             _errorMenu.PlacementTarget = btnError;
+            volCloseTimer = new Timer(2000);
+            volCloseTimer.Elapsed += new ElapsedEventHandler(volCloseTimer_Elapsed);
         }
 
         public event MainBarHandler StationListClick;
@@ -52,7 +60,15 @@ namespace Elpis
         public event MainBarHandler SettingsClick;
         public event MainBarHandler AboutClick;
 
+        public event VolumeChangedHandler VolumeChanged;
+
         public event ErrorClickedHandler ErrorClicked;
+
+        public double Volume
+        {
+            get { return sVolume.Value; }
+            set { sVolume.Value = value; }
+        }
 
         #region ItemStates
         
@@ -79,6 +95,8 @@ namespace Elpis
         private void ShowPlayControls(bool state)
         {
             gridPlayPause.Visibility = Vis(state);
+
+            btnVolume.Visibility = Vis(state);
         }
 
         private void ShowStationList(bool state)
@@ -259,5 +277,46 @@ namespace Elpis
         {
             gridError.Visibility = Visibility.Hidden;
         }
+
+        private void sVolume_VolumeChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (VolumeChanged != null)
+                VolumeChanged(e.NewValue);
+
+            if (Volume == 0)
+                imgVolume.Source = new BitmapImage(Resources["Image_Volume_0"] as System.Uri);
+            else if (Volume > 0 && Volume < 33)
+                imgVolume.Source = new BitmapImage(Resources["Image_Volume_33"] as System.Uri);
+            else if(Volume >= 33 && Volume < 66)
+                imgVolume.Source = new BitmapImage(Resources["Image_Volume_66"] as System.Uri);
+            else if(Volume >= 66)
+                imgVolume.Source = new BitmapImage(Resources["Image_Volume_100"] as System.Uri);
+        }
+
+        private void btnVolume_Click(object sender, RoutedEventArgs e)
+        {
+            volCloseTimer.Stop();
+            gridVolume.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        void volCloseTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            this.BeginDispatch(() =>
+            {
+                gridVolume.Visibility = System.Windows.Visibility.Hidden;
+            }); 
+        }
+
+        private void gridVolume_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            volCloseTimer.Stop();
+            volCloseTimer.Start();
+        }
+
+        private void gridVolume_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            volCloseTimer.Stop();
+        }
+
     }
 }
