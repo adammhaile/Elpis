@@ -108,6 +108,8 @@ namespace Elpis
 
         public MainWindow()
         {
+            var args = Environment.GetCommandLineArgs();
+            
             InitializeComponent();
 
             _keyListen = new KeyboardListener();
@@ -140,7 +142,17 @@ namespace Elpis
 
             transitionControl.ShowPage(_loadingPage);
 
-            _config = new Config();
+            string configSuffix = "";
+            if (args.Length >= 3)
+            {
+                if (args[1] == "-config")
+                {
+                    configSuffix = args[2];
+                }
+            }
+
+            _config = new Config(configSuffix);
+
             if (!_config.LoadConfig())
             {
                 _configError = true;
@@ -466,6 +478,7 @@ namespace Elpis
             
             _player.AudioFormat = _config.Fields.Pandora_AudioFormat;
             _player.SetStationSortOrder(_config.Fields.Pandora_StationSortOrder);
+            _player.Volume = _config.Fields.Elpis_Volume;
 
             _player.ForceSSL = _config.Fields.Misc_ForceSSL;
 
@@ -1063,6 +1076,7 @@ namespace Elpis
             {
                 _config.Fields.Elpis_StartupLocation = new Point(this.Left, this.Top);
                 _config.Fields.Elpis_StartupSize = new Size(this.Width, this.Height);
+                _config.Fields.Elpis_Volume = _player.Volume;
                 _config.SaveConfig();
             }
         }
