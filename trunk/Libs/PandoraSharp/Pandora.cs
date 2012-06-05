@@ -531,7 +531,7 @@ namespace PandoraSharp
 
             try
             {
-                SendLoginStatus("Authenticating user...");
+                SendLoginStatus("Authenticating user:\r\n" + user);
                 _connected = AuthenticateUser();
 
                 if (_connected)

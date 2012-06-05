@@ -303,7 +303,7 @@ namespace BassPlayer
         private bool _SoftStop = true;
         private string _SoundDevice = "";
         private PlayState _State = PlayState.Init;
-        private int _StreamVolume = 40;
+        private int _StreamVolume = 100;
 
         private string _downloadFile = string.Empty;
         private bool _downloadFileComplete;
@@ -806,7 +806,7 @@ namespace BassPlayer
             _SoundDevice = "Default Sound Device";
             //xmlreader.GetValueAsString("audioplayer", "sounddevice", "Default Sound Device");
 
-            _StreamVolume = 85; // xmlreader.GetValueAsInt("audioplayer", "streamOutputLevel", 85);
+            _StreamVolume = 100; // xmlreader.GetValueAsInt("audioplayer", "streamOutputLevel", 85);
             _BufferingMS = 5000; // xmlreader.GetValueAsInt("audioplayer", "buffering", 5000);
 
             if (_BufferingMS <= 0)

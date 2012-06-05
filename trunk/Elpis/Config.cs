@@ -52,6 +52,7 @@ namespace Elpis
         public static MapConfigEntry Elpis_ShowTrayNotifications = new MapConfigEntry("Elpis_ShowTrayNotifications", true);
         public static MapConfigEntry Elpis_StartupLocation = new MapConfigEntry("Elpis_StartupLocation", "");
         public static MapConfigEntry Elpis_StartupSize = new MapConfigEntry("Elpis_StartupSize", "");
+        public static MapConfigEntry Elpis_Volume = new MapConfigEntry("Elpis_Volume", 100);
 
         public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
     }
@@ -83,6 +84,7 @@ namespace Elpis
         public bool Elpis_GlobalMediaKeys { get; set; }
         public bool Elpis_MinimizeToTray { get; set; }
         public bool Elpis_ShowTrayNotifications { get; set; }
+        public int Elpis_Volume { get; set; }
 
         public bool Misc_ForceSSL { get; set; }
 
@@ -101,10 +103,16 @@ namespace Elpis
         private readonly string _cryptPass = SystemInfo.GetUniqueHash();
 
         public ConfigFields Fields;
-        private const string _configFile = "elpis.config";
+        private string _configFile = "elpis.config";
 
-        public Config()
+        public Config(string configSuffix = "")
         {
+            configSuffix = configSuffix.Trim().Replace(" ", "");
+            if (configSuffix != "")
+            {
+                _configFile = "config_" + configSuffix + ".config";
+            }
+
             var appData = (string) ConfigItems.Debug_Logpath.Default;
             if (!Directory.Exists(appData))
                 Directory.CreateDirectory(appData);
@@ -126,7 +134,7 @@ namespace Elpis
             if (!_c.LoadConfig())
                 return false;
 
-            Fields.Debug_WriteLog = (bool) _c.GetValue(ConfigItems.Debug_WriteLog);
+            Fields.Debug_WriteLog = true;// (bool)_c.GetValue(ConfigItems.Debug_WriteLog);
             Fields.Debug_Logpath = (string) _c.GetValue(ConfigItems.Debug_Logpath);
             Fields.Debug_Timestamp = (bool) _c.GetValue(ConfigItems.Debug_Timestamp);
 
@@ -171,6 +179,7 @@ namespace Elpis
             Fields.Elpis_GlobalMediaKeys = (bool) _c.GetValue(ConfigItems.Elpis_GlobalMediaKeys);
             Fields.Elpis_MinimizeToTray = (bool) _c.GetValue(ConfigItems.Elpis_MinimizeToTray);
             Fields.Elpis_ShowTrayNotifications = (bool) _c.GetValue(ConfigItems.Elpis_ShowTrayNotifications);
+            Fields.Elpis_Volume = (int)_c.GetValue(ConfigItems.Elpis_Volume);
             Fields.Misc_ForceSSL = (bool)_c.GetValue(ConfigItems.Misc_ForceSSL);
 
             var location = (string) _c.GetValue(ConfigItems.Elpis_StartupLocation);
@@ -226,6 +235,7 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Misc_ForceSSL, Fields.Misc_ForceSSL);
                 _c.SetValue(ConfigItems.Elpis_StartupLocation, Fields.Elpis_StartupLocation.ToString());
                 _c.SetValue(ConfigItems.Elpis_StartupSize, Fields.Elpis_StartupSize.ToString());
+                _c.SetValue(ConfigItems.Elpis_Volume, Fields.Elpis_Volume);
             }
             catch (Exception ex)
             {
