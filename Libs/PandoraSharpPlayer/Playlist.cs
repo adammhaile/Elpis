@@ -127,21 +127,21 @@ namespace PandoraSharpPlayer
                 if ((DateTime.Now - start).TotalSeconds >= 15)
                 {
                     Log.O("Playlist did not reload within 15 seconds, ");
-                    throw new PandoraException("PLAYLIST_EMPTY");
+                    throw new PandoraException(ErrorCodes._END_OF_PLAYLIST);
                 }
 
                 Thread.Sleep(25);
             }
 
             if(_emptyPlaylist)
-                throw new PandoraException("PLAYLIST_EMPTY");
+                throw new PandoraException(ErrorCodes._END_OF_PLAYLIST);
         }
 
         private Song DequeueSong()
         {
             Song result = null;
             if(!_nextSongs.TryDequeue(out result))
-                throw new PandoraException("PLAYLIST_EMPTY");
+                throw new PandoraException(ErrorCodes._END_OF_PLAYLIST);
 
             return result;
         }

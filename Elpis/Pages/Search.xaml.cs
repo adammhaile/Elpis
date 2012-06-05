@@ -23,6 +23,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using PandoraSharp;
 using PandoraSharpPlayer;
+using Util;
 
 namespace Elpis
 {
@@ -57,7 +58,7 @@ namespace Elpis
         public event CancelHandler Cancel;
         public event AddVarietyHandler AddVariety;
 
-        void _player_ExceptionEvent(object sender, string code, System.Exception ex)
+        void _player_ExceptionEvent(object sender, ErrorCodes code, System.Exception ex)
         {
             ShowWait(false);
         }

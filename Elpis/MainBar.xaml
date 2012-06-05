@@ -32,6 +32,19 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            <Style TargetType="Grid" x:Key="VolumeFade">
+                <Style.Triggers>
+                    <Trigger Property="Visibility" Value="Visible">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity" Duration="00:00:0.5" BeginTime="00:00:00" From="0.0" To="1.0" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Grid.Row="1" Background="{StaticResource MainBGBrush}" Height="32">
@@ -44,6 +57,7 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
+        
         <ElpisControls:ImageButton Width="28" Height="28" Margin="8,2,2,2" Grid.Column="0" x:Name="btnStationList"
                                ActiveImageUri="{StaticResource Image_PlaylistHover}" InactiveImageUri="{StaticResource Image_Playlist}"
                                Click="btnStationList_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
@@ -56,6 +70,20 @@
         <!--<ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="1" x:Name="btnCreateStationClose"
                                ActiveImageUri="{StaticResource Image_CloseHover}" InactiveImageUri="{StaticResource Image_Close}"
                                Click="btnCreateStationClose_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />-->
+        <!--<Grid Name="gridVolumeControls" Grid.Column="2" Visibility="Hidden">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Name="TitleText" Padding="8,0" HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch" Text="VOL:" Grid.Column="0"
+                       TextTrimming="CharacterEllipsis" Foreground="{StaticResource MainFontBrush}" FontWeight="999" FontSize="16" />
+            <Slider Height="25" Name="sVolume" Grid.Column="1" Maximum="100" ValueChanged="sVolume_VolumeChanged" />
+        </Grid>-->
+        <ElpisControls:ImageButton Width="28" Height="28" Margin="8,2,2,2" Grid.Column="2" x:Name="btnVolume"
+                               ActiveImageUri="{StaticResource Image_Volume_100_Hover}" InactiveImageUri="{StaticResource Image_Volume_100}"
+                               Click="btnVolume_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
+        
         <Grid Name="gridPlayPause" Grid.Column="3" Visibility="Hidden">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -86,6 +114,18 @@
                                Click="btnError_Click" VerticalAlignment="Center" HorizontalAlignment="Center">
                 
             </ElpisControls:ImageButton>
+        </Grid>
+        <Grid Name="gridVolume" Grid.Column="2" Grid.ColumnSpan="3" Visibility="Hidden"
+              Background="{StaticResource MainBGBrush}"
+              MouseLeave="gridVolume_MouseLeave"
+              MouseEnter="gridVolume_MouseEnter"
+              Style="{StaticResource VolumeFade}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image Name="imgVolume" Grid.Column="0" Width="28" Height="28" Margin="8,2,2,2" Source="/Elpis;component/Images/volume_100.png"  />
+            <Slider Name="sVolume" Height="28" Grid.Column="1" Minimum="0" Maximum="100" ValueChanged="sVolume_VolumeChanged" />
         </Grid>
         <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="5" x:Name="btnSettings"
                                ActiveImageUri="{StaticResource Image_SettingsHover}" InactiveImageUri="{StaticResource Image_Settings}"

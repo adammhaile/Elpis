@@ -25,6 +25,7 @@ using System.Windows.Input;
 using Elpis.Controls;
 using PandoraSharp;
 using PandoraSharpPlayer;
+using Util;
 
 namespace Elpis
 {
@@ -116,7 +117,7 @@ namespace Elpis
                                    });
         }
 
-        void _player_ExceptionEvent(object sender, string code, System.Exception ex)
+        void _player_ExceptionEvent(object sender, ErrorCodes code, System.Exception ex)
         {
             ShowWait(false);
         }

@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Downloader.cs" />
+    <Compile Include="Errors.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MapConfig.cs" />

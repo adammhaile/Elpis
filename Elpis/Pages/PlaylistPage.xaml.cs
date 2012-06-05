@@ -30,6 +30,7 @@ using BassPlayer;
 using Elpis.Controls;
 using PandoraSharp;
 using PandoraSharpPlayer;
+using Util;
 
 namespace Elpis
 {
@@ -85,7 +86,7 @@ namespace Elpis
             lstOldSongs.Items.Clear();
         }
 
-        void _player_ExceptionEvent(object sender, string code, Exception ex)
+        void _player_ExceptionEvent(object sender, ErrorCodes code, Exception ex)
         {
             ShowWait(false);
         }

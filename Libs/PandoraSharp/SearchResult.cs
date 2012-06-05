@@ -17,6 +17,7 @@
  * along with PandoraSharp. If not, see http://www.gnu.org/licenses/.
 */
 
+using Newtonsoft.Json.Linq;
 namespace PandoraSharp
 {
     public enum SearchResultType
@@ -27,26 +28,26 @@ namespace PandoraSharp
 
     public class SearchResult
     {
-        public SearchResult(SearchResultType type, PDict d)
+        public SearchResult(SearchResultType type, JToken d)
         {
             ResultType = type;
             Score = (int) d["score"];
-            MusicID = (string) d["musicId"];
+            MusicToken = (string)d["musicToken"];
 
             if (ResultType == SearchResultType.Song)
             {
-                Title = (string) d["songTitle"];
-                Artist = (string) d["artistSummary"];
+                Title = (string)d["songName"];
+                Artist = (string)d["artistName"];
             }
             else if (ResultType == SearchResultType.Artist)
             {
-                Name = (string) d["artistName"];
+                Name = (string)d["artistName"];
             }
         }
 
         public SearchResultType ResultType { get; private set; }
         public int Score { get; private set; }
-        public string MusicID { get; private set; }
+        public string MusicToken { get; private set; }
         public string Title { get; private set; }
         public string Artist { get; private set; }
         public string Name { get; private set; }

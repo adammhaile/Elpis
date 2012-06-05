@@ -51,6 +51,7 @@ namespace Elpis
         private readonly LoadingPage _loadingPage;
         private readonly ToolStripSeparator _notifyMenu_BreakSong = new ToolStripSeparator();
         private readonly ToolStripSeparator _notifyMenu_BreakStation = new ToolStripSeparator();
+        private readonly ToolStripSeparator _notifyMenu_BreakVote = new ToolStripSeparator();
         private About _aboutPage;
 
         private Config _config;
@@ -67,6 +68,8 @@ namespace Elpis
         private ToolStripMenuItem _notifyMenu_PlayPause;
         private ToolStripMenuItem _notifyMenu_Stations;
         private ToolStripMenuItem _notifyMenu_Title;
+        private ToolStripMenuItem _notifyMenu_UpVote;
+        private ToolStripMenuItem _notifyMenu_DownVote;
         private Player _player;
         private PlaylistPage _playlistPage;
         private UserControl _prevPage;
@@ -84,7 +87,7 @@ namespace Elpis
         private UpdateCheck _update;
         private UpdatePage _updatePage;
 
-        private string _lastError = string.Empty;
+        private ErrorCodes _lastError = ErrorCodes.SUCCESS;
         private Exception _lastException = null;
 #endregion
 
@@ -221,7 +224,8 @@ namespace Elpis
             mainBar.StationListClick += mainBar_stationPageClick;
             mainBar.CreateStationClick += mainBar_searchPageClick;
             mainBar.ErrorClicked += mainBar_ErrorClicked;
-
+            mainBar.VolumeChanged += mainBar_VolumeChanged;
+            
             _loginPage.Loaded += _loginPage_Loaded;
             _aboutPage.Loaded += _aboutPage_Loaded;
             _settingsPage.Loaded += _settingsPage_Loaded;
@@ -301,7 +305,10 @@ namespace Elpis
             _notifyMenu_Title.Visible =
                 _notifyMenu_Artist.Visible =
                 _notifyMenu_Album.Visible =
-                _notifyMenu_BreakSong.Visible = showSongInfo;
+                _notifyMenu_BreakSong.Visible = 
+                _notifyMenu_DownVote.Visible =
+                _notifyMenu_UpVote.Visible =
+                _notifyMenu_BreakVote.Visible = showSongInfo;
 
             _notifyMenu_PlayPause.Enabled =
                 _notifyMenu_Next.Enabled = showSongInfo;
@@ -349,6 +356,12 @@ namespace Elpis
 
             _notifyMenu_Stations = new ToolStripMenuItem("Stations");
 
+            _notifyMenu_DownVote = new ToolStripMenuItem("Dislike Song");
+            _notifyMenu_DownVote.Click += ((o, e) => _player.SongThumbDown(_player.CurrentSong));
+
+            _notifyMenu_UpVote = new ToolStripMenuItem("Like Song");
+            _notifyMenu_UpVote.Click += ((o, e) => _player.SongThumbUp(_player.CurrentSong));
+
             var menus = new ToolStripItem[]
                             {
                                 _notifyMenu_Title,
@@ -357,6 +370,9 @@ namespace Elpis
                                 _notifyMenu_BreakSong,
                                 _notifyMenu_PlayPause,
                                 _notifyMenu_Next,
+                                _notifyMenu_BreakVote,
+                                _notifyMenu_UpVote,
+                                _notifyMenu_DownVote,
                                 _notifyMenu_BreakStation,
                                 _notifyMenu_Stations
                             };
@@ -388,7 +404,7 @@ namespace Elpis
 
             if (_configError)
             {
-                this.BeginDispatch(() => ShowError("CONFIG_LOAD_ERROR", null));
+                this.BeginDispatch(() => ShowError(ErrorCodes.CONFIG_LOAD_ERROR, null));
                 return false;
             }
 
@@ -398,7 +414,7 @@ namespace Elpis
             }
             catch (Exception ex)
             {
-                ShowError("LOG_SETUP_ERROR", ex);
+                ShowError(ErrorCodes.LOG_SETUP_ERROR, ex);
                 return false;
             }
             _initComplete = true;
@@ -444,7 +460,7 @@ namespace Elpis
             }
             catch(Exception ex)
             {
-                ShowError("ENGINE_INIT_ERROR", ex);
+                ShowError(ErrorCodes.ENGINE_INIT_ERROR, ex);
                 return;
             }
             
@@ -478,6 +494,8 @@ namespace Elpis
             {
                 transitionControl.ShowPage(_loginPage);
             }
+
+            this.Dispatch(() => mainBar.Volume = _player.Volume);
 
             _finalComplete = true;
         }
@@ -661,31 +679,29 @@ namespace Elpis
             _prevPage = null;
         }
 
-        private void ShowErrorPage(string code, Exception ex)
+        private void ShowErrorPage(ErrorCodes code, Exception ex)
         {
             if (!_showingError)
             {
                 _showingError = true;
 
                 _prevPage = transitionControl.CurrentPage;
-                ErrorCode error = Errors.GetError(code);
-                _errorPage.SetError(error.Description, error.HardFail, ex);
+                _errorPage.SetError(Errors.GetErrorMessage(code), Errors.IsHardFail(code), ex);
                 transitionControl.ShowPage(_errorPage);
             }
         }
 
-        private void ShowError(string code, Exception ex, bool showLast = false)
+        private void ShowError(ErrorCodes code, Exception ex, bool showLast = false)
         {
             if (transitionControl.CurrentPage != _errorPage)
             {
-                if(showLast && _lastError != string.Empty)
+                if(showLast && _lastError != ErrorCodes.SUCCESS)
                 {
                     ShowErrorPage(_lastError, _lastException);
                 }
-                else if(code != string.Empty && ex != null)
+                else if (code != ErrorCodes.SUCCESS && ex != null)
                 {
-                    var err = Errors.GetError(code);
-                    if(err.HardFail)
+                    if(Errors.IsHardFail(code))
                     {
                         ShowErrorPage(code, ex);
                     }
@@ -693,7 +709,7 @@ namespace Elpis
                     {
                         _lastError = code;
                         _lastException = ex;
-                        mainBar.ShowError(err.Description);
+                        mainBar.ShowError(Errors.GetErrorMessage(code));
 
                         if (transitionControl.CurrentPage == _loadingPage)
                         {
@@ -710,7 +726,7 @@ namespace Elpis
 
         void mainBar_ErrorClicked()
         {
-            ShowError(string.Empty, null, true);
+            ShowError(ErrorCodes.SUCCESS, null, true);
         }
 
         private void _keyListen_KeyDown(object sender, RawKeyEventArgs args)
@@ -739,7 +755,7 @@ namespace Elpis
                 Close();
             else
             {
-                _lastError = string.Empty;
+                _lastError = ErrorCodes.SUCCESS;
                 _lastException = null;
                 RestorePrevPage();
                 _showingError = false;
@@ -830,7 +846,7 @@ namespace Elpis
                                    });
         }
 
-        private void _player_ExceptionEvent(object sender, string code, Exception ex)
+        private void _player_ExceptionEvent(object sender, ErrorCodes code, Exception ex)
         {
             ShowError(code, ex);
         }
@@ -925,6 +941,11 @@ namespace Elpis
             transitionControl.ShowPage(_searchPage, PageTransitionType.Previous);
         }
 
+        private void mainBar_VolumeChanged(double vol)
+        {
+            _player.Volume = (int)vol;
+        }
+
         private void mainBar_SettingsClick()
         {
             if (_prevPage == null)
@@ -991,7 +1012,7 @@ namespace Elpis
             transitionControl.ShowPage(_loginPage);
         }
 
-        private void _player_ConnectionEvent(object sender, bool state, string msg)
+        private void _player_ConnectionEvent(object sender, bool state, ErrorCodes code)
         {
             if (state)
             {

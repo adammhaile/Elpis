@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Util;
 
 namespace Elpis
 {
@@ -35,7 +36,7 @@ namespace Elpis
             InitializeComponent();
         }
 
-        void _player_ExceptionEvent(object sender, string code, Exception ex)
+        void _player_ExceptionEvent(object sender, ErrorCodes code, Exception ex)
         {
             ShowWait(false);
         }

@@ -26,6 +26,7 @@ using BassPlayer;
 using PandoraSharp;
 using PandoraSharp.Exceptions;
 using Log = Util.Log;
+using Util;
 
 namespace PandoraSharpPlayer
 {
@@ -41,11 +42,11 @@ namespace PandoraSharpPlayer
 
         #region Delegates
 
-        public delegate void ConnectionEventHandler(object sender, bool state, string msg);
+        public delegate void ConnectionEventHandler(object sender, bool state, ErrorCodes code);
 
         public delegate void LogoutEventHandler(object sender);
         
-        public delegate void ExceptionEventHandler(object sender, string code, Exception ex);
+        public delegate void ExceptionEventHandler(object sender, ErrorCodes code, Exception ex);
 
         public delegate void FeedbackUpdateEventHandler(object sender, Song song, bool success);
 
@@ -320,7 +321,7 @@ namespace PandoraSharpPlayer
 
         #region Private Methods
 
-        private void SendPandoraError(string code, Exception ex)
+        private void SendPandoraError(ErrorCodes code, Exception ex)
         {
             if (ExceptionEvent != null)
                 ExceptionEvent(this, code, ex);
@@ -345,7 +346,7 @@ namespace PandoraSharpPlayer
                 catch (PandoraException pex)
                 {
                     _playNext = false;
-                    if (pex.FaultCode == "PLAYLIST_EMPTY")
+                    if (pex.Fault == ErrorCodes._END_OF_PLAYLIST)
                     {
                         Stop();
                         return;
@@ -371,7 +372,7 @@ namespace PandoraSharpPlayer
                         else
                         {
                             Stop();
-                            throw new PandoraException("STREAM_ERROR");
+                            throw new PandoraException(ErrorCodes.STREAM_ERROR);
                         }
                     }
                     else
@@ -398,7 +399,7 @@ namespace PandoraSharpPlayer
                 }
             }
 
-            if (result.Count == 0)
+            if (result.Count == 0 && CurrentStation != null)
                 result = CurrentStation.GetPlaylist();
 
             return _playlist.AddSongs(result);
@@ -412,7 +413,7 @@ namespace PandoraSharpPlayer
             _playlist.ClearSongs();
 
             if (UpdatePlaylist() == 0)
-                throw new PandoraException("PLAYLIST_EMPTY");
+                throw new PandoraException(ErrorCodes._END_OF_PLAYLIST);
 
             if (StationLoaded != null)
                 StationLoaded(this, CurrentStation);
@@ -424,7 +425,7 @@ namespace PandoraSharpPlayer
             catch (Playlist.PlaylistEmptyException pex)
             {
                 if (UpdatePlaylist() == 0)
-                    throw new PandoraException("PLAYLIST_EMPTY");
+                    throw new PandoraException(ErrorCodes._END_OF_PLAYLIST);
 
                 PlayNextSong();
             }
@@ -444,14 +445,14 @@ namespace PandoraSharpPlayer
                                           }
                                           catch (PandoraException pex)
                                           {
-                                              Log.O(pex.FaultCode + ": " + pex);
-                                              SendPandoraError(pex.FaultCode, pex);
+                                              Log.O(pex.Fault.ToString() + ": " + pex);
+                                              SendPandoraError(pex.Fault, pex);
                                           }
                                           catch (Exception ex)
                                           {
                                               Log.O(ex.ToString());
 
-                                              SendPandoraError("UNKNOWN", ex);
+                                              SendPandoraError(ErrorCodes.UNKNOWN_ERROR, ex);
                                           }
                                       }
                 );
@@ -594,7 +595,7 @@ namespace PandoraSharpPlayer
         {
             RunTask(() =>
             {
-                Station station = _pandora.CreateStationFromMusic(song.MusicID);
+                Station station = _pandora.CreateStation(song.TrackToken);
                 if (StationCreated != null)
                     StationCreated(this, station);
             });
@@ -604,7 +605,7 @@ namespace PandoraSharpPlayer
         {
             RunTask(() =>
             {
-                Station station = _pandora.CreateStationFromMusic(song.ArtistMusicID);
+                Station station = _pandora.CreateStation(song.TrackToken);
                 if (StationCreated != null)
                     StationCreated(this, station);
             });
@@ -614,7 +615,7 @@ namespace PandoraSharpPlayer
         {
             RunTask(() =>
                         {
-                            Station station = _pandora.CreateStationFromMusic(result.MusicID);
+                            Station station = _pandora.CreateStation(result.MusicToken);
                             if (StationCreated != null)
                                 StationCreated(this, station);
                         });
@@ -692,12 +693,12 @@ namespace PandoraSharpPlayer
                 PlayedSongAdded(this, newSong);
         }
 
-        private void _pandora_ConnectionEvent(object sender, bool state, string msg)
+        private void _pandora_ConnectionEvent(object sender, bool state, ErrorCodes code)
         {
             LoggedIn = state;
 
             if (ConnectionEvent != null)
-                ConnectionEvent(this, state, msg);
+                ConnectionEvent(this, state, code);
         }
         #endregion
 

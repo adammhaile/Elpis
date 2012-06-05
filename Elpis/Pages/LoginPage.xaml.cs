@@ -38,7 +38,7 @@ namespace Elpis
 
         private readonly Config _config;
         private readonly Player _player;
-        private string _error = "";
+        private ErrorCodes _error = ErrorCodes.SUCCESS;
         private bool _loginFailed;
 
         private const string _initEmail = "enter email address";
@@ -61,20 +61,19 @@ namespace Elpis
         {
             this.BeginDispatch(() =>
                                    {
-                                       lblError.Text = _error;
+                                       lblError.Text = Errors.GetErrorMessage(_error);
                                        //WaitScreen.Visibility = Visibility.Hidden;
                                    });
         }
 
-        private void _player_ConnectionEvent(object sender, bool state, string msg)
+        private void _player_ConnectionEvent(object sender, bool state, ErrorCodes code)
         {
             if (!state)
             {
                 _loginFailed = true;
-                string errorMsg = Errors.GetError(msg).Description;
-                Log.O("Connection Error: {0} - {1}", msg, errorMsg);
+                Log.O("Connection Error: {0} - {1}", code.ToString(), Errors.GetErrorMessage(code));
 
-                _error = errorMsg;
+                _error = code;
                 ShowError();
             }
             else

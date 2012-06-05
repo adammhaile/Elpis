@@ -57,6 +57,7 @@ Use the same mode of operation for decryption.
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using Util;
 
 namespace PandoraSharp
 {
@@ -466,9 +467,16 @@ namespace PandoraSharp
     {
         internal static long DecryptSyncTime(string s)
         {
-            string b = in_key.Decrypt(s);
-            b = b.Substring(4);
-            return long.Parse(System.Text.RegularExpressions.Regex.Match(b, "^[0-9]*").Groups[0].Value);
+            string b = in_key.Decrypt(s, false);
+            try
+            {
+                return long.Parse(System.Text.RegularExpressions.Regex.Match(b.Substring(4), "^[0-9]*").Groups[0].Value);
+            }
+            catch (Exception e)
+            {
+                Log.O("Failed to parse sync time '" + b + "': " + e + "\r\nRaw:" + s);
+                throw;
+            }
         }
 
         internal static Blowfish in_key = new Blowfish(Const.CRYPT_IN_KEY);
@@ -903,7 +911,7 @@ namespace PandoraSharp
                 return bytesTohex(bytes);
             }
 
-            public string Decrypt(string p)
+            public string Decrypt(string p, bool breakOnNull = true)
             {
                 byte[] bytes = new byte[p.Length / 2];
                 for (int i = 0; i < p.Length; i += 2)
@@ -915,7 +923,7 @@ namespace PandoraSharp
 
                 foreach (byte b in bytes)
                 {
-                    if (b == 0) break;
+                    if (b == 0 && breakOnNull) break;
                     sb.Append((char)b);
                 }
 

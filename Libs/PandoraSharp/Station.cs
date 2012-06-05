@@ -46,6 +46,7 @@ namespace PandoraSharp
             IsCreator = true;// d["isCreator"].ToObject<bool>();
             IsQuickMix = d["isQuickMix"].ToObject<bool>();
             Name = d["stationName"].ToString();
+            InfoUrl = (string)d["stationDetailUrl"];
 
             if (IsQuickMix)
             {
@@ -56,12 +57,6 @@ namespace PandoraSharp
                     _pandora.QuickMixStationIDs.Add((string) qmid);
             }
 
-            //var req = new JObject();
-            //req["stationToken"] = IdToken;
-            //req["includeExtendedAttributes"] = true;
-            //var ret = _pandora.CallRPC("station.getStation", req);
-            //if (!ret.Fault)
-            //{
             bool downloadArt = true;
             if (!_pandora.ImageCachePath.Equals("") && File.Exists(ArtCacheFile))
             {
@@ -102,68 +97,6 @@ namespace PandoraSharp
                 //}
                 
             }
-
-            
-
-            //try
-            //{
-            //    if (d.ContainsKey("initialSeed"))
-            //    {
-            //        var seed = (PDict) d["initialSeed"];
-
-            //        bool getArt = true;
-            //        PDict entry = null;
-            //        if (seed.ContainsKey("artist"))
-            //            entry = (PDict) seed["artist"];
-            //        else if (seed.ContainsKey("song"))
-            //            entry = (PDict) seed["song"];
-            //        else
-            //            getArt = false;
-
-            //        if (getArt)
-            //        {
-            //            ArtUrl = (string) entry["artUrl"];
-
-            //            if (ArtUrl != string.Empty)
-            //            {
-            //                bool download = true;
-            //                if (!_pandora.ImageCachePath.Equals("") && File.Exists(ArtCacheFile))
-            //                {
-            //                    try
-            //                    {
-            //                        ArtImage = File.ReadAllBytes(ArtCacheFile);
-            //                    }
-            //                    catch (Exception)
-            //                    {
-            //                        Log.O("Error retrieving image cache file: " + ArtCacheFile);
-            //                        download = true;
-            //                    }
-
-            //                    download = false;
-            //                }
-
-            //                if (download)
-            //                {  
-            //                    try
-            //                    {
-            //                        ArtImage = PRequest.ByteRequest(ArtUrl);
-            //                        if(ArtImage.Length > 0)
-            //                            File.WriteAllBytes(ArtCacheFile, ArtImage);
-            //                    }
-            //                    catch (Exception)
-            //                    {
-            //                        Log.O("Error saving image cache file: " + ArtCacheFile);
-            //                    }
-            //                    //PRequest.ByteRequestAsync(ArtUrl, StationArtDownloadHandler);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-            //catch
-            //{
-            //    Log.O("Error getting station art.");
-            //}
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -220,7 +153,8 @@ namespace PandoraSharp
 
         public string InfoUrl
         {
-            get { return "http://www.pandora.com/stations/" + IdToken; }
+            get;
+            set;
         }
 
         public string ArtCacheFile
@@ -244,7 +178,7 @@ namespace PandoraSharp
             if (!IsCreator)
             {
                 Log.O("Pandora: Transforming Station");
-                _pandora.CallRPC("station.transformShared", new object[] {ID});
+                _pandora.CallRPC("station.transformSharedStation", "stationToken", IdToken);
                 IsCreator = true;
             }
         }
@@ -258,18 +192,23 @@ namespace PandoraSharp
             try
             {
                 _gettingPlaylist = true;
-                var playlist =
-                    (object[])_pandora.CallRPC("playlist.getFragment",
-                                                new object[]
-                                                {
-                                                    ID,
-                                                    "0", "",
-                                                    "", _pandora.AudioFormat,
-                                                    "", ""
-                                                });
+                JObject req = new JObject();
+                req["stationToken"] = IdToken;
+                req["additionalAudioUrl"] = "HTTP_64_AACPLUS_ADTS,HTTP_128_MP3,HTTP_192_MP3";
+                var playlist = _pandora.CallRPC("station.getPlaylist", req, false, true); // MUST use SSL
 
-                foreach (PDict s in playlist)
-                    results.Add(new Song(_pandora, s));
+                foreach (var song in playlist.Result["items"])
+                {
+                    if (song["songName"] == null) continue;
+                    try
+                    {
+                        results.Add(new Song(_pandora, song));
+                    }
+                    catch (PandoraException ex)
+                    {
+                        Log.O("Song Add Error: " + ex.FaultMessage);
+                    }
+                }
 
                 _gettingPlaylist = false;
                 return results;
@@ -288,7 +227,7 @@ namespace PandoraSharp
                         throw;
                 }
 
-                Log.O("Error getting playlist, will try again next time: " + ex.FaultCode);
+                Log.O("Error getting playlist, will try again next time: " + Errors.GetErrorMessage(ex.Fault));
                 return results;
             }
         }
@@ -299,8 +238,7 @@ namespace PandoraSharp
 
             try
             {
-                _pandora.CallRPC("station.addSeed",
-                                 new object[] { this.ID, item.MusicID });
+                _pandora.CallRPC("station.addMusic", "stationToken", IdToken, "musicToken", item.MusicToken);
             }
             catch{} // eventually do something with this
         }
@@ -310,8 +248,7 @@ namespace PandoraSharp
             if (newName == Name)
                 return;
             Log.O("Pandora: Renaming Station");
-            _pandora.CallRPC("station.setStationName",
-                             new object[] {ID, newName});
+            _pandora.CallRPC("station.renameStation", "stationToken", IdToken, "stationName", newName);
 
             Name = newName;
         }
@@ -319,7 +256,7 @@ namespace PandoraSharp
         public void Delete()
         {
             Log.O("Pandora: Deleting Station");
-            _pandora.CallRPC("station.removeStation", new object[] {ID});
+            _pandora.CallRPC("station.deleteStation", "stationToken", IdToken);
             if (File.Exists(ArtCacheFile))
             {
                 try

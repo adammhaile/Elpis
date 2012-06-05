@@ -68,7 +68,7 @@
                      Foreground="{StaticResource MainFontBrush}" Margin="3" HorizontalAlignment="Right" VerticalAlignment="Top" />
         </Grid>
         <elpis:MainBar x:Name="mainBar" Grid.Row="1" />
-        <Grid Grid.Row="2">
+                <Grid Grid.Row="2">
           <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
