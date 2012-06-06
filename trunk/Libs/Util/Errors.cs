@@ -68,7 +68,7 @@ namespace Util
 
     public class Errors
     {
-        static readonly string UPDATE_REQUIRED = "Your client requires an update to continue listening to Pandora.";
+        static readonly string UPDATE_REQUIRED = "Elpis requires an update.\r\nPlease check http://adamhaile.net for details.";
 
         public static string GetErrorMessage(ErrorCodes FaultCode, string msg = "Unknown Error")
         {

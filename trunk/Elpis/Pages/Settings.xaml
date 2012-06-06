@@ -16,7 +16,7 @@
             <x:Array x:Key="AudioFormats" Type="{x:Type config:ConfigDropDownItem}">
                 <config:ConfigDropDownItem Display="AAC Plus" Value="aacplus" />
                 <config:ConfigDropDownItem Display="MP3 (128kbps)" Value="mp3" />
-                <config:ConfigDropDownItem Display="MP3 HiFi (192kbps - Subscribers Only)" Value="mp3-hifi" />
+                <config:ConfigDropDownItem Display="MP3 HiFi (192kbps)" Value="mp3-hifi" />
             </x:Array>
             <x:Array x:Key="StationSortOrder" Type="{x:Type config:ConfigDropDownItem}">
                 <config:ConfigDropDownItem Display="Date Ascending" Value="DateAsc" />
@@ -81,7 +81,7 @@
                   <LineBreak />
                   MP3 (Standard bitrate)
                   <LineBreak />
-                  MP3 HiFi (CD Quality, Pandora One Subscribers Only)
+                  MP3 HiFi (CD Quality)
                                 </TextBlock>
                             </ComboBox.ToolTip>
                         </ComboBox>

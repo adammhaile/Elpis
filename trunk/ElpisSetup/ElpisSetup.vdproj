@@ -124,6 +124,12 @@
         "Entry"
         {
         "MsmKey" = "8:_FF28D9E03DBD44DD27906306A3A11A3F"
+        "OwnerKey" = "8:_CF645B2F7AD94001DE0ED5148A56B189"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FF28D9E03DBD44DD27906306A3A11A3F"
         "OwnerKey" = "8:_CCC7FD24AF7F2E0C4100EEE24030B6DC"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -278,7 +284,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Util, Version=1.0.4538.40724, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Util, Version=1.0.4539.40706, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_0E799B879F5E83D42141D70B248C45CF"
@@ -309,7 +315,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=1.0.4538.40724, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=1.0.4539.40706, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_15FE1A7E82985F425137722EDB3F3D9D"
@@ -431,7 +437,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=1.0.4538.40724, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=1.0.4539.40706, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_CCC7FD24AF7F2E0C4100EEE24030B6DC"
@@ -462,7 +468,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=1.0.4538.40724, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=1.0.4539.40707, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_CF645B2F7AD94001DE0ED5148A56B189"
@@ -627,15 +633,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Elpis"
-        "ProductCode" = "8:{D8EB368E-D2C3-4CB5-84C2-3773BB2D3D83}"
-        "PackageCode" = "8:{E51A0833-DE49-420F-80F4-DB17F11E2460}"
+        "ProductCode" = "8:{E026B77E-5485-4820-B388-865DB73E3AA8}"
+        "PackageCode" = "8:{5012A4DA-2510-444C-80EE-4C026457D2D0}"
         "UpgradeCode" = "8:{F0962B86-5C6F-4A2C-98F4-2FF9D0AC46AD}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:Adam Haile"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

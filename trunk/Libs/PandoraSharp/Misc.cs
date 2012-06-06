@@ -48,7 +48,7 @@ namespace PandoraSharp
         public static readonly int HTTP_TIMEOUT = 30;
         public static readonly string AUDIO_FORMAT = PAudioFormat.AACPlus;
 
-        public static readonly int PLAYLIST_VALIDITY_TIME = 60*60*3;
+        public static readonly int PLAYLIST_VALIDITY_TIME = (int)(60*60*0.5);
 
         public static readonly string SYNC_KEY_URL = @"http://zzj.itf-inc.com/s2/getsynckey.php";
 

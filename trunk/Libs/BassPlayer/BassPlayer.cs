@@ -170,6 +170,13 @@ namespace BassPlayer
         public BassStreamException(string msg) : base(msg)
         {
         }
+
+        public BassStreamException(string msg, BASSError error) : base(msg)
+        {
+            ErrorCode = error;
+        }
+
+        public BASSError ErrorCode { get; set; }
     }
 
     /// <summary>
@@ -1319,10 +1326,11 @@ namespace BassPlayer
                     }
                     else
                     {
+                        BASSError error = Bass.BASS_ErrorGetCode();
                         Log.Error("BASS: Unable to create Stream for {0}.  Reason: {1}.", filePath,
-                                  Enum.GetName(typeof (BASSError), Bass.BASS_ErrorGetCode()));
+                                  Enum.GetName(typeof(BASSError), error));
                         throw new BassStreamException("Bass Error: Unable to create stream - " +
-                                                      Enum.GetName(typeof (BASSError), Bass.BASS_ErrorGetCode()));
+                                                      Enum.GetName(typeof(BASSError), error), error);
                     }
 
                     bool playbackStarted = false;
@@ -1364,10 +1372,11 @@ namespace BassPlayer
 
                     else
                     {
+                        BASSError error = Bass.BASS_ErrorGetCode();
                         Log.Error("BASS: Unable to play {0}.  Reason: {1}.", filePath,
-                                  Enum.GetName(typeof (BASSError), Bass.BASS_ErrorGetCode()));
+                                  Enum.GetName(typeof(BASSError), error));
                         throw new BassStreamException("Bass Error: Unable to play - " +
-                                                      Enum.GetName(typeof (BASSError), Bass.BASS_ErrorGetCode()));
+                                                      Enum.GetName(typeof(BASSError), error), error);
 
                         // Release all of the sync proc handles
                         if (StreamEventSyncHandles[CurrentStreamIndex] != null)

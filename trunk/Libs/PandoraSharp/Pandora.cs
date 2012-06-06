@@ -491,8 +491,8 @@ namespace PandoraSharp
             req["includePandoraOneInfo"] = true;
             req["includeAdAttributes"] = true;
             req["includeSubscriptionExpiration"] = true;
-            req["includeStationArtUrl"] = true;
-            req["returnStationList"] = true;
+            //req["includeStationArtUrl"] = true;
+            //req["returnStationList"] = true;
 
             req["partnerAuthToken"] = AuthToken;
             req["syncTime"] = _syncTime;// AdjustedSyncTime();
@@ -509,6 +509,7 @@ namespace PandoraSharp
             result = ret["result"];
             AuthToken = result["userAuthToken"].ToString();
             UserID = result["userId"].ToString();
+            HasSubscription = !result["hasAudioAds"].ToObject<bool>();
 
             _authorizing = false;
             return true;
@@ -613,11 +614,8 @@ namespace PandoraSharp
             return list;
         }
 
-        public Station CreateStation(string token)
+        public Station CreateStationFromSearch(string token)
         {
-            //if (reqType != "mi" && reqType != "sh")
-            //    throw new PandoraException("CreateStation: reqType must be mi or sh.");
-
             JObject req = new JObject();
             req["musicToken"] = token;
             var result = CallRPC("station.createStation", req);
@@ -628,14 +626,27 @@ namespace PandoraSharp
             return station;
         }
 
-        public Station CreateStation(Song song)
+        private Station CreateStation(Song song, string type)
         {
-            return CreateStation(song.TrackToken);
+            JObject req = new JObject();
+            req["trackToken"] = song.TrackToken;
+            req["musicType"] = type;
+            var result = CallRPC("station.createStation", req);
+
+            var station = new Station(this, result.Result);
+            Stations.Add(station);
+
+            return station;
+        }
+
+        public Station CreateStationFromSong(Song song)
+        {
+            return CreateStation(song, "song");
         }
 
         public Station CreateStationFromArtist(Song song)
         {
-            return null;// CreateStationFromMusic(song.ArtistMusicID);
+            return CreateStation(song, "artist");
         }
 
         public void AddFeedback(string stationToken, string trackToken, SongRating rating)
@@ -655,7 +666,8 @@ namespace PandoraSharp
         public void DeleteFeedback(string feedbackID)
         {
             Log.O("DeleteFeedback");
-            object result = CallRPC("station.deleteFeedback", new object[] {feedbackID});
+
+            object result = CallRPC("station.deleteFeedback", "feedbackId", feedbackID);
         }
 
         public void CallFeedbackUpdateEvent(Song song, bool success)
@@ -675,18 +687,15 @@ namespace PandoraSharp
             return null;
         }
 
-        public string GetFeedbackID(string stationToken, string musicID)
+        public string GetFeedbackID(string stationToken, string trackToken)
         {
-            //var station = CallRPC("station.getStation", new object[] {stationID});
-            //var feedback = ((object[]) station["feedback"]);
+            JObject req = new JObject();
+            req["stationToken"] = stationToken;
+            req["trackToken"] = trackToken;
+            req["isPositive"] = true;
 
-            //foreach (PDict d in feedback)
-            //{
-            //    if (musicID == (string) d["musicId"])
-            //        return (string) d["feedbackId"];
-            //}
-
-            return string.Empty;
+            var feedback = CallRPC("station.addFeedback", req);
+            return (string)feedback.Result["feedbackId"];
         }
     }
 }

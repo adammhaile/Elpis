@@ -367,12 +367,17 @@ namespace PandoraSharpPlayer
                     _playNext = false;
                     if (ex.GetType() == typeof (BassStreamException))
                     {
+                        if (((BassStreamException)ex).ErrorCode == Un4seen.Bass.BASSError.BASS_ERROR_FILEOPEN)
+                        {
+                            _playlist.DoReload();
+                        }
+
                         if (retry > 0)
                             PlayNextSong(retry - 1);
                         else
                         {
                             Stop();
-                            throw new PandoraException(ErrorCodes.STREAM_ERROR);
+                            throw new PandoraException(ErrorCodes.STREAM_ERROR, ex);
                         }
                     }
                     else
@@ -595,7 +600,7 @@ namespace PandoraSharpPlayer
         {
             RunTask(() =>
             {
-                Station station = _pandora.CreateStation(song.TrackToken);
+                Station station = _pandora.CreateStationFromSong(song);
                 if (StationCreated != null)
                     StationCreated(this, station);
             });
@@ -605,7 +610,7 @@ namespace PandoraSharpPlayer
         {
             RunTask(() =>
             {
-                Station station = _pandora.CreateStation(song.TrackToken);
+                Station station = _pandora.CreateStationFromArtist(song);
                 if (StationCreated != null)
                     StationCreated(this, station);
             });
@@ -615,7 +620,7 @@ namespace PandoraSharpPlayer
         {
             RunTask(() =>
                         {
-                            Station station = _pandora.CreateStation(result.MusicToken);
+                            Station station = _pandora.CreateStationFromSearch(result.MusicToken);
                             if (StationCreated != null)
                                 StationCreated(this, station);
                         });
