@@ -124,17 +124,22 @@ namespace PandoraSharpPlayer
             Log.O("Waiting for playlist to reload.");
             while (_nextSongs.IsEmpty && !_emptyPlaylist)
             {
-                if ((DateTime.Now - start).TotalSeconds >= 15)
+                if ((DateTime.Now - start).TotalSeconds >= 20)
                 {
-                    Log.O("Playlist did not reload within 15 seconds, ");
+                    Log.O("Playlist did not reload within 20 seconds, ");
                     throw new PandoraException(ErrorCodes._END_OF_PLAYLIST);
                 }
 
                 Thread.Sleep(25);
             }
 
-            if(_emptyPlaylist)
+            if (_emptyPlaylist)
+            {
+                Log.O("WaitForPlaylist: Still Empty");
                 throw new PandoraException(ErrorCodes._END_OF_PLAYLIST);
+            }
+
+            Log.O("WaitForPlaylist: Complete");
         }
 
         private Song DequeueSong()
@@ -153,15 +158,30 @@ namespace PandoraSharpPlayer
                     PlaylistLow(this, _nextSongs.Count);
         }
 
+        public void DoReload()
+        {
+
+            ClearSongs();
+            SendPlaylistLow();
+
+            try
+            {
+                WaitForPlaylistReload();
+            }
+            catch
+            {
+                if (_nextSongs.IsEmpty)
+                    throw;
+            }
+        }
+
         public Song NextSong()
         {
             if (_nextSongs.IsEmpty)
             {
                 Log.O("PlaylistEmpty - Reloading");
 
-                SendPlaylistLow();
-
-                WaitForPlaylistReload();
+                DoReload();
             }
 
             var next = DequeueSong();
@@ -170,10 +190,7 @@ namespace PandoraSharpPlayer
             {
                 Log.O("Song was invalid, reloading and skipping any more invalid songs.");
                 //clear songs that are now invalid
-                ClearSongs();
-                SendPlaylistLow();
-
-                WaitForPlaylistReload();
+                DoReload();
             }
 
             Log.O("NextSong: " + next);

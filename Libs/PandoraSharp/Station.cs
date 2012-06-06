@@ -43,7 +43,7 @@ namespace PandoraSharp
             
             ID = d["stationId"].ToString();
             IdToken = d["stationToken"].ToString();
-            IsCreator = true;// d["isCreator"].ToObject<bool>();
+            IsCreator = !d["isShared"].ToObject<bool>();
             IsQuickMix = d["isQuickMix"].ToObject<bool>();
             Name = d["stationName"].ToString();
             InfoUrl = (string)d["stationDetailUrl"];
@@ -186,15 +186,17 @@ namespace PandoraSharp
         private bool _gettingPlaylist = false;
         public List<Song> GetPlaylist()
         { 
-            Log.O("GetPlaylist");
             var results = new List<Song>();
             if (_gettingPlaylist) return results;
+            Log.O("GetPlaylist");
             try
             {
                 _gettingPlaylist = true;
                 JObject req = new JObject();
                 req["stationToken"] = IdToken;
-                req["additionalAudioUrl"] = "HTTP_64_AACPLUS_ADTS,HTTP_128_MP3,HTTP_192_MP3";
+                if(_pandora.AudioFormat != PAudioFormat.AACPlus)
+                    req["additionalAudioUrl"] = "HTTP_128_MP3,HTTP_192_MP3";
+
                 var playlist = _pandora.CallRPC("station.getPlaylist", req, false, true); // MUST use SSL
 
                 foreach (var song in playlist.Result["items"])

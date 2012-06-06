@@ -42,37 +42,54 @@ namespace PandoraSharp
             AmazonAlbumID = (string)song["amazonAlbumDigitalAsin"];
             AmazonTrackID = (string)song["amazonSongDigitalAsin"];
 
-            //"HTTP_64_AACPLUS_ADTS,HTTP_128_MP3,HTTP_192_MP3";
-                
-            //var aUrl = (string) song["audioURL"];
-            //AudioUrl = aUrl.Substring(0, aUrl.Length - 48) +
-            //           PandoraCrypt.Decrypt(aUrl.Substring(aUrl.Length - 48, 48));
+            var aacUrl = string.Empty;
+            try
+            {
+                aacUrl = (string)song["audioUrlMap"]["highQuality"]["audioUrl"];
+            }
+            catch { }
 
-            var songUrls = song["additionalAudioUrl"].ToObject<string[]>();
-            if(songUrls.Length == 0)
-            {                
-                throw new PandoraException(ErrorCodes.NO_AUDIO_URLS);
-            }
-            else if (songUrls.Length == 1)
+            if (_pandora.AudioFormat == PAudioFormat.AACPlus)
             {
-                AudioUrl = songUrls[0];
+                if(aacUrl == string.Empty)
+                    throw new PandoraException(ErrorCodes.NO_AUDIO_URLS);
+
+                AudioUrl = aacUrl;
             }
-            else if(songUrls.Length > 1)
+            else
             {
-                if (_pandora.AudioFormat == PAudioFormat.MP3_HIFI)
+                string[] songUrls = null;
+                try
                 {
-                    if (songUrls.Length >= 3)
-                        AudioUrl = songUrls[2];
+                    if(song["additionalAudioUrl"].HasValues)
+                        songUrls = song["additionalAudioUrl"].ToObject<string[]>();
                     else
-                        AudioUrl = songUrls[1];
+                        songUrls = new string[]{(string)song["additionalAudioUrl"]};
                 }
-                else if (_pandora.AudioFormat == PAudioFormat.AACPlus)
+                catch { }
+
+                if (songUrls == null || songUrls.Length == 0)
+                {
+                    if (aacUrl != string.Empty) AudioUrl = aacUrl;
+                    else throw new PandoraException(ErrorCodes.NO_AUDIO_URLS);
+                }
+                else if (songUrls.Length == 1)
                 {
                     AudioUrl = songUrls[0];
                 }
-                else //default to PAudioFormat.MP3
+                else if (songUrls.Length > 1)
                 {
-                    AudioUrl = songUrls[1];
+                    if (_pandora.AudioFormat == PAudioFormat.MP3_HIFI)
+                    {
+                        if (songUrls.Length >= 2)
+                            AudioUrl = songUrls[1];
+                        else
+                            AudioUrl = songUrls[0];
+                    }
+                    else //default to PAudioFormat.MP3
+                    {
+                        AudioUrl = songUrls[0];
+                    }
                 }
             }
 
@@ -167,9 +184,9 @@ namespace PandoraSharp
             get { return _pandora.GetStationByID(StationID); }
         }
 
-        public string FeedbackID
+        private string FeedbackID
         {
-            get { return ""; }// _pandora.GetFeedbackID(StationID, MusicID); }
+            get { return _pandora.GetFeedbackID(StationID, TrackToken); }
         }
 
         public bool IsStillValid
