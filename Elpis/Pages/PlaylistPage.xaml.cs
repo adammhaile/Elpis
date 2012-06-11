@@ -43,7 +43,6 @@ namespace Elpis
         private readonly Dictionary<Song, ImageButton[]> _feedbackMap;
         private readonly Player _player;
         private Song _currSong;
-        private bool _loaded;
         private Song _currMenuSong;
 
         private ContextMenu _songMenu;

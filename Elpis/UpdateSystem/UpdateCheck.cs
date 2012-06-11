@@ -63,6 +63,8 @@ namespace Elpis.UpdateSystem
 
                 _downloadComplete = false;
                 _downloadString = string.Empty;
+                if (PRequest.Proxy != null)
+                    wc.Proxy = PRequest.Proxy;
 
                 wc.DownloadStringAsync(new Uri(url));
 

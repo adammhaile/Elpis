@@ -159,6 +159,10 @@ namespace Elpis
             }
             else
             {
+                if (_config.Fields.Proxy_Address != string.Empty)
+                    PRequest.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
+                        _config.Fields.Proxy_User, _config.Fields.Proxy_Password);
+
                 var loc = _config.Fields.Elpis_StartupLocation;
                 var size = _config.Fields.Elpis_StartupSize;
 
@@ -369,10 +373,10 @@ namespace Elpis
             _notifyMenu_Stations = new ToolStripMenuItem("Stations");
 
             _notifyMenu_DownVote = new ToolStripMenuItem("Dislike Song");
-            _notifyMenu_DownVote.Click += ((o, e) => _player.SongThumbDown(_player.CurrentSong));
+            _notifyMenu_DownVote.Click += ((o, e) => _playlistPage.ThumbDownCurrent() );
 
             _notifyMenu_UpVote = new ToolStripMenuItem("Like Song");
-            _notifyMenu_UpVote.Click += ((o, e) => _player.SongThumbUp(_player.CurrentSong));
+            _notifyMenu_UpVote.Click += ((o, e) => _playlistPage.ThumbUpCurrent() );
 
             var menus = new ToolStripItem[]
                             {
@@ -468,7 +472,10 @@ namespace Elpis
             try
             {
                 _player = new Player();
-                _player.Initialize(_bassRegEmail, _bassRegKey); //TODO - put this in the login sequence?  
+                _player.Initialize(_bassRegEmail, _bassRegKey); //TODO - put this in the login sequence? 
+                if(_config.Fields.Proxy_Address != string.Empty)
+                    _player.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
+                        _config.Fields.Proxy_User, _config.Fields.Proxy_Password);
             }
             catch(Exception ex)
             {
@@ -480,7 +487,8 @@ namespace Elpis
             _player.SetStationSortOrder(_config.Fields.Pandora_StationSortOrder);
             _player.Volume = _config.Fields.Elpis_Volume;
 
-            _player.ForceSSL = _config.Fields.Misc_ForceSSL;
+            //_player.ForceSSL = _config.Fields.Misc_ForceSSL;
+
 
             _loadingPage.UpdateStatus("Setting up cache...");
             string cachePath = Path.Combine(Config.ElpisAppData, "Cache");

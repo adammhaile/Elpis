@@ -59,6 +59,9 @@ namespace Util
             _map = new Dictionary<string, string>();
         }
 
+        private string _lastConfig = string.Empty;
+        public string LastConfig { get { return _lastConfig; } }
+
         public string ConfigPath { get; private set; }
 
         public bool AutoSave { get; set; }
@@ -92,6 +95,10 @@ namespace Util
                 string line = "";
                 while ((line = tr.ReadLine()) != null)
                     lines.Add(line);
+
+                _lastConfig = string.Empty;
+                foreach (var l in lines)
+                    _lastConfig += (l + "\r\n");
             }
             catch (Exception ex)
             {
@@ -140,8 +147,12 @@ namespace Util
             try
             {
                 sw = new StreamWriter(ConfigPath, false, Encoding.Unicode);
+                _lastConfig = string.Empty;
                 foreach (string line in configs.ToArray())
+                {
                     sw.WriteLine(line);
+                    _lastConfig += (line + "\r\n");
+                }
             }
             catch (Exception ex)
             {

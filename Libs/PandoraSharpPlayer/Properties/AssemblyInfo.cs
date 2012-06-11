@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Adam Haile")]
 [assembly: AssemblyProduct("PandoraSharpPlayer")]
-[assembly: AssemblyCopyright("Copyright © Adam Haile 2011")]
+[assembly: AssemblyCopyright("Copyright © Adam Haile 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.1.*")]
 //[assembly: AssemblyFileVersion("0.0.0.0")]
