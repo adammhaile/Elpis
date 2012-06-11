@@ -91,7 +91,7 @@ namespace Util
                 case ErrorCodes.API_VERSION_NOT_SUPPORTED: return UPDATE_REQUIRED;
                 case ErrorCodes._INVALID_COUNTRY: return "The country you are connecting from is not allowed to access Pandora.";
                 case ErrorCodes.INSUFFICIENT_CONNECTIVITY: return "INSUFFICIENT_CONNECTIVITY. Possibly invalid sync time. Try logging in again, and check for client updates.";
-                case ErrorCodes._INVALID_METHOD: return "An attempt was made to use an invalid method call. " + UPDATE_REQUIRED;
+                case ErrorCodes._INVALID_METHOD: return "Incorrect HTTP/S method used for last RPC. " + UPDATE_REQUIRED;
                 case ErrorCodes._SECURE_REQUIRED: return "SSL required for last RPC. " + UPDATE_REQUIRED;
                 case ErrorCodes.READ_ONLY_MODE: return "Pandora is currently conducting maintenance. Please try again later."; ;
                 case ErrorCodes.INVALID_AUTH_TOKEN: return "Auth token is invalid/expired.";

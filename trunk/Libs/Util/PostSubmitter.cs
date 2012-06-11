@@ -53,6 +53,9 @@ namespace Util
             wc.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
             wc.Headers.Add("Origin", "http://elpis.adamhaile.net");
 
+            if (PRequest.Proxy != null)
+                wc.Proxy = PRequest.Proxy;
+
             wc.UploadValuesAsync(new Uri(_url), "POST", _params);
 
             DateTime start = DateTime.Now;

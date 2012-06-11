@@ -44,6 +44,11 @@ namespace Elpis
         public static MapConfigEntry Pandora_StationSortOrder = new MapConfigEntry("Pandora_StationSortOrder",
                                                                                    Pandora.SortOrder.DateDesc.ToString());
 
+        public static MapConfigEntry Proxy_Address = new MapConfigEntry("Proxy_Address", "");
+        public static MapConfigEntry Proxy_Port = new MapConfigEntry("Proxy_Port", 0);
+        public static MapConfigEntry Proxy_User = new MapConfigEntry("Proxy_User", "");
+        public static MapConfigEntry Proxy_Password = new MapConfigEntry("Proxy_Password", "");
+
         public static MapConfigEntry Elpis_Version = new MapConfigEntry("Elpis_Version", (new Version()).ToString());
         public static MapConfigEntry Elpis_InstallID = new MapConfigEntry("Elpis_InstallID", Guid.NewGuid().ToString());
         public static MapConfigEntry Elpis_CheckUpdates = new MapConfigEntry("Elpis_CheckUpdates", true);
@@ -54,7 +59,7 @@ namespace Elpis
         public static MapConfigEntry Elpis_StartupSize = new MapConfigEntry("Elpis_StartupSize", "");
         public static MapConfigEntry Elpis_Volume = new MapConfigEntry("Elpis_Volume", 100);
 
-        public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
+        //public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
     }
 
     public struct ConfigDropDownItem
@@ -78,6 +83,11 @@ namespace Elpis
         public string Pandora_LastStationID { get; set; }
         public string Pandora_StationSortOrder { get; set; }
 
+        public string Proxy_Address { get; set; }
+        public int Proxy_Port { get; set; }
+        public string Proxy_User { get; set; }
+        public string Proxy_Password { get; set; }
+
         public Version Elpis_Version { get; internal set; }
         public string Elpis_InstallID { get; internal set; }
         public bool Elpis_CheckUpdates { get; set; }
@@ -86,7 +96,7 @@ namespace Elpis
         public bool Elpis_ShowTrayNotifications { get; set; }
         public int Elpis_Volume { get; set; }
 
-        public bool Misc_ForceSSL { get; set; }
+        //public bool Misc_ForceSSL { get; set; }
 
         public Point Elpis_StartupLocation { get; set; }
         public Size Elpis_StartupSize { get; set; }
@@ -134,7 +144,7 @@ namespace Elpis
             if (!_c.LoadConfig())
                 return false;
 
-            Fields.Debug_WriteLog = true;// (bool)_c.GetValue(ConfigItems.Debug_WriteLog);
+            Fields.Debug_WriteLog = (bool)_c.GetValue(ConfigItems.Debug_WriteLog);
             Fields.Debug_Logpath = (string) _c.GetValue(ConfigItems.Debug_Logpath);
             Fields.Debug_Timestamp = (bool) _c.GetValue(ConfigItems.Debug_Timestamp);
 
@@ -169,6 +179,11 @@ namespace Elpis
             Fields.Pandora_LastStationID = (string) _c.GetValue(ConfigItems.Pandora_LastStationID);
             Fields.Pandora_StationSortOrder = (string) _c.GetValue(ConfigItems.Pandora_StationSortOrder);
 
+            Fields.Proxy_Address = (string)_c.GetValue(ConfigItems.Proxy_Address);
+            Fields.Proxy_Port = (int)_c.GetValue(ConfigItems.Proxy_Port);
+            Fields.Proxy_User = (string)_c.GetValue(ConfigItems.Proxy_User);
+            Fields.Proxy_Password = (string)_c.GetValue(ConfigItems.Proxy_Password);
+
             var verStr = (string) _c.GetValue(ConfigItems.Elpis_Version);
             Version ver;
             if (Version.TryParse(verStr, out ver))
@@ -180,7 +195,7 @@ namespace Elpis
             Fields.Elpis_MinimizeToTray = (bool) _c.GetValue(ConfigItems.Elpis_MinimizeToTray);
             Fields.Elpis_ShowTrayNotifications = (bool) _c.GetValue(ConfigItems.Elpis_ShowTrayNotifications);
             Fields.Elpis_Volume = (int)_c.GetValue(ConfigItems.Elpis_Volume);
-            Fields.Misc_ForceSSL = (bool)_c.GetValue(ConfigItems.Misc_ForceSSL);
+            //Fields.Misc_ForceSSL = (bool)_c.GetValue(ConfigItems.Misc_ForceSSL);
 
             var location = (string) _c.GetValue(ConfigItems.Elpis_StartupLocation);
             try
@@ -202,6 +217,8 @@ namespace Elpis
                 Fields.Elpis_StartupSize = new Size(0, 0);
             }
 
+            Log.O("Config File Contents:");
+            Log.O(_c.LastConfig);
 
             return true;
         }
@@ -227,12 +244,17 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Pandora_LastStationID, Fields.Pandora_LastStationID);
                 _c.SetValue(ConfigItems.Pandora_StationSortOrder, Fields.Pandora_StationSortOrder);
 
+                _c.SetValue(ConfigItems.Proxy_Address, Fields.Proxy_Address);
+                _c.SetValue(ConfigItems.Proxy_Port, Fields.Proxy_Port);
+                _c.SetValue(ConfigItems.Proxy_User, Fields.Proxy_User);
+                _c.SetValue(ConfigItems.Proxy_Password, Fields.Proxy_Password);
+
                 _c.SetValue(ConfigItems.Elpis_Version, Fields.Elpis_Version.ToString());
                 _c.SetValue(ConfigItems.Elpis_CheckUpdates, Fields.Elpis_CheckUpdates);
                 _c.SetValue(ConfigItems.Elpis_GlobalMediaKeys, Fields.Elpis_GlobalMediaKeys);
                 _c.SetValue(ConfigItems.Elpis_MinimizeToTray, Fields.Elpis_MinimizeToTray);
                 _c.SetValue(ConfigItems.Elpis_ShowTrayNotifications, Fields.Elpis_ShowTrayNotifications);
-                _c.SetValue(ConfigItems.Misc_ForceSSL, Fields.Misc_ForceSSL);
+                //_c.SetValue(ConfigItems.Misc_ForceSSL, Fields.Misc_ForceSSL);
                 _c.SetValue(ConfigItems.Elpis_StartupLocation, Fields.Elpis_StartupLocation.ToString());
                 _c.SetValue(ConfigItems.Elpis_StartupSize, Fields.Elpis_StartupSize.ToString());
                 _c.SetValue(ConfigItems.Elpis_Volume, Fields.Elpis_Volume);
@@ -244,7 +266,9 @@ namespace Elpis
             }
 
             if (!_c.SaveConfig()) return false;
-            
+
+            Log.O("Config File Contents:");
+            Log.O(_c.LastConfig);
             return true;
         }
     }

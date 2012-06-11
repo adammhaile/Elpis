@@ -33,121 +33,122 @@ using Un4seen.Bass.AddOn.Mix;
 using Un4seen.Bass.AddOn.Tags;
 using Un4seen.Bass.AddOn.WaDsp;
 using Un4seen.Bass.Misc;
+using System.Text;
 
 namespace BassPlayer
 {
     /// <summary>
     /// This singleton class is responsible for managing the BASS audio Engine object. 
     /// </summary>
-    public class BassMusicPlayer
-    {
-        #region Variables
+    //public class BassMusicPlayer
+    //{
+    //    #region Variables
 
-        internal static BassAudioEngine _Player;
-        private static Thread BassAsyncLoadThread;
+    //    internal static BassAudioEngine _Player;
+    //    private static Thread BassAsyncLoadThread;
 
-        private static string _email = string.Empty;
-        private static string _key = string.Empty;
+    //    private static string _email = string.Empty;
+    //    private static string _key = string.Empty;
 
-        #endregion
+    //    #endregion
 
-        #region Constructors/Destructors
+    //    #region Constructors/Destructors
 
-        // Singleton -- make sure we can't instantiate this class
-        private BassMusicPlayer()
-        {
-        }
+    //    // Singleton -- make sure we can't instantiate this class
+    //    private BassMusicPlayer()
+    //    {
+    //    }
 
-        #endregion
+    //    #endregion
 
-        #region Properties
+    //    #region Properties
 
-        /// <summary>
-        /// Returns the BassAudioEngine Object
-        /// </summary>
-        public static BassAudioEngine Player
-        {
-            get
-            {
-                if (_Player == null)
-                {
-                    _Player = new BassAudioEngine(_email, _key);
-                }
+    //    /// <summary>
+    //    /// Returns the BassAudioEngine Object
+    //    /// </summary>
+    //    public static BassAudioEngine Player
+    //    {
+    //        get
+    //        {
+    //            if (_Player == null)
+    //            {
+    //                _Player = new BassAudioEngine(_email, _key);
+    //            }
 
-                return _Player;
-            }
-        }
+    //            return _Player;
+    //        }
+    //    }
 
-        /// <summary>
-        /// Returns a Boolean if the BASS Audio Engine is initialised
-        /// </summary>
-        public static bool Initialized
-        {
-            get { return _Player != null && _Player.Initialized; }
-        }
+    //    /// <summary>
+    //    /// Returns a Boolean if the BASS Audio Engine is initialised
+    //    /// </summary>
+    //    public static bool Initialized
+    //    {
+    //        get { return _Player != null && _Player.Initialized; }
+    //    }
 
-        /// <summary>
-        /// Is the BASS Engine Freed?
-        /// </summary>
-        public static bool BassFreed
-        {
-            get { return _Player.BassFreed; }
-        }
+    //    /// <summary>
+    //    /// Is the BASS Engine Freed?
+    //    /// </summary>
+    //    public static bool BassFreed
+    //    {
+    //        get { return _Player.BassFreed; }
+    //    }
 
-        #endregion
+    //    #endregion
 
-        #region Public Methods
+    //    #region Public Methods
 
-        /// <summary>
-        /// Create the BASS Audio Engine Objects
-        /// </summary>
-        //public static void CreatePlayerAsync()
-        //{
-        //    if (_Player != null)
-        //    {
-        //        return;
-        //    }
-        //    ThreadStart ts = InternalCreatePlayerAsync;
-        //    BassAsyncLoadThread = new Thread(ts);
-        //    BassAsyncLoadThread.Name = "BassAudio";
-        //    BassAsyncLoadThread.Start();
-        //}
-        public static void SetRegistration(string email, string key)
-        {
-            _email = email;
-            _key = key;
-        }
+    //    /// <summary>
+    //    /// Create the BASS Audio Engine Objects
+    //    /// </summary>
+    //    //public static void CreatePlayerAsync()
+    //    //{
+    //    //    if (_Player != null)
+    //    //    {
+    //    //        return;
+    //    //    }
+    //    //    ThreadStart ts = InternalCreatePlayerAsync;
+    //    //    BassAsyncLoadThread = new Thread(ts);
+    //    //    BassAsyncLoadThread.Name = "BassAudio";
+    //    //    BassAsyncLoadThread.Start();
+    //    //}
+    //    public static void SetRegistration(string email, string key)
+    //    {
+    //        _email = email;
+    //        _key = key;
+    //    }
 
-        /// <summary>
-        /// Frees, the BASS Audio Engine.
-        /// </summary>
-        public static void FreeBass()
-        {
-            if (_Player == null)
-            {
-                return;
-            }
+    //    /// <summary>
+    //    /// Frees, the BASS Audio Engine.
+    //    /// </summary>
+    //    public static void FreeBass()
+    //    {
+    //        if (_Player == null)
+    //        {
+    //            return;
+    //        }
 
-            _Player.FreeBass();
-        }
+    //        _Player.FreeBass();
+    //    }
 
-        #endregion
+    //    #endregion
 
-        #region Private Methods
+    //    #region Private Methods
 
-        /// <summary>
-        /// Thread for Creating the BASS Audio Engine objects.
-        /// </summary>
-        private static void InternalCreatePlayerAsync()
-        {
-            if (_Player == null)
-            {
-                _Player = new BassAudioEngine();
-            }
-        }
+    //    /// <summary>
+    //    /// Thread for Creating the BASS Audio Engine objects.
+    //    /// </summary>
+    //    private static void InternalCreatePlayerAsync()
+    //    {
+    //        if (_Player == null)
+    //        {
+    //            _Player = new BassAudioEngine();
+    //        }
+    //    }
 
-        #endregion
-    }
+    //    #endregion
+    //}
 
 
     public class BassException : Exception
@@ -590,7 +591,7 @@ namespace BassPlayer
         #region Methods
 
         /// <summary>
-        /// Release the Video Window
+        /// Release the Player
         /// </summary>
         public void Dispose()
         {
@@ -598,6 +599,7 @@ namespace BassPlayer
             {
                 Stop(true);
             }
+            _proxyValue.Free();
         }
 
         /// <summary>
@@ -605,6 +607,7 @@ namespace BassPlayer
         /// </summary>
         public void DisposeAndCleanUp()
         {
+            Dispose();
             // Clean up BASS Resources
             try
             {
@@ -760,6 +763,21 @@ namespace BassPlayer
                 Log.Error("BASS: Initialize failed. Reason: {0}", ex.Message);
                 throw new BassException("BASS: Initialize failed. Reason: }" + ex.Message);
             }
+        }
+
+        private GCHandle _proxyValue;
+        public void SetProxy(string address, int port, string user = "", string password = "")
+        {
+            string proxy = address + ":" + port.ToString();
+            if(user != "")
+                proxy = user + ":" + password + "@" + proxy;
+
+            byte[] proxyBytes = Encoding.Default.GetBytes(proxy);
+            _proxyValue = GCHandle.Alloc(proxyBytes, GCHandleType.Pinned);
+            Bass.BASS_SetConfigPtr(BASSConfig.BASS_CONFIG_NET_PROXY,
+                _proxyValue.AddrOfPinnedObject());
+
+            //_proxyValue.Free();
         }
 
         /// <summary>

@@ -67,7 +67,7 @@ namespace Elpis
             _config.Fields.Elpis_GlobalMediaKeys = (bool) chkGlobalMediaKeys.IsChecked;
             _config.Fields.Elpis_MinimizeToTray = (bool) chkTrayMinimize.IsChecked;
             _config.Fields.Elpis_ShowTrayNotifications = (bool) chkShowNotify.IsChecked;
-            _config.Fields.Misc_ForceSSL = (bool)chkForceSSL.IsChecked;
+            //_config.Fields.Misc_ForceSSL = (bool)chkForceSSL.IsChecked;
 
             _player.AudioFormat = _config.Fields.Pandora_AudioFormat;
             //In case MP3-HiFi was rejected
@@ -76,7 +76,7 @@ namespace Elpis
             _player.SetStationSortOrder(_config.Fields.Pandora_StationSortOrder);
             _config.Fields.Pandora_StationSortOrder = _player.StationSortOrder.ToString();
 
-            _player.ForceSSL = _config.Fields.Misc_ForceSSL;
+            //_player.ForceSSL = _config.Fields.Misc_ForceSSL;
 
             _config.SaveConfig();
         }

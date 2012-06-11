@@ -22,13 +22,15 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
-using Util;
 
-namespace PandoraSharp
+namespace Util
 {
     public class PRequest
     {
         private static WebProxy _proxy;
+        private static string _userAgent = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.7 (KHTML, like Gecko) Chrome/16.0.912.63 Safari/535.7";
+
+        public static WebProxy Proxy { get { return _proxy; } }
 
         public static void SetProxy(string address, string user = "", string password = "")
         {
@@ -42,8 +44,9 @@ namespace PandoraSharp
 
         public static void SetProxy(string address, int port, string user = "", string password = "")
         {
+            ServicePointManager.Expect100Continue = false;
             var p = new WebProxy(address, port);
-
+           
             if (user != "")
                 p.Credentials = new NetworkCredential(user, password);
 
@@ -57,7 +60,7 @@ namespace PandoraSharp
                 wc.Proxy = _proxy;
 
             wc.Headers.Add("Content-Type", "text/plain");
-            wc.Headers.Add("User-Agent", Const.USER_AGENT);
+            wc.Headers.Add("User-Agent", _userAgent);
 
             string response = string.Empty;
             try

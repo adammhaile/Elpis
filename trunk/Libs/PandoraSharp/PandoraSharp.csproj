@@ -74,9 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Crypt.cs" />
-    <Compile Include="CipherKeys.cs" />
     <Compile Include="JSONResult.cs" />
-    <Compile Include="JsonRPC.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="Extensions.cs" />
@@ -86,8 +84,6 @@
     <Compile Include="Song.cs" />
     <Compile Include="Station.cs" />
     <Compile Include="Util.cs" />
-    <Compile Include="WebRequest.cs" />
-    <Compile Include="XmlRPC.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Util\Util.csproj">
