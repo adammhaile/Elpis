@@ -540,6 +540,10 @@ namespace PandoraSharp
                     SendLoginStatus("Loading station list...");
                     RefreshStations();
                 }
+                else
+                {
+                    status = ErrorCodes.ERROR_RPC;
+                }
             }
             catch (PandoraException ex)
             {
@@ -552,6 +556,7 @@ namespace PandoraSharp
                 Log.O("Connection Error: " + ex.ToString());
                 _connected = false;
             }
+
 
             if (ConnectionEvent != null)
                 ConnectionEvent(this, _connected, status);
