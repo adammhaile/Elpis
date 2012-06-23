@@ -369,26 +369,23 @@ namespace PandoraSharpPlayer
                 {
                     _bass.Play(song.AudioUrl, song.FileGain);
                 }
-                catch (Exception ex)
+                catch (BassStreamException ex)
+                {
+                    if (ex.ErrorCode == Un4seen.Bass.BASSError.BASS_ERROR_FILEOPEN)
+                    {
+                        _playlist.DoReload();
+                    }
+                    if (retry > 0)
+                        PlayNextSong(retry - 1);
+                    else
+                    {
+                        Stop();
+                        throw new PandoraException(ErrorCodes.STREAM_ERROR, ex);
+                    }
+                }
+                finally
                 {
                     _playNext = false;
-                    if (ex.GetType() == typeof (BassStreamException))
-                    {
-                        if (((BassStreamException)ex).ErrorCode == Un4seen.Bass.BASSError.BASS_ERROR_FILEOPEN)
-                        {
-                            _playlist.DoReload();
-                        }
-
-                        if (retry > 0)
-                            PlayNextSong(retry - 1);
-                        else
-                        {
-                            Stop();
-                            throw new PandoraException(ErrorCodes.STREAM_ERROR, ex);
-                        }
-                    }
-                    else
-                        throw;
                 }
 
                 _playNext = false;

@@ -182,7 +182,22 @@ namespace Elpis
             Fields.Proxy_Address = (string)_c.GetValue(ConfigItems.Proxy_Address);
             Fields.Proxy_Port = (int)_c.GetValue(ConfigItems.Proxy_Port);
             Fields.Proxy_User = (string)_c.GetValue(ConfigItems.Proxy_User);
-            Fields.Proxy_Password = (string)_c.GetValue(ConfigItems.Proxy_Password);
+            try
+            {
+                Fields.Proxy_Password = StringCrypt.DecryptString((string)_c.GetValue(ConfigItems.Proxy_Password),
+                                                                  _cryptPass);
+                if (Fields.Proxy_Password != string.Empty)
+                {
+                    if (Fields.Proxy_Password.StartsWith(_cryptCheck))
+                        Fields.Proxy_Password = Fields.Login_Password.Replace(_cryptCheck, string.Empty);
+                    else
+                        Fields.Proxy_Password = string.Empty;
+                }
+            }
+            catch
+            {
+                Fields.Proxy_Password = string.Empty;
+            }
 
             var verStr = (string) _c.GetValue(ConfigItems.Elpis_Version);
             Version ver;
@@ -247,7 +262,8 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Proxy_Address, Fields.Proxy_Address);
                 _c.SetValue(ConfigItems.Proxy_Port, Fields.Proxy_Port);
                 _c.SetValue(ConfigItems.Proxy_User, Fields.Proxy_User);
-                _c.SetValue(ConfigItems.Proxy_Password, Fields.Proxy_Password);
+                _c.SetValue(ConfigItems.Proxy_Password,
+                            StringCrypt.EncryptString(_cryptCheck + Fields.Proxy_Password, _cryptPass));
 
                 _c.SetValue(ConfigItems.Elpis_Version, Fields.Elpis_Version.ToString());
                 _c.SetValue(ConfigItems.Elpis_CheckUpdates, Fields.Elpis_CheckUpdates);
