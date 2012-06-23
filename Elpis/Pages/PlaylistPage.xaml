@@ -75,10 +75,12 @@
                                           RevolutionsPerSecond="1.5" AutoStart="False">
                             <ElpisControls:ImageButton Width="28" Height="28" x:Name="btnThumbUp"
                                          ActiveImageUri="{StaticResource Image_ThumbLove}" InactiveImageUri="{StaticResource Image_ThumbUp}"
+                                         ToolTip="Like Song"
                                          IsActive="{Binding Loved}" Click="btnThumbUp_Click" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </ElpisControls:ContentSpinner>
                         <ElpisControls:ImageButton Width="28" Height="28" x:Name="btnMenu" Grid.Row="1"
                                        ActiveImageUri="{StaticResource Image_MenuRightHover}" InactiveImageUri="{StaticResource Image_MenuRight}"
+                                       ToolTip="Show Song Menu"
                                        VerticalAlignment="Center" HorizontalAlignment="Center" Click="btnMenu_Click">
  
                         </ElpisControls:ImageButton>
@@ -86,6 +88,7 @@
                                           RevolutionsPerSecond="1.5" AutoStart="False">
                             <ElpisControls:ImageButton Width="28" Height="28" x:Name="btnThumbDown"
                                          ActiveImageUri="{StaticResource Image_ThumbBan}" InactiveImageUri="{StaticResource Image_ThumbDown}"
+                                         ToolTip="Dislike Song"
                                          IsActive="{Binding Banned}" Click="btnThumbDown_Click" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </ElpisControls:ContentSpinner>
                     </Grid>

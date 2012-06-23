@@ -69,6 +69,7 @@
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
                                         <Controls:ImageButton Width="28" Height="28" x:Name="btnMenu" Grid.Column="0"
+                                        ToolTip="Show Station Menu"
                                         ActiveImageUri="{StaticResource Image_MenuRightHover}" InactiveImageUri="{StaticResource Image_MenuRight}"
                                         VerticalAlignment="Center" HorizontalAlignment="Center" Click="btnMenu_Click" Visibility="Visible" />
 
@@ -81,72 +82,9 @@
                                    KeyUp="TextBox_KeyUp" />
                                         <Controls:ImageButton Width="32" Height="32" Margin="4,2"
                                                 Grid.Column="2" x:Name="btnSaveRename" ActiveImageUri="{StaticResource Image_CheckHover}"
+                                                ToolTip="Save"
                                                 InactiveImageUri="{StaticResource Image_Check}" Click="btnSaveRename_Click" VerticalAlignment="Center"
                                                 HorizontalAlignment="Center" Visibility="Hidden" />
-                                        <!--<ContentControl x:Name="StationMenu" HorizontalAlignment="Stretch"
-                                                    Grid.Column="0" Grid.ColumnSpan="2"
-                                                    VerticalAlignment="Center" Visibility="Hidden">
-                                            <Grid Name="MenuGrid" Background="{StaticResource MainBGBrush}"
-                            Width="{Binding RelativeSource=
-                                                    {RelativeSource FindAncestor,
-                                                    AncestorType={x:Type Grid}},
-                                                    Path=ActualWidth}"
-                            Height="{Binding RelativeSource=
-                                                    {RelativeSource FindAncestor,
-                                                    AncestorType={x:Type Grid}},
-                                                    Path=ActualHeight}"
-                            IsVisibleChanged="MenuGrid_IsVisibleChanged" Tag="{Binding}">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="*" />
-                                                    <RowDefinition Height="*" />
-                                                </Grid.RowDefinitions>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                </Grid.ColumnDefinitions>
-                                                <Controls:ImageButton Width="28" Height="28" x:Name="btnMenuClose" Grid.Column="0" Grid.RowSpan="2"
-                                        ActiveImageUri="{StaticResource Image_MenuLeftHover}" InactiveImageUri="{StaticResource Image_MenuLeft}"
-                                        VerticalAlignment="Center" HorizontalAlignment="Center" Click="btnMenuClose_Click" Visibility="Visible" />
-                                                <Grid Name="gridMenuRename" Grid.Row="0" Grid.Column="1">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Name="txtStationNameMenu"
-                                     Foreground="{StaticResource MainFontBrush}" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Path=Name}"
-                                     FontSize="22" FontWeight="DemiBold" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch"
-                                     VerticalAlignment="Center" Controls:TextBlockUtils.AutoTooltip="True" Controls:TextBlockUtils.AutoTooltipFontSize="12" />
-                                                    <TextBox Visibility="Hidden" Name="txtRename1" Grid.Column="0"
-                                   FontSize="22" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                   KeyUp="TextBox_KeyUp" />
-                                                    <Controls:ImageButton Width="32" Height="32" Margin="4,2"
-                                                Grid.Column="1" x:Name="btnSaveRename2" ActiveImageUri="{StaticResource Image_CheckHover}"
-                                                InactiveImageUri="{StaticResource Image_Check}" Click="btnSaveRename_Click" VerticalAlignment="Center"
-                                                HorizontalAlignment="Center" Visibility="Hidden" />
-                                                </Grid>
-                                                <Grid Name="gridMenuButtons" Grid.Row="1" Grid.Column="1">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Controls:ImageButton Width="32" Height="32" Margin="4,2"
-                                                Grid.Column="1" x:Name="btnRename" ActiveImageUri="{StaticResource Image_WriteHover}"
-                                                InactiveImageUri="{StaticResource Image_Write}" Click="btnRename_Click" Tag="{Binding}" VerticalAlignment="Center"
-                                                HorizontalAlignment="Center" />
-                                                    <Controls:ImageButton Width="32" Height="32" Margin="4,2"
-                                                Grid.Column="2" x:Name="btnDelete" ActiveImageUri="{StaticResource Image_TrashHover}"
-                                                InactiveImageUri="{StaticResource Image_Trash}" Click="btnDelete_Click" Tag="{Binding}" VerticalAlignment="Center"
-                                                HorizontalAlignment="Center" />
-                                                    <Controls:ImageButton Width="32" Height="32" Margin="2"
-                                                Grid.Column="3" x:Name="btnInfo" ActiveImageUri="{StaticResource Image_InfoHover}"
-                                                InactiveImageUri="{StaticResource Image_Info}" Click="btnInfo_Click" VerticalAlignment="Center"
-                                                HorizontalAlignment="Center" Tag="{Binding Path=InfoUrl}" />
-                                                </Grid>
-                                            </Grid>
-                                        </ContentControl>-->
                                     </Grid>
                                 </Grid>
                             </Grid>

@@ -20,6 +20,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using PandoraSharpPlayer;
+using System;
 
 namespace Elpis
 {
@@ -76,6 +77,14 @@ namespace Elpis
             _player.SetStationSortOrder(_config.Fields.Pandora_StationSortOrder);
             _config.Fields.Pandora_StationSortOrder = _player.StationSortOrder.ToString();
 
+            _config.Fields.Proxy_Address = txtProxyAddress.Text;
+            int port = _config.Fields.Proxy_Port;
+            Int32.TryParse(txtProxyPort.Text, out port);
+            _config.Fields.Proxy_Port = port;
+            _config.Fields.Proxy_User = txtProxyUser.Text;
+            _config.Fields.Proxy_Password = txtProxyPassword.Password;
+
+
             //_player.ForceSSL = _config.Fields.Misc_ForceSSL;
 
             _config.SaveConfig();
@@ -103,6 +112,7 @@ namespace Elpis
         {
             btnLogout.IsEnabled = _player.LoggedIn;
             DataContext = _config.Fields;
+            txtProxyPassword.Password = _config.Fields.Proxy_Password;
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
@@ -113,6 +123,22 @@ namespace Elpis
         {
             if (Close != null)
                 Close();
+        }
+
+        private void txtProxyPort_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)
+        {
+            try
+            {
+                Convert.ToInt32(e.Text);
+                string text = txtProxyPort.Text + e.Text;
+                int output = Convert.ToInt32(text);
+                if (output < 0 || output > 65535)
+                    e.Handled = true;
+            }
+            catch
+            {
+                e.Handled = true;
+            }
         }
     }
 }

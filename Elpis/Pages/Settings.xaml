@@ -3,7 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:config="clr-namespace:Elpis" mc:Ignorable="d"
              xmlns:Controls="clr-namespace:Elpis.Controls"
-             d:DesignHeight="440" d:DesignWidth="440" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="479" d:DesignWidth="442" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -138,28 +138,50 @@
                       Content="Show Song Notifications" />
                     </Grid>
                 </GroupBox>
-                <!--<GroupBox Header="Misc" Margin="5" >
+                <GroupBox Header="Proxy - Changes Require Restarting Elpis" Margin="5" >
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <CheckBox Name="chkForceSSL" Grid.Row="0" Grid.Column="1" Margin="4"
-                      IsChecked="{Binding Path=Misc_ForceSSL, 
-                                    UpdateSourceTrigger=PropertyChanged}"
-                      Content="Force SSL (HTTPS)">
-                            <CheckBox.ToolTip>
-                                <TextBlock FontSize="14">
-                                    Force SSL (HTTPS) to be used for all API requests.
-                                    <LineBreak />
-                                    In some instances, this fixes certain connection issues.
-                                </TextBlock>
-                            </CheckBox.ToolTip>
-                        </CheckBox>
+                        <Label Grid.Row="0" Grid.Column="0" Content="Address" FontSize="16" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Proxy_Address, 
+                                    UpdateSourceTrigger=PropertyChanged}" Margin="3"
+                                 FontSize="16" TextAlignment="Center"
+                                    Name="txtProxyAddress"/>
+
+                        <Label Grid.Row="0" Grid.Column="2" Content="Port" FontSize="16" />
+                        <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Path=Proxy_Port, 
+                                    UpdateSourceTrigger=PropertyChanged}" Width="55" 
+                                 FontSize="16"
+                                 HorizontalAlignment="Left" Margin="3" TextAlignment="Center"
+                                 PreviewTextInput="txtProxyPort_PreviewTextInput"
+                                 Name="txtProxyPort"/>
+
+
+                        <Label Grid.Row="2" Grid.Column="0" Content="Username" FontSize="16" />
+                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" 
+                                 Text="{Binding Path=Proxy_User, 
+                            UpdateSourceTrigger=PropertyChanged}" 
+                            FontSize="16"
+                            TextAlignment="Center" Margin="3"
+                            Name="txtProxyUser"/>
+
+                        <Label Grid.Row="3" Grid.Column="0" Content="Password" FontSize="16" />
+                        <PasswordBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="3"
+                                    HorizontalContentAlignment="Center"
+                                    FontSize="16"
+                                    Name="txtProxyPassword"/>
                     </Grid>
-                </GroupBox>-->
+                </GroupBox>
             </StackPanel>
         </ScrollViewer>
         <Grid Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
