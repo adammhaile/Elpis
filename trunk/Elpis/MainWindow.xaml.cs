@@ -86,6 +86,7 @@ namespace Elpis
         private QuickMixPage _quickMixPage;
         private UpdateCheck _update;
         private UpdatePage _updatePage;
+        private RestartPage _restartPage;
 
         private ErrorCodes _lastError = ErrorCodes.SUCCESS;
         private Exception _lastException = null;
@@ -213,11 +214,52 @@ namespace Elpis
         private void SetupPageEvents()
         {
             _settingsPage.Close += RestorePrevPage;
+            _settingsPage.Restart += _settingsPage_Restart;
+            _restartPage.RestartSelectionEvent += _restartPage_RestartSelectionEvent;
             _aboutPage.Close += RestorePrevPage;
 
             _searchPage.Cancel += _searchPage_Cancel;
             _searchPage.AddVariety += _searchPage_AddVariety;
             _loginPage.ConnectingEvent += _loginPage_ConnectingEvent;
+        }
+
+        void _settingsPage_Restart()
+        {
+            transitionControl.ShowPage(_restartPage);
+        }
+
+        void DoRestart()
+        {
+
+            System.Collections.Generic.List<string> args = 
+                new System.Collections.Generic.List<string>();
+            var cmds = System.Environment.GetCommandLineArgs();
+            foreach (string a in cmds)
+                args.Add(a);
+
+            args.RemoveAt(0);
+            args.Remove("-restart");
+
+            string sArgs = string.Empty;
+            foreach(string s in args)
+                sArgs += (s + " ");
+
+            sArgs += " -restart";
+
+            Process.Start("Elpis.exe", sArgs);
+        }
+
+        void _restartPage_RestartSelectionEvent(bool status)
+        {
+            if (status)
+            {
+                DoRestart();
+                Close();
+            }
+            else
+            {
+                RestorePrevPage();
+            }
         }
 
         private void SetupUIEvents()
@@ -262,6 +304,9 @@ namespace Elpis
 
             _settingsPage = new Settings(_player, _config);
             transitionControl.AddPage(_settingsPage);
+
+            _restartPage = new RestartPage();
+            transitionControl.AddPage(_restartPage);
 
             _aboutPage = new About();
             transitionControl.AddPage(_aboutPage);

@@ -282,6 +282,7 @@ namespace Microsoft.Shell
         public static bool InitializeAsFirstInstance(string uniqueName)
         {
             commandLineArgs = GetCommandLineArgs(uniqueName);
+            if (commandLineArgs.Contains("-restart")) return true;
 
             // Build unique application Id and the IPC channel name.
             string applicationIdentifier = uniqueName + Environment.UserName;
@@ -447,7 +448,7 @@ namespace Microsoft.Shell
         private static void ActivateFirstInstance(IList<string> args)
         {
             // Set main window state and process command line args
-            if (Application.Current == null)
+            if (args.Contains("-restart") || Application.Current == null)
             {
                 return;
             }

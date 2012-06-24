@@ -189,7 +189,7 @@ namespace Elpis
                 if (Fields.Proxy_Password != string.Empty)
                 {
                     if (Fields.Proxy_Password.StartsWith(_cryptCheck))
-                        Fields.Proxy_Password = Fields.Login_Password.Replace(_cryptCheck, string.Empty);
+                        Fields.Proxy_Password = Fields.Proxy_Password.Replace(_cryptCheck, string.Empty);
                     else
                         Fields.Proxy_Password = string.Empty;
                 }

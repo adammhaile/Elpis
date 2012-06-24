@@ -33,6 +33,8 @@ namespace Elpis
 
         public delegate void CloseEvent();
 
+        public delegate void RestartEvent();
+
         public delegate void LogoutEvent();
 
         #endregion
@@ -51,12 +53,36 @@ namespace Elpis
 
         public event CloseEvent Close;
 
+        public event RestartEvent Restart;
+
         public event LogoutEvent Logout;
+
+        private void LoadConfig()
+        {
+            chkAutoLogin.IsChecked = _config.Fields.Login_AutoLogin;
+            cmbAudioFormat.SelectedValue = _config.Fields.Pandora_AudioFormat;
+            cmbStationSort.SelectedValue = _config.Fields.Pandora_StationSortOrder;
+
+            chkAutoPlay.IsChecked = _config.Fields.Pandora_AutoPlay;
+            chkCheckUpdates.IsChecked = _config.Fields.Elpis_CheckUpdates;
+            chkGlobalMediaKeys.IsChecked = _config.Fields.Elpis_GlobalMediaKeys;
+            chkTrayMinimize.IsChecked = _config.Fields.Elpis_MinimizeToTray;
+            chkShowNotify.IsChecked = _config.Fields.Elpis_ShowTrayNotifications;
+
+            _config.Fields.Pandora_AudioFormat = _player.AudioFormat;
+
+            _config.Fields.Pandora_StationSortOrder = _config.Fields.Pandora_StationSortOrder;
+
+            txtProxyAddress.Text = _config.Fields.Proxy_Address;
+            txtProxyPort.Text = _config.Fields.Proxy_Port.ToString();
+            txtProxyUser.Text = _config.Fields.Proxy_User;
+            txtProxyPassword.Password = _config.Fields.Proxy_Password;
+
+            _config.SaveConfig();
+        }
 
         private void SaveConfig()
         {
-            //_config.Fields = (ConfigFields)DataContext;
-
             _config.Fields.Login_AutoLogin = (bool) chkAutoLogin.IsChecked;
             _config.Fields.Pandora_AudioFormat = (string) cmbAudioFormat.SelectedValue;
             _config.Fields.Pandora_StationSortOrder = (string) cmbStationSort.SelectedValue;
@@ -84,17 +110,35 @@ namespace Elpis
             _config.Fields.Proxy_User = txtProxyUser.Text;
             _config.Fields.Proxy_Password = txtProxyPassword.Password;
 
-
-            //_player.ForceSSL = _config.Fields.Misc_ForceSSL;
-
             _config.SaveConfig();
+        }
+
+        private bool NeedsRestart()
+        {
+            bool restart = 
+                txtProxyAddress.Text != _config.Fields.Proxy_Address ||
+                txtProxyPort.Text != _config.Fields.Proxy_Port.ToString() ||
+                txtProxyUser.Text != _config.Fields.Proxy_User ||
+                txtProxyPassword.Password != _config.Fields.Proxy_Password;
+
+            return restart;
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
+            bool restart = NeedsRestart();
             SaveConfig();
-            if (Close != null)
-                Close();
+
+            if (restart)
+            {
+                if (Restart != null)
+                    Restart();
+            }
+            else
+            {
+                if (Close != null)
+                    Close();
+            }
         }
 
         private void btnLogout_Click(object sender, RoutedEventArgs e)
@@ -111,8 +155,7 @@ namespace Elpis
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             btnLogout.IsEnabled = _player.LoggedIn;
-            DataContext = _config.Fields;
-            txtProxyPassword.Password = _config.Fields.Proxy_Password;
+            LoadConfig();
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
