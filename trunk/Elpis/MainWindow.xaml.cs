@@ -40,6 +40,8 @@ using UserControl = System.Windows.Controls.UserControl;
 using WinForms = System.Windows.Forms;
 using System.Windows.Interop;
 
+using PandoraSharp.Plugins;
+
 namespace Elpis
 {
     public partial class MainWindow : Window
@@ -90,6 +92,8 @@ namespace Elpis
 
         private ErrorCodes _lastError = ErrorCodes.SUCCESS;
         private Exception _lastException = null;
+
+        private PandoraSharpScrobbler _scrobbler;
 #endregion
 
 #region Release Data Values
@@ -562,6 +566,31 @@ namespace Elpis
             }
 
             this.Dispatch(() => mainBar.Volume = _player.Volume);
+
+            if (_config.Fields.LastFM_Scrobble)
+            {
+
+                string apiKey = string.Empty;
+                string apiSecret = string.Empty;
+#if APP_RELEASE
+                apiKey = ReleaseData.LastFMApiKey;
+                apiSecret = ReleaseData.LastFMApiSecret;
+#else
+                apiKey = "d9d6aec702ac9e9703babeeea4d8d583";
+                apiSecret = "e77fc2991eac69d5bd337514efbb7561";
+#endif
+
+                _scrobbler = new PandoraSharpScrobbler(apiKey, apiSecret);
+
+                _player.RegisterPlayerControlQuery(_scrobbler);
+
+                _loadingPage.UpdateStatus("Connecting to Last.FM...");
+
+                if (!_scrobbler.Connect(_config.Fields.LastFM_Username, _config.Fields.LastFM_Password))
+                {
+                    _loadingPage.UpdateStatus("Error connecting to Last.FM...");
+                }
+            }
 
             _finalComplete = true;
         }

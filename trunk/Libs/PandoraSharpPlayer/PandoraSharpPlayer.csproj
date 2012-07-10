@@ -75,7 +75,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PlayerControlQuery.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Playlist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,9 +84,17 @@
       <Project>{D054F1ED-6A9C-4C4D-B500-7C1AF01F16C9}</Project>
       <Name>BassPlayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PandoraSharpScrobbler\PandoraSharpScrobbler.csproj">
+      <Project>{19FB9DF6-5C82-439D-94C7-521E6EAF3FF3}</Project>
+      <Name>PandoraSharpScrobbler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PandoraSharp\PandoraSharp.csproj">
       <Project>{64DD2B7D-9069-41FF-A4E4-732F6DF82F09}</Project>
       <Name>PandoraSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlayerControlQuery\PlayerControlQuery.csproj">
+      <Project>{E252FF08-F527-4A42-9A69-D28F4AE6052D}</Project>
+      <Name>PlayerControlQuery</Name>
     </ProjectReference>
     <ProjectReference Include="..\Util\Util.csproj">
       <Project>{A79647D6-4A05-4382-8B6E-4FEC154C3222}</Project>

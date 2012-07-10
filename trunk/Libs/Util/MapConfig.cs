@@ -50,6 +50,9 @@ namespace Util
     {
         private readonly Dictionary<string, string> _map;
 
+        private const string _cryptCheck = "*_a3fc756b42_*";
+        private readonly string _cryptPass = SystemInfo.GetUniqueHash();
+
         public MapConfig(string configPath = "")
         {
             ConfigPath = configPath;
@@ -206,6 +209,15 @@ namespace Util
             else if (t == typeof (bool) || t == typeof (Boolean)) SetValue(entry.Key, (bool) value);
         }
 
+        public void SetEncryptedString(MapConfigEntry entry, string value)
+        {
+            Type t = entry.Default.GetType();
+            if (!(t == typeof(string) || t == typeof(String)))
+                throw new Exception("SetEncryptedString only works on string entries.");
+
+            SetValue(entry, StringCrypt.EncryptString(_cryptCheck + value, _cryptPass));
+        }
+
         public string GetValue(string key, string defValue)
         {
             if (_map.ContainsKey(key))
@@ -253,6 +265,32 @@ namespace Util
             if (t == typeof (bool) || t == typeof (Boolean)) return GetValue(entry.Key, (bool) entry.Default);
 
             throw new Exception("Default Type must be string, int, double or bool");
+        }
+
+        public string GetEncryptedString(MapConfigEntry entry)
+        {
+            Type t = entry.Default.GetType();
+            if (!(t == typeof(string) || t == typeof(String)))
+                throw new Exception("GetEncryptedString only works on string entries.");
+
+            string result = string.Empty;
+            try
+            {
+                result = StringCrypt.DecryptString((string)GetValue(entry), _cryptPass);
+                if (result != string.Empty)
+                {
+                    if (result.StartsWith(_cryptCheck))
+                        result = result.Replace(_cryptCheck, string.Empty);
+                    else
+                        result = string.Empty;
+                }
+            }
+            catch
+            {
+                result = string.Empty;
+            }
+
+            return result;
         }
     }
 }

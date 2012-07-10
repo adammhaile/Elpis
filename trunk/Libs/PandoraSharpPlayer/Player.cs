@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using BassPlayer;
 using PandoraSharp;
 using PandoraSharp.Exceptions;
+using PandoraSharp.ControlQuery;
 using Log = Util.Log;
 using Util;
 
@@ -38,15 +39,7 @@ namespace PandoraSharpPlayer
         private bool _playNext;
         private Playlist _playlist;
 
-        private List<PlayerControlQuery.SongUpdate> _songUpdateDelegates;
-        private List<PlayerControlQuery.StatusUpdate> _statusUpdateDelegates;
-
-        private object _lastQueryStatusLock = new object();
-        private QueryStatusValue _lastQueryStatus = QueryStatusValue.Waiting;
-
-        private object _lastQuerySongLock = new object();
-        private QuerySong _lastQuerySong;
-
+        private ControlQueryManager _cqman;
 
         #region Events
 
@@ -140,9 +133,7 @@ namespace PandoraSharpPlayer
 
         public bool Initialize(string bassRegEmail = "", string bassRegKey = "")
         {
-            _lastQuerySong = new QuerySong();
-            _songUpdateDelegates = new List<PlayerControlQuery.SongUpdate>();
-            _statusUpdateDelegates = new List<PlayerControlQuery.StatusUpdate>();
+            _cqman = new ControlQueryManager();
 
             _pandora = new Pandora();
             _pandora.ConnectionEvent += _pandora_ConnectionEvent;
@@ -171,63 +162,19 @@ namespace PandoraSharpPlayer
             LoggedIn = false;
             return true;
         }  
+
+        public void RegisterPlayerControlQuery(PlayerControlQuery obj)
+        {
+            if (_cqman == null) return;
+
+            _cqman.RegisterPlayerControlQuery(obj);
+        }
       
         public void SetProxy(string address, int port, string user = "", string password = "")
         {
             PRequest.SetProxy(address, port, user, password);
             if (_bass != null)
                 _bass.SetProxy(address, port, user, password);
-        }
-
-        public void RegisterPlayerControlQuery(PlayerControlQuery obj)
-        {
-            _songUpdateDelegates.Add(obj.SongUpdateReceiver);
-            _statusUpdateDelegates.Add(obj.StatsusUpdateReceiver);
-        }
-
-        public void SendSongUpdate(QuerySong song)
-        {
-            lock (_lastQuerySongLock)
-            {
-                _lastQuerySong = song;
-            }
-
-            Log.O("Song Update: {0} | {1} | {2}", song.Artist, song.Album, song.Song);
-            foreach (var del in _songUpdateDelegates)
-            {
-                del(song);
-            }
-        }
-
-        public void SendSongUpdate(string artist, string album, string song)
-        {
-            SendSongUpdate(new QuerySong() { Artist = artist, Album = album, Song = song });
-        }
-
-        public void SendStatusUpdate(QueryStatus status)
-        {
-            lock (_lastQueryStatusLock)
-            {
-                _lastQueryStatus = status.CurrentStatus;
-            }
-
-            Log.O("Status Update: {0} -> {1}",
-                status.PreviousStatus.ToString(),
-                status.CurrentStatus.ToString());
-            foreach (var del in _statusUpdateDelegates)
-            {
-                del(status);
-            }
-        }
-
-        public void SendStatusUpdate(QueryStatusValue previous, QueryStatusValue current)
-        {
-            SendStatusUpdate(new QueryStatus() { PreviousStatus = previous, CurrentStatus = current });
-        }
-
-        public void SendStatusUpdate(QueryStatusValue current)
-        {
-            SendStatusUpdate(_lastQueryStatus, current);
         }
 
         #region Properties
@@ -398,7 +345,7 @@ namespace PandoraSharpPlayer
             if (ExceptionEvent != null)
                 ExceptionEvent(this, code, ex);
 
-            SendStatusUpdate(QueryStatusValue.Error);
+            _cqman.SendStatusUpdate(QueryStatusValue.Error);
         }
 
         private void PlayNextSong(int retry = 2)
@@ -448,7 +395,7 @@ namespace PandoraSharpPlayer
                     else
                     {
                         Stop();
-                        SendStatusUpdate(QueryStatusValue.Error);
+                        _cqman.SendStatusUpdate(QueryStatusValue.Error);
                         throw new PandoraException(ErrorCodes.STREAM_ERROR, ex);
                     }
                 }
@@ -457,8 +404,8 @@ namespace PandoraSharpPlayer
                     _playNext = false;
                 }
 
-                SendSongUpdate(song.Artist, song.Album, song.SongTitle);
-                SendStatusUpdate(QueryStatusValue.Playing);
+                _cqman.SendSongUpdate(song.Artist, song.Album, song.SongTitle);
+                _cqman.SendStatusUpdate(QueryStatusValue.Playing);
 
                 _playNext = false; 
             }
@@ -490,7 +437,7 @@ namespace PandoraSharpPlayer
         {
             if (StationLoading != null)
                 StationLoading(this, CurrentStation);
-            SendStatusUpdate(QueryStatusValue.StationLoading);
+            _cqman.SendStatusUpdate(QueryStatusValue.StationLoading);
 
             _playlist.ClearSongs();
 
@@ -499,7 +446,7 @@ namespace PandoraSharpPlayer
 
             if (StationLoaded != null)
                 StationLoaded(this, CurrentStation);
-            SendStatusUpdate(QueryStatusValue.StationLoaded);
+            _cqman.SendStatusUpdate(QueryStatusValue.StationLoaded);
 
             try
             {
@@ -555,7 +502,7 @@ namespace PandoraSharpPlayer
 
             if (LogoutEvent != null)
                 LogoutEvent(this);
-            SendStatusUpdate(QueryStatusValue.Disconnected);
+            _cqman.SendStatusUpdate(QueryStatusValue.Disconnected);
         }
 
         public void Connect(string email, string password)
@@ -564,7 +511,7 @@ namespace PandoraSharpPlayer
             Email = email;
             Password = password;
             RunTask(() => _pandora.Connect(Email, Password));
-            SendStatusUpdate(QueryStatusValue.Connecting);
+            _cqman.SendStatusUpdate(QueryStatusValue.Connecting);
         }
 
         public Station GetStationFromID(string stationID)
@@ -786,9 +733,9 @@ namespace PandoraSharpPlayer
                 ConnectionEvent(this, state, code);
 
             if (state)
-                SendStatusUpdate(QueryStatusValue.Connected);
+                _cqman.SendStatusUpdate(QueryStatusValue.Connected);
             else
-                SendStatusUpdate(QueryStatusValue.Error);
+                _cqman.SendStatusUpdate(QueryStatusValue.Error);
         }
         #endregion
 
@@ -806,6 +753,7 @@ namespace PandoraSharpPlayer
         private void bass_PlaybackProgress(object sender, BassAudioEngine.Progress prog)
         {
             if (PlaybackProgress != null) PlaybackProgress(this, prog);
+            _cqman.SendProgressUpdate(_cqman.LastSong, prog.TotalTime, prog.ElapsedTime);
         }
 
         private void bass_PlaybackStateChanged(object sender, BassAudioEngine.PlayState oldState,
@@ -819,9 +767,9 @@ namespace PandoraSharpPlayer
             Playing = newState == BassAudioEngine.PlayState.Playing;
             Stopped = newState == BassAudioEngine.PlayState.Ended || newState == BassAudioEngine.PlayState.Stopped;
 
-            if (Playing) SendStatusUpdate(QueryStatusValue.Playing);
-            else if (Paused) SendStatusUpdate(QueryStatusValue.Paused);
-            else if (Stopped) SendStatusUpdate(QueryStatusValue.Stopped);
+            if (Playing) _cqman.SendStatusUpdate(QueryStatusValue.Playing);
+            else if (Paused) _cqman.SendStatusUpdate(QueryStatusValue.Paused);
+            else if (Stopped) _cqman.SendStatusUpdate(QueryStatusValue.Stopped);
 
             if (newState == BassAudioEngine.PlayState.Ended && CurrentStation != null)
             {
