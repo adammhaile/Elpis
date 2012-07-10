@@ -59,6 +59,10 @@ namespace Elpis
         public static MapConfigEntry Elpis_StartupSize = new MapConfigEntry("Elpis_StartupSize", "");
         public static MapConfigEntry Elpis_Volume = new MapConfigEntry("Elpis_Volume", 100);
 
+        public static MapConfigEntry LastFM_Scrobble = new MapConfigEntry("LastFM_Scrobble", false);
+        public static MapConfigEntry LastFM_Username = new MapConfigEntry("LastFM_Username", "");
+        public static MapConfigEntry LastFM_Password = new MapConfigEntry("LastFM_Password", "");
+
         //public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
     }
 
@@ -96,6 +100,10 @@ namespace Elpis
         public bool Elpis_ShowTrayNotifications { get; set; }
         public int Elpis_Volume { get; set; }
 
+        public bool LastFM_Scrobble { get; set; }
+        public string LastFM_Username { get; set; }
+        public string LastFM_Password { get; set; }
+
         //public bool Misc_ForceSSL { get; set; }
 
         public Point Elpis_StartupLocation { get; set; }
@@ -104,13 +112,10 @@ namespace Elpis
 
     public class Config
     {
-        private const string _cryptCheck = "*_a3fc756b42_*";
-
         public static readonly string ElpisAppData =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Elpis");
 
         private readonly MapConfig _c;
-        private readonly string _cryptPass = SystemInfo.GetUniqueHash();
 
         public ConfigFields Fields;
         private string _configFile = "elpis.config";
@@ -149,22 +154,7 @@ namespace Elpis
             Fields.Debug_Timestamp = (bool) _c.GetValue(ConfigItems.Debug_Timestamp);
 
             Fields.Login_Email = (string) _c.GetValue(ConfigItems.Login_Email);
-            try
-            {
-                Fields.Login_Password = StringCrypt.DecryptString((string) _c.GetValue(ConfigItems.Login_Password),
-                                                                  _cryptPass);
-                if (Fields.Login_Password != string.Empty)
-                {
-                    if (Fields.Login_Password.StartsWith(_cryptCheck))
-                        Fields.Login_Password = Fields.Login_Password.Replace(_cryptCheck, string.Empty);
-                    else
-                        Fields.Login_Password = string.Empty;
-                }
-            }
-            catch
-            {
-                Fields.Login_Password = string.Empty;
-            }
+            Fields.Login_Password = _c.GetEncryptedString(ConfigItems.Login_Password);
 
             Fields.Login_AutoLogin = (bool) _c.GetValue(ConfigItems.Login_AutoLogin);
 
@@ -182,22 +172,7 @@ namespace Elpis
             Fields.Proxy_Address = (string)_c.GetValue(ConfigItems.Proxy_Address);
             Fields.Proxy_Port = (int)_c.GetValue(ConfigItems.Proxy_Port);
             Fields.Proxy_User = (string)_c.GetValue(ConfigItems.Proxy_User);
-            try
-            {
-                Fields.Proxy_Password = StringCrypt.DecryptString((string)_c.GetValue(ConfigItems.Proxy_Password),
-                                                                  _cryptPass);
-                if (Fields.Proxy_Password != string.Empty)
-                {
-                    if (Fields.Proxy_Password.StartsWith(_cryptCheck))
-                        Fields.Proxy_Password = Fields.Proxy_Password.Replace(_cryptCheck, string.Empty);
-                    else
-                        Fields.Proxy_Password = string.Empty;
-                }
-            }
-            catch
-            {
-                Fields.Proxy_Password = string.Empty;
-            }
+            Fields.Proxy_Password = _c.GetEncryptedString(ConfigItems.Proxy_Password);
 
             var verStr = (string) _c.GetValue(ConfigItems.Elpis_Version);
             Version ver;
@@ -211,6 +186,11 @@ namespace Elpis
             Fields.Elpis_ShowTrayNotifications = (bool) _c.GetValue(ConfigItems.Elpis_ShowTrayNotifications);
             Fields.Elpis_Volume = (int)_c.GetValue(ConfigItems.Elpis_Volume);
             //Fields.Misc_ForceSSL = (bool)_c.GetValue(ConfigItems.Misc_ForceSSL);
+
+            Fields.LastFM_Scrobble = (bool)_c.GetValue(ConfigItems.LastFM_Scrobble);
+            Fields.LastFM_Username = (string)_c.GetValue(ConfigItems.LastFM_Username);
+            Fields.LastFM_Password = (string)_c.GetValue(ConfigItems.LastFM_Password);
+            //Fields.LastFM_Password = _c.GetEncryptedString(ConfigItems.LastFM_Password);
 
             var location = (string) _c.GetValue(ConfigItems.Elpis_StartupLocation);
             try
@@ -250,8 +230,7 @@ namespace Elpis
                 //*********************************************
 
                 _c.SetValue(ConfigItems.Login_Email, Fields.Login_Email);
-                _c.SetValue(ConfigItems.Login_Password,
-                            StringCrypt.EncryptString(_cryptCheck + Fields.Login_Password, _cryptPass));
+                _c.SetEncryptedString(ConfigItems.Login_Password, Fields.Login_Password);
                 _c.SetValue(ConfigItems.Login_AutoLogin, Fields.Login_AutoLogin);
 
                 _c.SetValue(ConfigItems.Pandora_AudioFormat, Fields.Pandora_AudioFormat);
@@ -262,8 +241,7 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Proxy_Address, Fields.Proxy_Address);
                 _c.SetValue(ConfigItems.Proxy_Port, Fields.Proxy_Port);
                 _c.SetValue(ConfigItems.Proxy_User, Fields.Proxy_User);
-                _c.SetValue(ConfigItems.Proxy_Password,
-                            StringCrypt.EncryptString(_cryptCheck + Fields.Proxy_Password, _cryptPass));
+                _c.SetEncryptedString(ConfigItems.Proxy_Password, Fields.Proxy_Password);
 
                 _c.SetValue(ConfigItems.Elpis_Version, Fields.Elpis_Version.ToString());
                 _c.SetValue(ConfigItems.Elpis_CheckUpdates, Fields.Elpis_CheckUpdates);
@@ -271,6 +249,13 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Elpis_MinimizeToTray, Fields.Elpis_MinimizeToTray);
                 _c.SetValue(ConfigItems.Elpis_ShowTrayNotifications, Fields.Elpis_ShowTrayNotifications);
                 //_c.SetValue(ConfigItems.Misc_ForceSSL, Fields.Misc_ForceSSL);
+
+                _c.SetValue(ConfigItems.LastFM_Scrobble, Fields.LastFM_Scrobble);
+                _c.SetValue(ConfigItems.LastFM_Username, Fields.LastFM_Username);
+                _c.SetValue(ConfigItems.LastFM_Password, Fields.LastFM_Password);
+                //_c.SetEncryptedString(ConfigItems.LastFM_Password, Fields.LastFM_Password);
+                
+
                 _c.SetValue(ConfigItems.Elpis_StartupLocation, Fields.Elpis_StartupLocation.ToString());
                 _c.SetValue(ConfigItems.Elpis_StartupSize, Fields.Elpis_StartupSize.ToString());
                 _c.SetValue(ConfigItems.Elpis_Volume, Fields.Elpis_Volume);
