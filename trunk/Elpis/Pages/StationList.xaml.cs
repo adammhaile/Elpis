@@ -76,6 +76,8 @@ namespace Elpis
             {
                 this.BeginDispatch(() =>
                                        {
+                                           if (value == null) return;
+
                                            lblNoStations.Visibility = (value.Count > 0) ? Visibility.Hidden : Visibility.Visible;
                                            StationItems.ItemsSource = value;
                                            _currSort = _player.StationSortOrder;

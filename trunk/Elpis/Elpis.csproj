@@ -90,6 +90,9 @@
     </Compile>
     <Compile Include="Controls\ContentSpinner.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Pages\LastFMAuthPage.xaml.cs">
+      <DependentUpon>LastFMAuthPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\RestartPage.xaml.cs">
       <DependentUpon>RestartPage.xaml</DependentUpon>
     </Compile>
@@ -129,6 +132,10 @@
     <Page Include="Pages\About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\LastFMAuthPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\RestartPage.xaml">
       <Generator>MSBuild:Compile</Generator>

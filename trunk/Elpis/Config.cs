@@ -60,8 +60,7 @@ namespace Elpis
         public static MapConfigEntry Elpis_Volume = new MapConfigEntry("Elpis_Volume", 100);
 
         public static MapConfigEntry LastFM_Scrobble = new MapConfigEntry("LastFM_Scrobble", false);
-        public static MapConfigEntry LastFM_Username = new MapConfigEntry("LastFM_Username", "");
-        public static MapConfigEntry LastFM_Password = new MapConfigEntry("LastFM_Password", "");
+        public static MapConfigEntry LastFM_SessionKey = new MapConfigEntry("LastFM_SessionKey", "");
 
         //public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
     }
@@ -101,8 +100,7 @@ namespace Elpis
         public int Elpis_Volume { get; set; }
 
         public bool LastFM_Scrobble { get; set; }
-        public string LastFM_Username { get; set; }
-        public string LastFM_Password { get; set; }
+        public string LastFM_SessionKey { get; set; }
 
         //public bool Misc_ForceSSL { get; set; }
 
@@ -188,9 +186,7 @@ namespace Elpis
             //Fields.Misc_ForceSSL = (bool)_c.GetValue(ConfigItems.Misc_ForceSSL);
 
             Fields.LastFM_Scrobble = (bool)_c.GetValue(ConfigItems.LastFM_Scrobble);
-            Fields.LastFM_Username = (string)_c.GetValue(ConfigItems.LastFM_Username);
-            Fields.LastFM_Password = (string)_c.GetValue(ConfigItems.LastFM_Password);
-            //Fields.LastFM_Password = _c.GetEncryptedString(ConfigItems.LastFM_Password);
+            Fields.LastFM_SessionKey = _c.GetEncryptedString(ConfigItems.LastFM_SessionKey);
 
             var location = (string) _c.GetValue(ConfigItems.Elpis_StartupLocation);
             try
@@ -251,9 +247,7 @@ namespace Elpis
                 //_c.SetValue(ConfigItems.Misc_ForceSSL, Fields.Misc_ForceSSL);
 
                 _c.SetValue(ConfigItems.LastFM_Scrobble, Fields.LastFM_Scrobble);
-                _c.SetValue(ConfigItems.LastFM_Username, Fields.LastFM_Username);
-                _c.SetValue(ConfigItems.LastFM_Password, Fields.LastFM_Password);
-                //_c.SetEncryptedString(ConfigItems.LastFM_Password, Fields.LastFM_Password);
+                _c.SetEncryptedString(ConfigItems.LastFM_SessionKey, Fields.LastFM_SessionKey);
                 
 
                 _c.SetValue(ConfigItems.Elpis_StartupLocation, Fields.Elpis_StartupLocation.ToString());

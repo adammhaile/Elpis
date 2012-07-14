@@ -8,9 +8,9 @@ namespace PandoraSharp.ControlQuery
 {
     public class ControlQueryManager
     {
-        private List<PlayerControlQuery.SongUpdate> _songUpdateDelegates;
-        private List<PlayerControlQuery.StatusUpdate> _statusUpdateDelegates;
-        private List<PlayerControlQuery.ProgressUpdate> _progressUpdateDelegates;
+        private List<SongUpdate> _songUpdateDelegates;
+        private List<StatusUpdate> _statusUpdateDelegates;
+        private List<ProgressUpdate> _progressUpdateDelegates;
 
         private object _lastQueryStatusLock = new object();
         private QueryStatusValue _lastQueryStatus = QueryStatusValue.Waiting;
@@ -24,14 +24,14 @@ namespace PandoraSharp.ControlQuery
         public ControlQueryManager()
         {
             _lastQuerySong = new QuerySong();
-            _songUpdateDelegates = new List<PlayerControlQuery.SongUpdate>();
-            _statusUpdateDelegates = new List<PlayerControlQuery.StatusUpdate>();
-            _progressUpdateDelegates = new List<PlayerControlQuery.ProgressUpdate>();
+            _songUpdateDelegates = new List<SongUpdate>();
+            _statusUpdateDelegates = new List<StatusUpdate>();
+            _progressUpdateDelegates = new List<ProgressUpdate>();
         }
 
         public QuerySong LastSong { get { lock (_lastQuerySongLock) { return _lastQuerySong; } } }
 
-        public void RegisterPlayerControlQuery(PlayerControlQuery obj)
+        public void RegisterPlayerControlQuery(IPlayerControlQuery obj)
         {
             _songUpdateDelegates.Add(obj.SongUpdateReceiver);
             _statusUpdateDelegates.Add(obj.StatsusUpdateReceiver);
@@ -54,7 +54,7 @@ namespace PandoraSharp.ControlQuery
 
         public void SendSongUpdate(string artist, string album, string song)
         {
-            SendSongUpdate(new QuerySong() { Artist = artist, Album = album, Title = song });
+            SendSongUpdate(new QuerySong() { Artist = artist, Album = album, Title = song});
         }
 
         public void SendStatusUpdate(QueryStatus status)

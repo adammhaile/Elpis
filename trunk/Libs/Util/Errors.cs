@@ -63,7 +63,10 @@ namespace Util
         LOG_SETUP_ERROR = 6002,
         ENGINE_INIT_ERROR = 6003,
         STREAM_ERROR = 6004,
-        
+
+        //LastFM Errors
+        ERROR_GETTING_SESSION = 7000,
+        ERROR_GETTING_TOKEN = 7001,
     };
 
     public class Errors
@@ -129,6 +132,9 @@ namespace Util
                 case ErrorCodes.LOG_SETUP_ERROR: return "Error setting up logging.";
                 case ErrorCodes.ENGINE_INIT_ERROR: return "Error initializing the player engine, Elpis must close. Try restarting the application.";
                 case ErrorCodes.STREAM_ERROR: return "Failed to load song more than once.\r\nCheck connection and try again.";
+
+                case ErrorCodes.ERROR_GETTING_SESSION: return "Error retrieving Last.FM Session.";
+                case ErrorCodes.ERROR_GETTING_TOKEN: return "Error retrieving Last.FM Auth Token.";
 
                 default: return msg;
             }

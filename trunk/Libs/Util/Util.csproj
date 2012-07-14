@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Errors.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="HttpUtility.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MapConfig.cs" />
     <Compile Include="PostSubmitter.cs" />

@@ -60,21 +60,19 @@ namespace PandoraSharp.ControlQuery
         public QueryStatusValue CurrentStatus { get; set; }
     }
 
-    public abstract class PlayerControlQuery
-    {
-        public PlayerControlQuery(){}
+    public delegate void SongUpdate(QuerySong song);
+    public delegate void ProgressUpdate(QueryProgress progress);
+    public delegate void StatusUpdate(QueryStatus status);
 
-        //Query Delegates
-        public delegate void SongUpdate(QuerySong song);
-        virtual public void SongUpdateReceiver(QuerySong song) { throw new NotImplementedException(); }
+    public interface IPlayerControlQuery
+    {    
+        void SongUpdateReceiver(QuerySong song);
+    
+        void ProgressUpdateReciever(QueryProgress progress);
 
-        public delegate void ProgressUpdate(QueryProgress progress);
-        virtual public void ProgressUpdateReciever(QueryProgress progress) { throw new NotImplementedException(); }
+        void StatsusUpdateReceiver(QueryStatus status);
 
-        public delegate void StatusUpdate(QueryStatus status);
-        virtual public void StatsusUpdateReceiver(QueryStatus status) { throw new NotImplementedException(); }
-
-        //TODO: Add Control Delegates
+        //TODO: Add Control Methods
     }
 }
 

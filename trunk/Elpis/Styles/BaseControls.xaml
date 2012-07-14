@@ -1065,6 +1065,113 @@
         </Setter>
     </Style>
 
+    <ControlTemplate x:Key="ExpanderToggleButton" TargetType="ToggleButton">
+        <Border
+            Name="Border" 
+            CornerRadius="2,0,0,0"
+            Background="Transparent"
+            BorderBrush="{StaticResource ControlBorderBrush}"
+            BorderThickness="0,0,1,0">
+            <Path 
+              Name="Arrow"
+              Fill="{StaticResource ControlGlyphBrush}"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Data="M 0 0 L 6 6 L 12 0 Z"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ToggleButton.IsMouseOver" Value="true">
+                <Setter TargetName="Border" Property="Background"
+              Value="{StaticResource ShadeMediumBrush}" />
+                <Setter TargetName="Arrow" Property="Fill"
+                    Value="{StaticResource ShadeLightBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter TargetName="Border" Property="Background"
+              Value="{StaticResource ShadeMediumDarkBrush}" />
+            </Trigger>
+            <Trigger Property="IsChecked" Value="true">
+                <Setter TargetName="Arrow" Property="Data"
+              Value="M 0 6 L 6 0 L 12 6 Z" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Border" Property="Background"
+                    Value="{StaticResource ShadeMediumDarkBrush}" />
+                <Setter TargetName="Border" Property="BorderBrush"
+                    Value="{StaticResource ShadeMediumLightBrush}" />
+                <Setter Property="Foreground"
+                    Value="{StaticResource ShadeMediumLightBrush}"/>
+                <Setter TargetName="Arrow" Property="Fill"
+                    Value="{StaticResource ShadeMediumLightBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style TargetType="Expander">
+        <Setter Property="Foreground" Value="{StaticResource MainFontBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Expander">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Name="ContentRow" Height="0"/>
+                        </Grid.RowDefinitions>
+                        <Border 
+                            Name="Border" 
+                            Grid.Row="0" 
+                            Background="{StaticResource ControlSelectBrush}"
+                            BorderBrush="{StaticResource ControlBorderBrush}"
+                            BorderThickness="1" 
+                            CornerRadius="0,0,0,0" >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ToggleButton
+                                    IsChecked="{Binding Path=IsExpanded,Mode=TwoWay,
+                                                        RelativeSource={RelativeSource TemplatedParent}}"
+                                    OverridesDefaultStyle="True" 
+                                    Template="{StaticResource ExpanderToggleButton}" 
+                                    Background="{StaticResource ControlBGBrush}" />
+                                <ContentPresenter 
+                                    Grid.Column="1"
+                                    Margin="4" 
+                                    ContentSource="Header" 
+                                    RecognizesAccessKey="True" />
+                            </Grid>
+                        </Border>
+                        <Border 
+                            Name="Content" 
+                            Grid.Row="1" 
+                            Background="{StaticResource ControlBGBrush}"
+                            BorderBrush="{StaticResource ControlBorderBrush}" 
+                            BorderThickness="1,0,1,1" 
+                            CornerRadius="0,0,0,0" >
+                            <ContentPresenter Margin="4" />
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="True">
+                            <Setter TargetName="ContentRow" Property="Height"
+                                Value="{Binding ElementName=Content,Path=Height}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border" Property="Background"
+                                Value="{StaticResource ShadeMediumDarkBrush}" />
+                            <Setter TargetName="Border" Property="BorderBrush"
+                                Value="{StaticResource ShadeMediumLightBrush}" />
+                            <Setter Property="Foreground"
+                                Value="{StaticResource ShadeMediumLightBrush}"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style x:Key="{x:Type GroupBox}" TargetType="{x:Type GroupBox}">
         <Setter Property="Foreground" Value="{StaticResource MainFontBrush}" />
         <Setter Property="Template">
