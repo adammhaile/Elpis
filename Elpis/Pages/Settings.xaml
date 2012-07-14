@@ -28,21 +28,22 @@
     </UserControl.Resources>
     <Grid Background="{StaticResource MainBGBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                   Style="{StaticResource FadeScroller}">
             <StackPanel Grid.Row="0" VerticalAlignment="Stretch">
-                <GroupBox Header="Login" Margin="5">
+                <!-- Due to a bug in the VS2010 Designer, the contents of expanders are not visible at design time when using custom styles.
+                     In order to see the contents while designing, add Style="" to the main expander tag section of each. Then remove when done. -->
+                <Expander Header="Login" Margin="5" IsExpanded="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <CheckBox Grid.Column="0" Margin="4" Name="chkAutoLogin"
-                      IsChecked="{Binding Path=Login_AutoLogin, 
-                                            UpdateSourceTrigger=PropertyChanged}"
+                      IsChecked="True"
                       Content="Automatically Login" />
                         <Button Grid.Column="1" Name="btnLogout" Content="Logout" HorizontalAlignment="Right"
                     Click="btnLogout_Click">
@@ -58,8 +59,8 @@
                         </Button>
 
                     </Grid>
-                </GroupBox>
-                <GroupBox Header="Pandora" Margin="5">
+                </Expander>
+                <Expander Header="Pandora" Margin="5" IsExpanded="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -72,9 +73,7 @@
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Content="Audio Format" FontSize="16" />
                         <ComboBox Name="cmbAudioFormat" Grid.Row="0" Grid.Column="1" Margin="3"
-                      ItemsSource="{StaticResource AudioFormats}" DisplayMemberPath="Display" SelectedValuePath="Value"
-                      SelectedValue="{Binding Path=Pandora_AudioFormat, 
-                                                    UpdateSourceTrigger=PropertyChanged}">
+                      ItemsSource="{StaticResource AudioFormats}" DisplayMemberPath="Display" SelectedValuePath="Value">
                             <ComboBox.ToolTip>
                                 <TextBlock FontSize="14">
                   AAC Plus (Low bitrate, best for slow connections)
@@ -87,16 +86,13 @@
                         </ComboBox>
                         <Label Grid.Row="1" Grid.Column="0" Content="Station Sort Order" FontSize="16" />
                         <ComboBox Name="cmbStationSort" Grid.Row="1" Grid.Column="1" Margin="3"
-                      ItemsSource="{StaticResource StationSortOrder}" DisplayMemberPath="Display" SelectedValuePath="Value"
-                      SelectedValue="{Binding Path=Pandora_StationSortOrder, 
-                                                    UpdateSourceTrigger=PropertyChanged}" />
+                      ItemsSource="{StaticResource StationSortOrder}" DisplayMemberPath="Display" SelectedValuePath="Value" />
                         <CheckBox Name="chkAutoPlay" Grid.Row="2" Grid.ColumnSpan="2" Margin="4"
-                      IsChecked="{Binding Path=Pandora_AutoPlay, 
-                                                        UpdateSourceTrigger=PropertyChanged}"
+                      IsChecked="True"
                       Content="Automatically Play Last Station" />
                     </Grid>
-                </GroupBox>
-                <GroupBox Header="General" Margin="5">
+                </Expander>
+                <Expander Header="General" Margin="5" IsExpanded="True">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -109,12 +105,10 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <CheckBox Name="chkCheckUpdates" Grid.Row="0" Margin="4"
-                      IsChecked="{Binding Path=Elpis_CheckUpdates, 
-                                    UpdateSourceTrigger=PropertyChanged}"
-                      Content="Check for Elpis Updates" />
+                      IsChecked="True"
+                      Content="Check for Updates" />
                         <CheckBox Name="chkGlobalMediaKeys" Grid.Row="0" Grid.Column="1" Margin="4"
-                      IsChecked="{Binding Path=Elpis_GlobalMediaKeys, 
-                                    UpdateSourceTrigger=PropertyChanged}"
+                      IsChecked="True"
                       Content="Global Media Keys">
                             <CheckBox.ToolTip>
                                 <TextBlock FontSize="14">
@@ -129,16 +123,17 @@
                             </CheckBox.ToolTip>
                         </CheckBox>
                         <CheckBox Name="chkTrayMinimize" Grid.Row="1" Grid.Column="0" Margin="4"
-                      IsChecked="{Binding Path=Elpis_MinimizeToTray, 
-                                    UpdateSourceTrigger=PropertyChanged}"
-                      Content="Minimize to System Tray" />
+                      IsChecked="True"
+                      Content="Minimize to Tray" />
                         <CheckBox Name="chkShowNotify" Grid.Row="1" Grid.Column="1" Margin="4"
-                      IsChecked="{Binding Path=Elpis_ShowTrayNotifications, 
-                                    UpdateSourceTrigger=PropertyChanged}"
-                      Content="Show Song Notifications" />
+                      IsChecked="True"
+                      Content="Show Notifications"
+                      ToolTip="Display notificationsin toolbar on each new song"/>
                     </Grid>
-                </GroupBox>
-                <GroupBox Header="Proxy - Changes Require Restarting Elpis" Margin="5" >
+                </Expander>
+                <Expander Header="Proxy - Changes Require Restarting Elpis" 
+                          IsExpanded="False"
+                          Margin="5">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition />
@@ -153,14 +148,12 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Content="Address" FontSize="16" />
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Path=Proxy_Address, 
-                                    UpdateSourceTrigger=PropertyChanged}" Margin="3"
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="" Margin="3"
                                  FontSize="16" TextAlignment="Center"
                                     Name="txtProxyAddress"/>
 
                         <Label Grid.Row="0" Grid.Column="2" Content="Port" FontSize="16" />
-                        <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Path=Proxy_Port, 
-                                    UpdateSourceTrigger=PropertyChanged}" Width="55" 
+                        <TextBox Grid.Row="0" Grid.Column="3" Text="" Width="55" 
                                  FontSize="16"
                                  HorizontalAlignment="Left" Margin="3" TextAlignment="Center"
                                  PreviewTextInput="txtProxyPort_PreviewTextInput"
@@ -169,8 +162,7 @@
 
                         <Label Grid.Row="2" Grid.Column="0" Content="Username" FontSize="16" />
                         <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" 
-                                 Text="{Binding Path=Proxy_User, 
-                            UpdateSourceTrigger=PropertyChanged}" 
+                                 Text="" 
                             FontSize="16"
                             TextAlignment="Center" Margin="3"
                             Name="txtProxyUser"/>
@@ -181,7 +173,28 @@
                                     FontSize="16"
                                     Name="txtProxyPassword"/>
                     </Grid>
-                </GroupBox>
+                </Expander>
+                <Expander Header="Last.FM Scrobbler"  IsExpanded="False" Margin="5" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Name="chkEnableScrobbler" Grid.Column="0" 
+                                  Content="Enable Scrobbler" Margin="4"
+                                  ToolTip="Enable Elpis to Scrobble to Last.FM - Must authenticate after enabling"
+                                  Click="chkEnableScrobbler_Click"/>
+                        <Button Name="btnLastFMAuth" Grid.Column="1"
+                                Content="Authenticate Account"
+                                ToolTip="Authenticate and allow Elpis to access Last.FM"
+                                Click="btnLastFMAuth_Click"/>
+                        <Button Name="btnLastFMDisable" Grid.Column="1"
+                                Visibility="Hidden"
+                                Content="De-Authenticate Account"
+                                ToolTip="Remove Last.FM Authentication"
+                                Click="btnLastFMDisable_Click"/>
+                    </Grid>
+                </Expander>
             </StackPanel>
         </ScrollViewer>
         <Grid Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">

@@ -2,87 +2,159 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Lastfm;             /*Note this requires lastfm-sharp.dll. Lastfm-sharp is   */
-using Lastfm.Scrobbling;  /* an open source C# last.fm client library available at */
-using Lastfm.Services;    /* https://code.google.com/p/lastfm-sharp */
 using PandoraSharp;
 using PandoraSharp.ControlQuery;
 using Util;
+using Lpfm.LastFmScrobbler;
+using Lpfm.LastFmScrobbler.Api;
+using System.Diagnostics;
 
 namespace PandoraSharp.Plugins
 {
-    public class PandoraSharpScrobbler : PlayerControlQuery
+    public class PandoraSharpScrobbler : IPlayerControlQuery
     /* This class maintains a Last.fm ScrobbleManager object, monitors Elpis's
      * play progress and adds tracks to the scrobbling queue as they satisfy 
      * the 'played' definition - currently hardcoded to half the tracklength */
     {
-        private const double PercentBeforeScrobble = 50.0;
+        private const double PercentNowPlaying = 5.0;
+        private const double PercentBeforeScrobble = 75.0;
 
-        private Session _session = null;
-        private string _username;
-        private string _password;
-        private Connection _connection = null;
+        private bool _doneScrobble;
+        private bool _doneNowPlaying;
+        QuerySong _currentSong;
 
-        private ScrobbleManager _scrobbleQueue;
-        private bool _scrobbledYet;
-        //QuerySong _currentSong;
+        QueuingScrobbler _scrobbler;
 
-        public PandoraSharpScrobbler(string lastFMApiKey, string lastFMApiSecret)
+        ProcessScrobblesDelegate _processScrobbleDelegate;
+
+        public bool IsEnabled { get; set; }
+
+        public string APIKey { get; set; }
+        public string APISecret { get; set; }
+        private string _sessionKey = string.Empty;
+        public string SessionKey 
+        { 
+            get { return _sessionKey; } 
+            set { _sessionKey = value; InitScrobblers(); } 
+        }
+        public string AuthURL { get; set; }
+
+        private delegate void ProcessScrobblesDelegate();
+
+        public PandoraSharpScrobbler(string lastFMApiKey, string lastFMApiSecret, string lastFMSessionKey = null)
         {
-            _session = new Session(lastFMApiKey, lastFMApiSecret);   
+            APIKey = lastFMApiKey;
+            APISecret = lastFMApiSecret;
+            SessionKey = lastFMSessionKey;
+            AuthURL = string.Empty;
+
+            InitScrobblers();
+
+            _processScrobbleDelegate = new ProcessScrobblesDelegate(DoScrobbles);
         }
 
-        public bool Connect(string username, string password)
+        private void InitScrobblers()
         {
-            _username = username;
-            _password = password;
+            _scrobbler = new QueuingScrobbler(APIKey, APISecret, SessionKey);
+        }
 
-            /* Last.fm expects the MD5 hash of password. Note we stored an encrypted password using same 
-             * method as Pandora password, but decrypted when we retrieved */
-            Log.O("LastFM: Connecting");
-            _session.Authenticate(username, Utilities.MD5(password));
-            if (_session.Authenticated)
+        private void DoScrobbles()
+        {
+            try
             {
-                _connection = new Connection("Elpis", "1.0", username, _session);
-                _scrobbleQueue = new ScrobbleManager(_connection);
-                Log.O("LastFM: Connected");
+                _scrobbler.Process();
             }
-            else
+            catch (Exception ex)
             {
-                _connection = null;
-                _scrobbleQueue = null;
-                Log.O("LastFM: Connection Failed");
-            }
-
-            _scrobbledYet = false;
-
-            return _session.Authenticated;
-        }
-
-        public override void SongUpdateReceiver(QuerySong song)
-        {
-            if (!_session.Authenticated) return;
-            _scrobbledYet = false;
-            //_currentSong = song;
-            _scrobbleQueue.ReportNowplaying(new NowplayingTrack(song.Artist, song.Title));
-        }
-
-        public override void StatsusUpdateReceiver(QueryStatus status)
-        {
-            
-        }
-
-        public override void ProgressUpdateReciever(QueryProgress progress)
-        {
-            if (!_session.Authenticated) return;
-            if (progress.Progress.Percent > PercentBeforeScrobble && !_scrobbledYet)
-            {
-                Log.O("LastFM, Scrobbling: {0} - {1}", progress.Song.Artist, progress.Song.Title);
-                _scrobbleQueue.Queue(
-                    new Entry(progress.Song.Artist, progress.Song.Title, System.DateTime.Now - progress.Progress.ElapsedTime,
-                        PlaybackSource.PersonalizedBroadcast, progress.Progress.TotalTime, ScrobbleMode.Played));
-                _scrobbledYet = true;
+                Log.O("Last.FM Error!: " + ex.ToString());
             }
         }
+
+        private void ProcessScrobbles()
+        {
+            _processScrobbleDelegate.BeginInvoke(null, null);
+        }
+        
+        public string GetAuthUrl()
+        {
+            AuthURL = _scrobbler.BaseScrobbler.GetAuthorisationUri();
+            return AuthURL;
+        }
+
+        public void LaunchAuthPage()
+        {
+            if (AuthURL == string.Empty)
+                AuthURL = GetAuthUrl();
+
+            Process.Start(AuthURL); 
+        }
+
+        public string GetAuthSessionKey()
+        {
+            try
+            {
+                SessionKey = _scrobbler.BaseScrobbler.GetSession();
+            }
+            catch (LastFmApiException exception)
+            {
+                throw;
+            }
+            return SessionKey;
+        }
+
+        private static Track QueryProgressToTrack(QueryProgress prog)
+        {
+            var track = new Track
+            {
+                TrackName = prog.Song.Title,
+                AlbumName = prog.Song.Album,
+                ArtistName = prog.Song.Artist,
+                Duration = prog.Progress.TotalTime,
+            };
+            return track;
+        }
+
+        #region IPlayerControlQuery Members
+        
+        public void SongUpdateReceiver(QuerySong song)
+        {
+            //Nothing to do here
+        }
+
+        public void StatsusUpdateReceiver(QueryStatus status)
+        {
+            //Nothing to do here
+        }
+
+        public void ProgressUpdateReciever(QueryProgress progress)
+        {
+            if (!IsEnabled || !_scrobbler.BaseScrobbler.HasSession) return;
+
+            try
+            {
+                if (progress.Progress.Percent < PercentNowPlaying && !_doneNowPlaying)
+                {
+                    _doneScrobble = false;
+                    Log.O("LastFM, Now Playing: {0} - {1}", progress.Song.Artist, progress.Song.Title);
+                    _currentSong = progress.Song;
+                    _scrobbler.NowPlaying(QueryProgressToTrack(progress));
+                    _doneNowPlaying = true;
+                }
+                if (progress.Progress.Percent > PercentBeforeScrobble && !_doneScrobble)
+                {
+                    _doneNowPlaying = false;
+                    Log.O("LastFM, Scrobbling: {0} - {1}", progress.Song.Artist, progress.Song.Title);
+                    _scrobbler.Scrobble(QueryProgressToTrack(progress));
+                    _doneScrobble = true;
+                }
+
+                if (_scrobbler.QueuedCount > 0) ProcessScrobbles();
+            }
+            catch (Exception ex)
+            {
+                Log.O("Last.FM Error!: " + ex.ToString());
+            }
+        }
+        #endregion
     }
 }

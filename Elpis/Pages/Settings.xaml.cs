@@ -21,6 +21,7 @@ using System.Windows;
 using System.Windows.Controls;
 using PandoraSharpPlayer;
 using System;
+using Util;
 
 namespace Elpis
 {
@@ -36,6 +37,10 @@ namespace Elpis
         public delegate void RestartEvent();
 
         public delegate void LogoutEvent();
+
+        public delegate void LastFMAuthRequestEvent();
+
+        public delegate void LasFMDeAuthRequestEvent();
 
         #endregion
 
@@ -56,6 +61,10 @@ namespace Elpis
         public event RestartEvent Restart;
 
         public event LogoutEvent Logout;
+
+        public event LastFMAuthRequestEvent LastFMAuthRequest;
+
+        public event LasFMDeAuthRequestEvent LasFMDeAuthRequest; 
 
         private void LoadConfig()
         {
@@ -78,7 +87,11 @@ namespace Elpis
             txtProxyUser.Text = _config.Fields.Proxy_User;
             txtProxyPassword.Password = _config.Fields.Proxy_Password;
 
+            chkEnableScrobbler.IsChecked = _config.Fields.LastFM_Scrobble;
+
             _config.SaveConfig();
+
+            UpdateLastFMControlState();
         }
 
         private void SaveConfig()
@@ -109,6 +122,8 @@ namespace Elpis
             _config.Fields.Proxy_Port = port;
             _config.Fields.Proxy_User = txtProxyUser.Text;
             _config.Fields.Proxy_Password = txtProxyPassword.Password;
+
+            _config.Fields.LastFM_Scrobble = (bool)chkEnableScrobbler.IsChecked;
 
             _config.SaveConfig();
         }
@@ -182,6 +197,40 @@ namespace Elpis
             {
                 e.Handled = true;
             }
+        }
+
+        private void ShowLastFMAuthButton(bool state)
+        {
+            btnLastFMAuth.Visibility = state ? Visibility.Visible : Visibility.Hidden;
+            btnLastFMDisable.Visibility = state ? Visibility.Hidden : Visibility.Visible;
+        }
+
+        private void UpdateLastFMControlState()
+        {
+            bool state = (bool)chkEnableScrobbler.IsChecked;
+
+            ShowLastFMAuthButton(_config.Fields.LastFM_SessionKey == string.Empty);
+            btnLastFMAuth.IsEnabled = state || _config.Fields.LastFM_SessionKey != string.Empty;
+        }
+
+        private void chkEnableScrobbler_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateLastFMControlState();
+        }
+
+        private void btnLastFMAuth_Click(object sender, RoutedEventArgs e)
+        {
+            if (LastFMAuthRequest != null)
+                LastFMAuthRequest();
+        }
+
+        private void btnLastFMDisable_Click(object sender, RoutedEventArgs e)
+        {
+            if (LasFMDeAuthRequest != null)
+                LasFMDeAuthRequest();
+
+            chkEnableScrobbler.IsChecked = false;
+            UpdateLastFMControlState();
         }
     }
 }

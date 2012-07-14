@@ -163,7 +163,7 @@ namespace PandoraSharpPlayer
             return true;
         }  
 
-        public void RegisterPlayerControlQuery(PlayerControlQuery obj)
+        public void RegisterPlayerControlQuery(IPlayerControlQuery obj)
         {
             if (_cqman == null) return;
 

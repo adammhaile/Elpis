@@ -89,6 +89,7 @@ namespace Elpis
         private UpdateCheck _update;
         private UpdatePage _updatePage;
         private RestartPage _restartPage;
+        private LastFMAuthPage _lastFMPage;
 
         private ErrorCodes _lastError = ErrorCodes.SUCCESS;
         private Exception _lastException = null;
@@ -215,16 +216,62 @@ namespace Elpis
             }
         }
 
+        private void CloseSettings()
+        {
+            _scrobbler.IsEnabled = _config.Fields.LastFM_Scrobble;
+            RestorePrevPage();
+        }
+
         private void SetupPageEvents()
         {
-            _settingsPage.Close += RestorePrevPage;
+            _settingsPage.Close += CloseSettings;
             _settingsPage.Restart += _settingsPage_Restart;
+            _settingsPage.LastFMAuthRequest += _settingsPage_LastFMAuthRequest;
+            _settingsPage.LasFMDeAuthRequest += _settingsPage_LasFMDeAuthRequest;
             _restartPage.RestartSelectionEvent += _restartPage_RestartSelectionEvent;
+            _lastFMPage.ContinueEvent += _lastFMPage_ContinueEvent;
+            _lastFMPage.CancelEvent += _lastFMPage_CancelEvent;
             _aboutPage.Close += RestorePrevPage;
 
             _searchPage.Cancel += _searchPage_Cancel;
             _searchPage.AddVariety += _searchPage_AddVariety;
             _loginPage.ConnectingEvent += _loginPage_ConnectingEvent;
+        }
+
+        void _settingsPage_LasFMDeAuthRequest()
+        {
+            _config.Fields.LastFM_SessionKey = string.Empty;
+            _config.Fields.LastFM_Scrobble = false;
+            _config.SaveConfig();
+        }
+
+        void _settingsPage_LastFMAuthRequest()
+        {
+            this.BeginDispatch(() =>
+                {
+                    try
+                    {
+                        string url = _scrobbler.GetAuthUrl();
+                        _lastFMPage.SetAuthURL(url);
+                        _scrobbler.LaunchAuthPage();
+
+                        transitionControl.ShowPage(_lastFMPage);
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowError(ErrorCodes.ERROR_GETTING_TOKEN, ex);
+                    }
+                });
+        }
+
+        void _lastFMPage_CancelEvent()
+        {
+            transitionControl.ShowPage(_settingsPage);
+        }
+
+        void _lastFMPage_ContinueEvent()
+        {
+            this.Dispatch(() => GetLastFMSessionKey());
         }
 
         void _settingsPage_Restart()
@@ -263,6 +310,25 @@ namespace Elpis
             else
             {
                 RestorePrevPage();
+            }
+        }
+
+        private void GetLastFMSessionKey()
+        {
+            _loadingPage.UpdateStatus("Fetching Last.FM Session");
+            transitionControl.ShowPage(_loadingPage);
+
+            try
+            {
+                string sk = _scrobbler.GetAuthSessionKey();
+                _config.Fields.LastFM_Scrobble = true;
+                _config.Fields.LastFM_SessionKey = sk;
+                _config.SaveConfig();
+                transitionControl.ShowPage(_settingsPage);
+            }
+            catch (Exception ex)
+            {
+                ShowError(ErrorCodes.ERROR_GETTING_SESSION, ex);
             }
         }
 
@@ -326,6 +392,9 @@ namespace Elpis
 
             _playlistPage = new PlaylistPage(_player);
             transitionControl.AddPage(_playlistPage);
+
+            _lastFMPage = new LastFMAuthPage();
+            transitionControl.AddPage(_lastFMPage);
         }
 
         private void StationMenuClick(object sender, EventArgs e)
@@ -531,7 +600,9 @@ namespace Elpis
                 ShowError(ErrorCodes.ENGINE_INIT_ERROR, ex);
                 return;
             }
-            
+
+            LoadLastFM();
+
             _player.AudioFormat = _config.Fields.Pandora_AudioFormat;
             _player.SetStationSortOrder(_config.Fields.Pandora_StationSortOrder);
             _player.Volume = _config.Fields.Elpis_Volume;
@@ -567,32 +638,31 @@ namespace Elpis
 
             this.Dispatch(() => mainBar.Volume = _player.Volume);
 
-            if (_config.Fields.LastFM_Scrobble)
-            {
+            _finalComplete = true;
+        }
 
-                string apiKey = string.Empty;
-                string apiSecret = string.Empty;
+
+
+        private void LoadLastFM()
+        {
+            string apiKey = string.Empty;
+            string apiSecret = string.Empty;
 #if APP_RELEASE
                 apiKey = ReleaseData.LastFMApiKey;
                 apiSecret = ReleaseData.LastFMApiSecret;
 #else
-                apiKey = "d9d6aec702ac9e9703babeeea4d8d583";
-                apiSecret = "e77fc2991eac69d5bd337514efbb7561";
+            apiKey = "cd4600e010b8b232f2e4130990702e53";
+            apiSecret = "8f4dc3082276489e200fe7568b04f685";
 #endif
 
+            if (!string.IsNullOrEmpty(_config.Fields.LastFM_SessionKey))
+                _scrobbler = new PandoraSharpScrobbler(apiKey, apiSecret, _config.Fields.LastFM_SessionKey);
+            else
                 _scrobbler = new PandoraSharpScrobbler(apiKey, apiSecret);
 
-                _player.RegisterPlayerControlQuery(_scrobbler);
+            _scrobbler.IsEnabled = _config.Fields.LastFM_Scrobble;
 
-                _loadingPage.UpdateStatus("Connecting to Last.FM...");
-
-                if (!_scrobbler.Connect(_config.Fields.LastFM_Username, _config.Fields.LastFM_Password))
-                {
-                    _loadingPage.UpdateStatus("Error connecting to Last.FM...");
-                }
-            }
-
-            _finalComplete = true;
+            _player.RegisterPlayerControlQuery(_scrobbler);
         }
 
         private void LoadLogic()
