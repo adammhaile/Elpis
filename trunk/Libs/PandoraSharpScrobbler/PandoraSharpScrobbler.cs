@@ -32,7 +32,8 @@ namespace PandoraSharp.Plugins
 
         ProcessScrobblesDelegate _processScrobbleDelegate;
 
-        public bool IsEnabled { get; set; }
+        private bool _isEnabled = false;
+        public bool IsEnabled { get { return _isEnabled && APIKey != "dummy_key"; } set { _isEnabled = value; } }
 
         public string APIKey { get; set; }
         public string APISecret { get; set; }
