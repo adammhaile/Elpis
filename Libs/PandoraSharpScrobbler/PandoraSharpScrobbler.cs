@@ -23,7 +23,10 @@ namespace PandoraSharp.Plugins
 
         private bool _doneScrobble;
         private bool _doneNowPlaying;
-        QuerySong _currentSong;
+        private QuerySong _currentSong;
+
+        private object _currentTrackLock = new object();
+        private Track _currentTrack;
 
         QueuingScrobbler _scrobbler;
 
@@ -64,7 +67,17 @@ namespace PandoraSharp.Plugins
         {
             try
             {
-                _scrobbler.Process();
+                var response = _scrobbler.Process();
+                if (response.Count == 1)
+                {
+                    if (response[0] is NowPlayingResponse || response[0] is ScrobbleResponse)
+                    {
+                        lock (_currentTrackLock)
+                        {
+                            _currentTrack = response[0].Track;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -162,6 +175,8 @@ namespace PandoraSharp.Plugins
             {
                 if (progress.Progress.Percent < PercentNowPlaying && !_doneNowPlaying)
                 {
+                    lock (_currentTrackLock) { _currentTrack = null; }
+
                     _doneScrobble = false;
                     Log.O("LastFM, Now Playing: {0} - {1}", progress.Song.Artist, progress.Song.Title);
                     _currentSong = progress.Song;
@@ -191,19 +206,34 @@ namespace PandoraSharp.Plugins
             try
             {
                 Log.O("LastFM, Rating: {0} - {1} - {2}", song.Artist, song.Title, newRating.ToString());
+                Track track = null;
+
+                //Get corrected track if there is one
+                //Without getting the corrected track, 
+                //ratings will not work if there were corrections.
+                lock (_currentTrackLock)
+                {
+                    if (_currentTrack == null)
+                    {
+                        track = QuerySongToTrack(song);
+                    }
+                    else
+                        track = _currentTrack;
+                }
+
                 switch (newRating)
                 {
                     case SongRating.love:
-                        _scrobbler.Love(QuerySongToTrack(song));
+                        _scrobbler.Love(track);
                         break;
                     case SongRating.ban:
-                        _scrobbler.Ban(QuerySongToTrack(song));
+                        _scrobbler.Ban(track);
                         break;
                     case SongRating.none:
                         if(oldRating == SongRating.love)
-                            _scrobbler.UnLove(QuerySongToTrack(song));
+                            _scrobbler.UnLove(track);
                         else if(oldRating == SongRating.ban)
-                            _scrobbler.UnBan(QuerySongToTrack(song));
+                            _scrobbler.UnBan(track);
                         break;
                 }
 
