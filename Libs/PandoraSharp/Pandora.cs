@@ -90,6 +90,7 @@ namespace PandoraSharp
         {
             QuickMixStationIDs = new List<string>();
             StationSortOrder = SortOrder.DateDesc;
+            HasSubscription = true;
             //this.set_proxy(null);
         }
 
@@ -155,7 +156,7 @@ namespace PandoraSharp
             set { _imageCachePath = value; }
         }
 
-        [DefaultValue(false)]
+        [DefaultValue(true)]
         public bool HasSubscription { get; private set; }
 
         public string AudioFormat

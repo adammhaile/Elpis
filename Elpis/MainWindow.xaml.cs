@@ -651,8 +651,9 @@ namespace Elpis
                 apiKey = ReleaseData.LastFMApiKey;
                 apiSecret = ReleaseData.LastFMApiSecret;
 #else
-            apiKey = "cd4600e010b8b232f2e4130990702e53";
-            apiSecret = "8f4dc3082276489e200fe7568b04f685";
+            //Put your own Last.FM API keys here
+            apiKey = "dummy_key";
+            apiSecret = "dummy_key";
 #endif
 
             if (!string.IsNullOrEmpty(_config.Fields.LastFM_SessionKey))
