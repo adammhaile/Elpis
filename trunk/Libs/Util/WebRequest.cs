@@ -59,7 +59,8 @@ namespace Util
             if (_proxy != null)
                 wc.Proxy = _proxy;
 
-            wc.Headers.Add("Content-Type", "text/plain");
+            wc.Encoding = System.Text.Encoding.UTF8;
+            wc.Headers.Add("Content-Type", "text/plain; charset=utf8");
             wc.Headers.Add("User-Agent", _userAgent);
 
             string response = string.Empty;
