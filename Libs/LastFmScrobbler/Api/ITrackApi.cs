@@ -61,5 +61,37 @@ namespace Lpfm.LastFmScrobbler.Api
         /// <param name="authentication"><see cref="Authentication"/> object</param>
         /// <returns>A <see cref="ScrobbleResponse"/>DTO containing details of Last.FM's response</returns>
         ScrobbleResponses Scrobble(IList<Track> tracks, string context, Authentication authentication);
+
+        /// <summary>
+        /// Notifies Last.FM that the user Loves the track
+        /// </summary>
+        /// <param name="track">A <see cref="Track"/> DTO containing track details</param>
+        /// <param name="authentication"><see cref="Authentication"/> object</param>     
+        /// <returns>int LastFM return code. 0 is Success, above 0 is failure</returns>
+        RatingResponse Love(Track track, Authentication authentication);
+
+        /// <summary>
+        /// Notifies Last.FM that the user UnLoves the track
+        /// </summary>
+        /// <param name="track">A <see cref="Track"/> DTO containing track details</param>
+        /// <param name="authentication"><see cref="Authentication"/> object</param>     
+        /// <returns>int LastFM return code. 0 is Success, above 0 is failure</returns>
+        RatingResponse UnLove(Track track, Authentication authentication);
+
+        /// <summary>
+        /// Notifies Last.FM that the user wants to Ban the track
+        /// </summary>
+        /// <param name="track">A <see cref="Track"/> DTO containing track details</param>
+        /// <param name="authentication"><see cref="Authentication"/> object</param>     
+        /// <returns>int LastFM return code. 0 is Success, above 0 is failure</returns>
+        RatingResponse Ban(Track track, Authentication authentication);
+
+        /// <summary>
+        /// Notifies Last.FM that the user wants to UnBan the track
+        /// </summary>
+        /// <param name="track">A <see cref="Track"/> DTO containing track details</param>
+        /// <param name="authentication"><see cref="Authentication"/> object</param>     
+        /// <returns>int LastFM return code. 0 is Success, above 0 is failure</returns>
+        RatingResponse UnBan(Track track, Authentication authentication);
     }
 }

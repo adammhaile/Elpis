@@ -10,6 +10,10 @@ namespace Lpfm.LastFmScrobbler.Api
     {
         private const string UpdateNowPlayingMethodName = "track.updateNowPlaying";
         private const string ScrobbleMethodName = "track.scrobble";
+        private const string LoveMethodName = "track.love";
+        private const string UnLoveMethodName = "track.unlove";
+        private const string BanMethodName = "track.ban";
+        private const string UnBanMethodName = "track.unban";
 
         /// <summary>
         /// Instantiates a <see cref="TrackApi"/>
@@ -66,6 +70,62 @@ namespace Lpfm.LastFmScrobbler.Api
         }
 
         /// <summary>
+        /// Notifies Last.FM that the user UnLoves the track
+        /// </summary>
+        /// <param name="track">A <see cref="Track"/> DTO containing track details</param>
+        /// <param name="authentication"><see cref="Authentication"/> object</param>     
+        /// <returns>int LastFM return code. 0 is Success, above 0 is failure</returns>
+        public RatingResponse Love(Track track, Authentication authentication)
+        {
+            return RateTrack(track, authentication, LoveMethodName);
+        }
+
+        /// <summary>
+        /// Notifies Last.FM that the user Loves the track
+        /// </summary>
+        /// <param name="track">A <see cref="Track"/> DTO containing track details</param>
+        /// <param name="authentication"><see cref="Authentication"/> object</param>     
+        /// <returns>int LastFM return code. 0 is Success, above 0 is failure</returns>
+        public RatingResponse UnLove(Track track, Authentication authentication)
+        {
+            return RateTrack(track, authentication, UnLoveMethodName);
+        }
+
+        /// <summary>
+        /// Notifies Last.FM that the user wants to Ban the track
+        /// </summary>
+        /// <param name="track">A <see cref="Track"/> DTO containing track details</param>
+        /// <param name="authentication"><see cref="Authentication"/> object</param>     
+        /// <returns>int LastFM return code. 0 is Success, above 0 is failure</returns>
+        public RatingResponse Ban(Track track, Authentication authentication)
+        {
+            return RateTrack(track, authentication, BanMethodName);
+        }
+
+        /// <summary>
+        /// Notifies Last.FM that the user wants to UnBan the track
+        /// </summary>
+        /// <param name="track">A <see cref="Track"/> DTO containing track details</param>
+        /// <param name="authentication"><see cref="Authentication"/> object</param>     
+        /// <returns>int LastFM return code. 0 is Success, above 0 is failure</returns>
+        public RatingResponse UnBan(Track track, Authentication authentication)
+        {
+            return RateTrack(track, authentication, UnBanMethodName);
+        }
+
+        private RatingResponse RateTrack(Track track, Authentication authentication, string method)
+        {
+            Dictionary<string, string> parameters = TrackToNameValueCollection(track);
+
+            ApiHelper.AddRequiredParams(parameters, method, authentication);
+
+            // send request
+            var navigator = RestApi.SendPostRequest(ApiHelper.LastFmWebServiceRootUrl, parameters);
+
+            return GetRatingResponseFromNavigator(navigator);
+        }
+
+        /// <summary>
         /// Add a track-play to a user's profile
         /// </summary>
         /// <param name="track">A <see cref="Track"/> DTO containing track details</param>
@@ -119,6 +179,17 @@ namespace Lpfm.LastFmScrobbler.Api
         }
 
         #endregion
+
+
+        protected RatingResponse GetRatingResponseFromNavigator(XPathNavigator navigator)
+        {
+            if (ApiHelper.SelectSingleNode(navigator, "/lfm/@status").Value == "ok")
+                return new RatingResponse() { ErrorCode = 0 };
+            else
+            {
+                return new RatingResponse() { ErrorCode = ApiHelper.SelectSingleNode(navigator, "/lfm/error/@code").ValueAsInt };
+            }
+        }
 
         protected ScrobbleResponse GetScrobbleResponseFromNavigator(XPathNavigator navigator)
         {

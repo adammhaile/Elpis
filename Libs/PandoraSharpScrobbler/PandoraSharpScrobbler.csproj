@@ -53,6 +53,10 @@
       <Project>{BA7F7E8A-B089-4323-8C8D-F406E7AFCDBE}</Project>
       <Name>Lpfm.LastFmScrobbler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PandoraSharp\PandoraSharp.csproj">
+      <Project>{64DD2B7D-9069-41FF-A4E4-732F6DF82F09}</Project>
+      <Name>PandoraSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PlayerControlQuery\PlayerControlQuery.csproj">
       <Project>{E252FF08-F527-4A42-9A69-D28F4AE6052D}</Project>
       <Name>PlayerControlQuery</Name>

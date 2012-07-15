@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PandoraSharp;
 
 namespace PandoraSharp.ControlQuery
 {
@@ -10,6 +11,7 @@ namespace PandoraSharp.ControlQuery
         public string Artist { get; set; }
         public string Album { get; set; }
         public string Title { get; set; }
+        public SongRating Rating { get; set; }
     }
 
     public class QueryTrackProgress
@@ -63,6 +65,7 @@ namespace PandoraSharp.ControlQuery
     public delegate void SongUpdate(QuerySong song);
     public delegate void ProgressUpdate(QueryProgress progress);
     public delegate void StatusUpdate(QueryStatus status);
+    public delegate void RatingUpdate(QuerySong song, SongRating rating);
 
     public interface IPlayerControlQuery
     {    
@@ -70,7 +73,9 @@ namespace PandoraSharp.ControlQuery
     
         void ProgressUpdateReciever(QueryProgress progress);
 
-        void StatsusUpdateReceiver(QueryStatus status);
+        void StatusUpdateReceiver(QueryStatus status);
+
+        void RatingUpdateReceiver(QuerySong song, SongRating oldRating, SongRating newRating);
 
         //TODO: Add Control Methods
     }

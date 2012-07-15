@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Util;
+using PandoraSharp;
 
 namespace PandoraSharp.ControlQuery
 {
     public class ControlQueryManager
     {
-        private List<SongUpdate> _songUpdateDelegates;
-        private List<StatusUpdate> _statusUpdateDelegates;
-        private List<ProgressUpdate> _progressUpdateDelegates;
+        private List<IPlayerControlQuery> _pcqList;
 
         private object _lastQueryStatusLock = new object();
         private QueryStatusValue _lastQueryStatus = QueryStatusValue.Waiting;
@@ -24,18 +23,17 @@ namespace PandoraSharp.ControlQuery
         public ControlQueryManager()
         {
             _lastQuerySong = new QuerySong();
-            _songUpdateDelegates = new List<SongUpdate>();
-            _statusUpdateDelegates = new List<StatusUpdate>();
-            _progressUpdateDelegates = new List<ProgressUpdate>();
+            _lastProgress = new QueryProgress();
+            _lastQueryStatus = new QueryStatusValue();
+
+            _pcqList = new List<IPlayerControlQuery>();
         }
 
         public QuerySong LastSong { get { lock (_lastQuerySongLock) { return _lastQuerySong; } } }
 
         public void RegisterPlayerControlQuery(IPlayerControlQuery obj)
         {
-            _songUpdateDelegates.Add(obj.SongUpdateReceiver);
-            _statusUpdateDelegates.Add(obj.StatsusUpdateReceiver);
-            _progressUpdateDelegates.Add(obj.ProgressUpdateReciever);
+            _pcqList.Add(obj);
         }
 
         public void SendSongUpdate(QuerySong song)
@@ -46,9 +44,9 @@ namespace PandoraSharp.ControlQuery
             }
 
             Log.O("Song Update: {0} | {1} | {2}", song.Artist, song.Album, song.Title);
-            foreach (var del in _songUpdateDelegates)
+            foreach (var obj in _pcqList)
             {
-                del(song);
+                obj.SongUpdateReceiver(song);
             }
         }
 
@@ -67,9 +65,10 @@ namespace PandoraSharp.ControlQuery
             Log.O("Status Update: {0} -> {1}",
                 status.PreviousStatus.ToString(),
                 status.CurrentStatus.ToString());
-            foreach (var del in _statusUpdateDelegates)
+
+            foreach (var obj in _pcqList)
             {
-                del(status);
+                obj.StatusUpdateReceiver(status);
             }
         }
 
@@ -90,9 +89,9 @@ namespace PandoraSharp.ControlQuery
                 _lastProgress = progress;
             }
 
-            foreach (var del in _progressUpdateDelegates)
+            foreach (var obj in _pcqList)
             {
-                del(progress);
+                obj.ProgressUpdateReciever(progress);
             }
         }
 
@@ -104,6 +103,19 @@ namespace PandoraSharp.ControlQuery
         public void SendProgressUpdate(QuerySong song, TimeSpan TotalTime, TimeSpan ElapsedTime)
         {
             SendProgressUpdate(song, new QueryTrackProgress() { TotalTime = TotalTime, ElapsedTime = ElapsedTime });
+        }
+
+        public void SendRatingUpdate(QuerySong song, SongRating oldRating, SongRating newRating)
+        {
+            foreach (var obj in _pcqList)
+            {
+                obj.RatingUpdateReceiver(song, oldRating, newRating);
+            }
+        }
+
+        public void SendRatingUpdate(string artist, string album, string song, SongRating oldRating, SongRating newRating)
+        {
+            SendRatingUpdate(new QuerySong() { Artist = artist, Album = album, Title = song }, oldRating, newRating);
         }
     }
 }
