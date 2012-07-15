@@ -1,5 +1,6 @@
 ﻿using System;
 using Lpfm.LastFmScrobbler.Api;
+using System.Net;
 
 namespace Lpfm.LastFmScrobbler
 {
@@ -47,6 +48,11 @@ namespace Lpfm.LastFmScrobbler
 
             AuthApi = new AuthApi();
             TrackApi = new TrackApi();
+        }
+
+        public static void SetWebProxy(WebProxy proxy)
+        {
+            Lpfm.LastFmScrobbler.Api.WebRequestRestApi.SetWebProxy(proxy);
         }
 
         public bool HasSession { get { return Authentication.Session != null; } }
@@ -131,6 +137,34 @@ namespace Lpfm.LastFmScrobbler
             }
 
             return TrackApi.Scrobble(track, Authentication);
+        }
+
+        public RatingResponse Love(Track track)
+        {
+            var result = TrackApi.Love(track, Authentication);
+            result.Track = track;
+            return result;
+        }
+
+        public RatingResponse UnLove(Track track)
+        {
+            var result = TrackApi.UnLove(track, Authentication);
+            result.Track = track;
+            return result;
+        }
+
+        public RatingResponse Ban(Track track)
+        {
+            var result = TrackApi.Ban(track, Authentication);
+            result.Track = track;
+            return result;
+        }
+
+        public RatingResponse UnBan(Track track)
+        {
+            var result = TrackApi.UnBan(track, Authentication);
+            result.Track = track;
+            return result;
         }
 
         protected virtual void GetAuthenticationToken()

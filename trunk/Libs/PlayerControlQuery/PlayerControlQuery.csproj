@@ -48,6 +48,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PandoraSharp\PandoraSharp.csproj">
+      <Project>{64DD2B7D-9069-41FF-A4E4-732F6DF82F09}</Project>
+      <Name>PandoraSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Util\Util.csproj">
       <Project>{A79647D6-4A05-4382-8B6E-4FEC154C3222}</Project>
       <Name>Util</Name>

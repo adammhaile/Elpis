@@ -546,19 +546,25 @@ namespace PandoraSharpPlayer
             return false;
         }
 
+        private void RateSong(Song song, SongRating rating)
+        {
+            SongRating oldRating = song.Rating;
+            song.Rate(rating);
+            _cqman.SendRatingUpdate(song.Artist, song.Album, song.SongTitle, oldRating, rating);
+        }
         public void SongThumbUp(Song song)
         {
-            RunTask(() => song.Rate(SongRating.love));
+            RunTask(() => RateSong(song, SongRating.love));
         }
 
         public void SongThumbDown(Song song)
         {
-            RunTask(() => song.Rate(SongRating.ban));
+            RunTask(() => RateSong(song, SongRating.ban));
         }
 
         public void SongDeleteFeedback(Song song)
         {
-            RunTask(() => song.Rate(SongRating.none));
+            RunTask(() => RateSong(song, SongRating.none));
         }
 
         public void SongTired(Song song)

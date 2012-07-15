@@ -25,7 +25,12 @@ namespace Lpfm.LastFmScrobbler.Api
         /// </summary>
         public const string NameValuePairStringSeperator = "&";
 
-        private WebProxy _proxy = null;
+        private static WebProxy _proxy = null;
+
+        public static void SetWebProxy(WebProxy proxy)
+        {
+            _proxy = proxy;
+        }
 
         #region IRestApi Members
 

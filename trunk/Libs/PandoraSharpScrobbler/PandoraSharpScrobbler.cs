@@ -8,6 +8,8 @@ using Util;
 using Lpfm.LastFmScrobbler;
 using Lpfm.LastFmScrobbler.Api;
 using System.Diagnostics;
+using System.Net;
+using PandoraSharp;
 
 namespace PandoraSharp.Plugins
 {
@@ -102,7 +104,7 @@ namespace PandoraSharp.Plugins
             return SessionKey;
         }
 
-        private static Track QueryProgressToTrack(QueryProgress prog)
+        private Track QueryProgressToTrack(QueryProgress prog)
         {
             var track = new Track
             {
@@ -110,8 +112,30 @@ namespace PandoraSharp.Plugins
                 AlbumName = prog.Song.Album,
                 ArtistName = prog.Song.Artist,
                 Duration = prog.Progress.TotalTime,
+                WhenStartedPlaying = DateTime.Now.Subtract(prog.Progress.ElapsedTime),
             };
             return track;
+        }
+
+        private Track QuerySongToTrack(QuerySong song)
+        {
+            var track = new Track
+            {
+                TrackName = song.Title,
+                AlbumName = song.Album,
+                ArtistName = song.Artist,
+            };
+            return track;
+        }
+
+        public void SetProxy(string address, int port, string user = "", string password = "")
+        {
+            var p = new WebProxy(address, port);
+
+            if (user != "")
+                p.Credentials = new NetworkCredential(user, password);
+
+            Scrobbler.SetWebProxy(p);
         }
 
         #region IPlayerControlQuery Members
@@ -121,9 +145,13 @@ namespace PandoraSharp.Plugins
             //Nothing to do here
         }
 
-        public void StatsusUpdateReceiver(QueryStatus status)
+        public void StatusUpdateReceiver(QueryStatus status)
         {
             //Nothing to do here
+            if (status.CurrentStatus == QueryStatusValue.Playing && status.PreviousStatus != QueryStatusValue.Paused)
+            {
+                _doneNowPlaying = false;
+            }
         }
 
         public void ProgressUpdateReciever(QueryProgress progress)
@@ -155,6 +183,38 @@ namespace PandoraSharp.Plugins
                 Log.O("Last.FM Error!: " + ex.ToString());
             }
         }
+
+        public void RatingUpdateReceiver(QuerySong song, SongRating oldRating, SongRating newRating)
+        {
+            if (!IsEnabled || !_scrobbler.BaseScrobbler.HasSession) return;
+
+            try
+            {
+                Log.O("LastFM, Rating: {0} - {1} - {2}", song.Artist, song.Title, newRating.ToString());
+                switch (newRating)
+                {
+                    case SongRating.love:
+                        _scrobbler.Love(QuerySongToTrack(song));
+                        break;
+                    case SongRating.ban:
+                        _scrobbler.Ban(QuerySongToTrack(song));
+                        break;
+                    case SongRating.none:
+                        if(oldRating == SongRating.love)
+                            _scrobbler.UnLove(QuerySongToTrack(song));
+                        else if(oldRating == SongRating.ban)
+                            _scrobbler.UnBan(QuerySongToTrack(song));
+                        break;
+                }
+
+                if (_scrobbler.QueuedCount > 0) ProcessScrobbles();
+            }
+            catch (Exception ex)
+            {
+                Log.O("Last.FM Error!: " + ex.ToString());
+            }
+        }
+
         #endregion
     }
 }

@@ -662,6 +662,10 @@ namespace Elpis
 
             _scrobbler.IsEnabled = _config.Fields.LastFM_Scrobble;
 
+            if (_config.Fields.Proxy_Address != string.Empty)
+                _scrobbler.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
+                        _config.Fields.Proxy_User, _config.Fields.Proxy_Password);
+
             _player.RegisterPlayerControlQuery(_scrobbler);
         }
 

@@ -23,9 +23,9 @@ namespace PandoraSharp
 {
     public enum SongRating
     {
-        ban,
-        love,
-        none
+        ban = 0,
+        love = 1,
+        none = 2
     }
 
     public static class PAudioFormat

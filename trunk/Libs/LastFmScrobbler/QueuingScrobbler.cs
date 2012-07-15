@@ -1,9 +1,24 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Net;
 
 namespace Lpfm.LastFmScrobbler
 {
+    public enum Rating
+    {
+        ban = 0,
+        love = 1,
+        unban = 2,
+        unlove = 3
+    }
+
+    class RatingObject
+    {
+        public Track Track { get; set; }
+        public Rating RatingType { get; set; }
+    }
+
     /// <summary>
     /// A Scrobbler object that scrobbles to a queue until the application is ready to process
     /// </summary>
@@ -15,8 +30,10 @@ namespace Lpfm.LastFmScrobbler
         public int ScrobbleQueueCount { get { if (ScrobbleQueue != null) return ScrobbleQueue.Count; else return 0; } }
         private ConcurrentQueue<Track> NowPlayingQueue { get; set; }
         public int NowPlayingQueueCount { get { if (NowPlayingQueue != null) return NowPlayingQueue.Count; else return 0; } }
+        private ConcurrentQueue<RatingObject> RatingQueue { get; set; }
+        public int RatingQueueCount { get { if (RatingQueue != null) return RatingQueue.Count; else return 0; } }
 
-        public int QueuedCount { get { return ScrobbleQueueCount + NowPlayingQueueCount; } }
+        public int QueuedCount { get { return ScrobbleQueueCount + NowPlayingQueueCount + RatingQueueCount; } }
 
         private Scrobbler _scrobbler;
         public Scrobbler BaseScrobbler { get { return _scrobbler;  } }
@@ -43,8 +60,14 @@ namespace Lpfm.LastFmScrobbler
             SessionKey = sessionKey;
             NowPlayingQueue = new ConcurrentQueue<Track>();
             ScrobbleQueue = new ConcurrentQueue<Track>();
+            RatingQueue = new ConcurrentQueue<RatingObject>();
 
             _scrobbler = new Scrobbler(ApiKey, ApiSecret, SessionKey);
+        }
+
+        public static void SetWebProxy(WebProxy proxy)
+        {
+            Lpfm.LastFmScrobbler.Api.WebRequestRestApi.SetWebProxy(proxy);
         }
 
         /// <summary>
@@ -65,6 +88,26 @@ namespace Lpfm.LastFmScrobbler
         public void Scrobble(Track track)
         {
             ScrobbleQueue.Enqueue(track);
+        }
+
+        public void Love(Track track)
+        {
+            RatingQueue.Enqueue(new RatingObject() { Track = track, RatingType = Rating.love });
+        }
+
+        public void UnLove(Track track)
+        {
+            RatingQueue.Enqueue(new RatingObject() { Track = track, RatingType = Rating.unlove });
+        }
+
+        public void Ban(Track track)
+        {
+            RatingQueue.Enqueue(new RatingObject() { Track = track, RatingType = Rating.ban });
+        }
+
+        public void UnBan(Track track)
+        {
+            RatingQueue.Enqueue(new RatingObject() { Track = track, RatingType = Rating.unban });
         }
 
         /// <summary>
@@ -105,6 +148,34 @@ namespace Lpfm.LastFmScrobbler
                 {
                     if (throwExceptionDuringProcess) throw;
                     results.Add(new ScrobbleResponse {Track = track, Exception = exception});
+                }
+            }
+
+            RatingObject rating;
+            while (RatingQueue.TryDequeue(out rating))
+            {
+                try
+                {
+                    switch(rating.RatingType)
+                    {
+                        case Rating.love:
+                            results.Add(_scrobbler.Love(rating.Track));
+                            break;
+                        case Rating.ban:
+                            results.Add(_scrobbler.Ban(rating.Track));
+                            break;
+                        case Rating.unlove:
+                            results.Add(_scrobbler.UnLove(rating.Track));
+                            break;
+                        case Rating.unban:
+                            results.Add(_scrobbler.UnBan(rating.Track));
+                            break;
+                    }
+                }
+                catch (Exception exception)
+                {
+                    if (throwExceptionDuringProcess) throw;
+                    results.Add(new RatingResponse { ErrorCode = -1, Exception = exception, Track = rating.Track });
                 }
             }
 
