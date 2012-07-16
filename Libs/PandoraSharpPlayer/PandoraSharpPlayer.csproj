@@ -78,6 +78,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="Playlist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionWatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BassPlayer\BassPlayer.csproj">

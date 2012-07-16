@@ -58,6 +58,7 @@ namespace Elpis
         public static MapConfigEntry Elpis_StartupLocation = new MapConfigEntry("Elpis_StartupLocation", "");
         public static MapConfigEntry Elpis_StartupSize = new MapConfigEntry("Elpis_StartupSize", "");
         public static MapConfigEntry Elpis_Volume = new MapConfigEntry("Elpis_Volume", 100);
+        public static MapConfigEntry Elpis_PauseOnLock = new MapConfigEntry("Elpis_PauseOnLock", false);
 
         public static MapConfigEntry LastFM_Scrobble = new MapConfigEntry("LastFM_Scrobble", false);
         public static MapConfigEntry LastFM_SessionKey = new MapConfigEntry("LastFM_SessionKey", "");
@@ -98,6 +99,7 @@ namespace Elpis
         public bool Elpis_MinimizeToTray { get; set; }
         public bool Elpis_ShowTrayNotifications { get; set; }
         public int Elpis_Volume { get; set; }
+        public bool Elpis_PauseOnLock { get; set; }
 
         public bool LastFM_Scrobble { get; set; }
         public string LastFM_SessionKey { get; set; }
@@ -183,7 +185,7 @@ namespace Elpis
             Fields.Elpis_MinimizeToTray = (bool) _c.GetValue(ConfigItems.Elpis_MinimizeToTray);
             Fields.Elpis_ShowTrayNotifications = (bool) _c.GetValue(ConfigItems.Elpis_ShowTrayNotifications);
             Fields.Elpis_Volume = (int)_c.GetValue(ConfigItems.Elpis_Volume);
-            //Fields.Misc_ForceSSL = (bool)_c.GetValue(ConfigItems.Misc_ForceSSL);
+            Fields.Elpis_PauseOnLock = (bool)_c.GetValue(ConfigItems.Elpis_PauseOnLock);
 
             Fields.LastFM_Scrobble = (bool)_c.GetValue(ConfigItems.LastFM_Scrobble);
             Fields.LastFM_SessionKey = _c.GetEncryptedString(ConfigItems.LastFM_SessionKey);
@@ -244,7 +246,7 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Elpis_GlobalMediaKeys, Fields.Elpis_GlobalMediaKeys);
                 _c.SetValue(ConfigItems.Elpis_MinimizeToTray, Fields.Elpis_MinimizeToTray);
                 _c.SetValue(ConfigItems.Elpis_ShowTrayNotifications, Fields.Elpis_ShowTrayNotifications);
-                //_c.SetValue(ConfigItems.Misc_ForceSSL, Fields.Misc_ForceSSL);
+                _c.SetValue(ConfigItems.Elpis_PauseOnLock, Fields.Elpis_PauseOnLock);
 
                 _c.SetValue(ConfigItems.LastFM_Scrobble, Fields.LastFM_Scrobble);
                 _c.SetEncryptedString(ConfigItems.LastFM_SessionKey, Fields.LastFM_SessionKey);

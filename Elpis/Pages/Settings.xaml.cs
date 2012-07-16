@@ -77,6 +77,7 @@ namespace Elpis
             chkGlobalMediaKeys.IsChecked = _config.Fields.Elpis_GlobalMediaKeys;
             chkTrayMinimize.IsChecked = _config.Fields.Elpis_MinimizeToTray;
             chkShowNotify.IsChecked = _config.Fields.Elpis_ShowTrayNotifications;
+            chkPauseOnLock.IsChecked = _config.Fields.Elpis_PauseOnLock;
 
             _config.Fields.Pandora_AudioFormat = _player.AudioFormat;
 
@@ -107,7 +108,7 @@ namespace Elpis
             _config.Fields.Elpis_GlobalMediaKeys = (bool) chkGlobalMediaKeys.IsChecked;
             _config.Fields.Elpis_MinimizeToTray = (bool) chkTrayMinimize.IsChecked;
             _config.Fields.Elpis_ShowTrayNotifications = (bool) chkShowNotify.IsChecked;
-            //_config.Fields.Misc_ForceSSL = (bool)chkForceSSL.IsChecked;
+           _player.PauseOnLock = _config.Fields.Elpis_PauseOnLock = (bool)chkPauseOnLock.IsChecked;
 
             _player.AudioFormat = _config.Fields.Pandora_AudioFormat;
             //In case MP3-HiFi was rejected

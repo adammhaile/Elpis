@@ -153,6 +153,12 @@ namespace PandoraSharp.Plugins
         }
 
         #region IPlayerControlQuery Members
+
+        public event PlayStateRequestEvent PlayStateRequest;
+        public event PlayRequestEvent PlayRequest;
+        public event PauseRequestEvent PauseRequest;
+        public event NextRequestEvent NextRequest;
+        public event StopRequestEvent StopRequest;
         
         public void SongUpdateReceiver(QuerySong song)
         {
