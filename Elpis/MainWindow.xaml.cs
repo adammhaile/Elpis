@@ -54,6 +54,7 @@ namespace Elpis
         private readonly ToolStripSeparator _notifyMenu_BreakSong = new ToolStripSeparator();
         private readonly ToolStripSeparator _notifyMenu_BreakStation = new ToolStripSeparator();
         private readonly ToolStripSeparator _notifyMenu_BreakVote = new ToolStripSeparator();
+        private readonly ToolStripSeparator _notifyMenu_BreakExit = new ToolStripSeparator();
         private About _aboutPage;
 
         private Config _config;
@@ -72,6 +73,7 @@ namespace Elpis
         private ToolStripMenuItem _notifyMenu_Title;
         private ToolStripMenuItem _notifyMenu_UpVote;
         private ToolStripMenuItem _notifyMenu_DownVote;
+        private ToolStripMenuItem _notifyMenu_Exit;
         private Player _player;
         private PlaylistPage _playlistPage;
         private UserControl _prevPage;
@@ -84,6 +86,8 @@ namespace Elpis
 
         private bool _configError = false;
 
+        private bool _forceClose = false;
+
         private StationList _stationPage;
         private QuickMixPage _quickMixPage;
         private UpdateCheck _update;
@@ -95,6 +99,8 @@ namespace Elpis
         private Exception _lastException = null;
 
         private PandoraSharpScrobbler _scrobbler;
+
+        ThumbnailButton
 #endregion
 
 #region Release Data Values
@@ -464,6 +470,8 @@ namespace Elpis
             _notifyMenu_BreakStation.Visible =
                 _notifyMenu_Stations.Visible = showStations;
 
+            _notifyMenu_BreakExit.Visible = _notifyMenu_Exit.Visible = true;
+
             if (showStations)
                 AddStationMenuItems();
         }
@@ -496,6 +504,10 @@ namespace Elpis
             _notifyMenu_UpVote = new ToolStripMenuItem("Like Song");
             _notifyMenu_UpVote.Click += ((o, e) => _playlistPage.ThumbUpCurrent() );
 
+
+            _notifyMenu_Exit = new ToolStripMenuItem("Exit Elpis");
+            _notifyMenu_Exit.Click += ((o, e) => { _forceClose = true; Close(); });
+
             var menus = new ToolStripItem[]
                             {
                                 _notifyMenu_Title,
@@ -508,7 +520,9 @@ namespace Elpis
                                 _notifyMenu_UpVote,
                                 _notifyMenu_DownVote,
                                 _notifyMenu_BreakStation,
-                                _notifyMenu_Stations
+                                _notifyMenu_Stations,
+                                _notifyMenu_BreakExit,
+                                _notifyMenu_Exit
                             };
 
             _notifyMenu = new ContextMenuStrip();
@@ -1223,6 +1237,15 @@ namespace Elpis
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            if (!_forceClose && _config.Fields.Elpis_MinimizeToTray)
+            {
+                WindowState = WindowState.Minimized;
+                ShowInTaskbar = false;
+
+                e.Cancel = true;
+                return;
+            }
+
             if (_notify != null)
             {
                 _notify.Dispose();

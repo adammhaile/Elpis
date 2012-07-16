@@ -101,8 +101,8 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="55*" />
+                            <ColumnDefinition Width="45*" />
                         </Grid.ColumnDefinitions>
                         <CheckBox Name="chkCheckUpdates" Grid.Row="0" Margin="4"
                       IsChecked="True"
@@ -123,8 +123,8 @@
                             </CheckBox.ToolTip>
                         </CheckBox>
                         <CheckBox Name="chkTrayMinimize" Grid.Row="1" Grid.Column="0" Margin="4"
-                      IsChecked="True"
-                      Content="Minimize to Tray" />
+                      IsChecked="True" ToolTip="Exit option in tray menu must be used to fully close."
+                      Content="Minimize / Close to Tray" />
                         <CheckBox Name="chkShowNotify" Grid.Row="1" Grid.Column="1" Margin="4"
                       IsChecked="True"
                       Content="Show Notifications"
