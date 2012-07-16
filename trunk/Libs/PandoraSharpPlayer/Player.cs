@@ -39,6 +39,8 @@ namespace PandoraSharpPlayer
         private bool _playNext;
         private Playlist _playlist;
 
+        private SessionWatcher _sessionWatcher;
+
         private ControlQueryManager _cqman;
 
         #region Events
@@ -134,6 +136,14 @@ namespace PandoraSharpPlayer
         public bool Initialize(string bassRegEmail = "", string bassRegKey = "")
         {
             _cqman = new ControlQueryManager();
+            _cqman.NextRequest += _cqman_NextRequest;
+            _cqman.PauseRequest += _cqman_PauseRequest;
+            _cqman.PlayRequest += _cqman_PlayRequest;
+            _cqman.StopRequest += _cqman_StopRequest;
+            _cqman.PlayStateRequest += _cqman_PlayStateRequest;
+
+            _sessionWatcher = new SessionWatcher();
+            RegisterPlayerControlQuery(_sessionWatcher);
 
             _pandora = new Pandora();
             _pandora.ConnectionEvent += _pandora_ConnectionEvent;
@@ -161,6 +171,41 @@ namespace PandoraSharpPlayer
 
             LoggedIn = false;
             return true;
+        }
+
+        public bool PauseOnLock
+        {
+            get { return _sessionWatcher.IsEnabled; }
+            set { _sessionWatcher.IsEnabled = value; }
+        }
+
+        QueryStatusValue _cqman_PlayStateRequest(object sender)
+        {
+            //Need something better than this, but for now, this will do.
+            if (Playing) return QueryStatusValue.Playing;
+            else if (Paused) return QueryStatusValue.Paused;
+            else if (Stopped) return QueryStatusValue.Stopped;
+            else return QueryStatusValue.Invalid;
+        }
+
+        void _cqman_StopRequest(object sender)
+        {
+            Stop();
+        }
+
+        void _cqman_PlayRequest(object sender)
+        {
+            Play();
+        }
+
+        void _cqman_PauseRequest(object sender)
+        {
+            Pause();
+        }
+
+        void _cqman_NextRequest(object sender)
+        {
+            Next();
         }  
 
         public void RegisterPlayerControlQuery(IPlayerControlQuery obj)
@@ -670,6 +715,16 @@ namespace PandoraSharpPlayer
         public void PlayPause()
         {
             RunTask(() => _bass.PlayPause());
+        }
+
+        public void Play()
+        {
+            if (Paused) PlayPause();
+        }
+
+        public void Pause()
+        {
+            if (Playing) PlayPause();
         }
 
         public void Stop()

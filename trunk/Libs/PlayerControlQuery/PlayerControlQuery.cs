@@ -44,6 +44,7 @@ namespace PandoraSharp.ControlQuery
 
     public enum QueryStatusValue
     {
+        Invalid,
         Waiting,
         Connecting,
         Connected,
@@ -67,6 +68,12 @@ namespace PandoraSharp.ControlQuery
     public delegate void StatusUpdate(QueryStatus status);
     public delegate void RatingUpdate(QuerySong song, SongRating rating);
 
+    public delegate QueryStatusValue PlayStateRequestEvent(object sender);
+    public delegate void PlayRequestEvent(object sender);
+    public delegate void PauseRequestEvent(object sender);
+    public delegate void NextRequestEvent(object sender);
+    public delegate void StopRequestEvent(object sender);
+
     public interface IPlayerControlQuery
     {    
         void SongUpdateReceiver(QuerySong song);
@@ -76,6 +83,12 @@ namespace PandoraSharp.ControlQuery
         void StatusUpdateReceiver(QueryStatus status);
 
         void RatingUpdateReceiver(QuerySong song, SongRating oldRating, SongRating newRating);
+
+        event PlayStateRequestEvent PlayStateRequest;
+        event PlayRequestEvent PlayRequest;
+        event PauseRequestEvent PauseRequest;
+        event NextRequestEvent NextRequest;
+        event StopRequestEvent StopRequest;
 
         //TODO: Add Control Methods
     }

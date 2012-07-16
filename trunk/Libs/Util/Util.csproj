@@ -81,6 +81,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringCrypt.cs" />
     <Compile Include="SystemInfo.cs" />
+    <Compile Include="SystemSessionState.cs" />
     <Compile Include="WebRequest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

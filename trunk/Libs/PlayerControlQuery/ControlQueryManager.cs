@@ -34,6 +34,44 @@ namespace PandoraSharp.ControlQuery
         public void RegisterPlayerControlQuery(IPlayerControlQuery obj)
         {
             _pcqList.Add(obj);
+
+            obj.PlayStateRequest += PlayStateRequestHandler;
+            obj.PlayRequest += PlayRequestHandler;
+            obj.PauseRequest += PauseRequestHandler;
+            obj.NextRequest += NextRequestHandler;
+            obj.StopRequest += StopRequestHandler;
+        }
+
+        public event PlayStateRequestEvent PlayStateRequest;
+        public event PlayRequestEvent PlayRequest;
+        public event PauseRequestEvent PauseRequest;
+        public event NextRequestEvent NextRequest;
+        public event StopRequestEvent StopRequest;
+
+        void StopRequestHandler(object sender)
+        {
+            if (StopRequest != null) StopRequest(sender);
+        }
+
+        void NextRequestHandler(object sender)
+        {
+            if (NextRequest != null) NextRequest(sender);
+        }
+
+        void PauseRequestHandler(object sender)
+        {
+            if (PauseRequest != null) PauseRequest(sender);
+        }
+
+        void PlayRequestHandler(object sender)
+        {
+            if (PlayRequest != null) PlayRequest(sender);
+        }
+
+        QueryStatusValue PlayStateRequestHandler(object sender)
+        {
+            if (PlayStateRequest != null) return PlayStateRequest(sender);
+            else return QueryStatusValue.Invalid;
         }
 
         public void SendSongUpdate(QuerySong song)

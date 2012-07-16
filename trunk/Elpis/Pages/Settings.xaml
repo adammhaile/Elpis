@@ -129,6 +129,9 @@
                       IsChecked="True"
                       Content="Show Notifications"
                       ToolTip="Display notificationsin toolbar on each new song"/>
+                        <CheckBox Name="chkPauseOnLock" Grid.Row="2" Grid.Column="0" Margin="4"
+                                  IsChecked="False" Content="Pause on System Lock"
+                                  ToolTip="Elpis will pause when the system is locked and resume when unlocked." />
                     </Grid>
                 </Expander>
                 <Expander Header="Proxy - Changes Require Restarting Elpis" 
