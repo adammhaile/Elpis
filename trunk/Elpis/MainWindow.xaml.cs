@@ -100,7 +100,6 @@ namespace Elpis
 
         private PandoraSharpScrobbler _scrobbler;
 
-        ThumbnailButton
 #endregion
 
 #region Release Data Values
