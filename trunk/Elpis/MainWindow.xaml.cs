@@ -936,7 +936,7 @@ namespace Elpis
         {
             if (status && _update.DownloadUrl != string.Empty)
             {
-                Process.Start(_update.DownloadUrl);
+                //Process.Start(_update.DownloadUrl);
                 Close();
             }
             else
@@ -1233,7 +1233,8 @@ namespace Elpis
             {
                 _config.Fields.Elpis_StartupLocation = new Point(this.Left, this.Top);
                 _config.Fields.Elpis_StartupSize = new Size(this.Width, this.Height);
-                _config.Fields.Elpis_Volume = _player.Volume;
+                if(_player != null)
+                    _config.Fields.Elpis_Volume = _player.Volume;
                 _config.SaveConfig();
             }
         }

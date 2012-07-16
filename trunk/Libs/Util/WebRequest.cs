@@ -22,6 +22,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.ComponentModel;
 
 namespace Util
 {
@@ -107,6 +108,19 @@ namespace Util
             if (_proxy != null)
                 wc.Proxy = _proxy;
             wc.DownloadFile(url, outputFile);
+        }
+
+        public static void FileRequestAsync(string url, string outputFile,
+            DownloadProgressChangedEventHandler progressCallback,
+            AsyncCompletedEventHandler completeCallback)
+        {
+            var wc = new WebClient();
+            if (_proxy != null)
+                wc.Proxy = _proxy;
+
+            wc.DownloadFileCompleted += completeCallback;
+            wc.DownloadProgressChanged += progressCallback;
+            wc.DownloadFileAsync(new System.Uri(url), outputFile);
         }
     }
 }
