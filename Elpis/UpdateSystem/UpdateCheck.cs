@@ -23,6 +23,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Util;
+using System.ComponentModel;
 
 namespace Elpis.UpdateSystem
 {
@@ -32,6 +33,11 @@ namespace Elpis.UpdateSystem
 
         public delegate void UpdateDataLoadedEventHandler(bool foundUpdate);
 
+        public delegate void DownloadProgressHandler(int prog);
+        public event DownloadProgressHandler DownloadProgress;
+        public delegate void DownloadCompleteHandler(bool error, Exception ex);
+        public event DownloadCompleteHandler DownloadComplete;
+
         #endregion
 
         private bool _downloadComplete;
@@ -39,6 +45,7 @@ namespace Elpis.UpdateSystem
 
         public Version CurrentVersion
         {
+            //get { return new Version(0, 5); } //uncomment to force update
             get { return Assembly.GetEntryAssembly().GetName().Version; }
         }
 
@@ -47,7 +54,9 @@ namespace Elpis.UpdateSystem
         public string ReleaseNotesPath { get; set; }
         public string ReleaseNotes { get; set; }
         public bool UpdateNeeded { get; set; }
+        public string UpdatePath { get; set; }
         public event UpdateDataLoadedEventHandler UpdateDataLoadedEvent;
+      
 
         private void SendUpdateEvent(bool foundUpdate)
         {
@@ -153,6 +162,31 @@ namespace Elpis.UpdateSystem
         public void CheckForUpdateAsync()
         {
             Task.Factory.StartNew(() => CheckForUpdateInternal());
+        }
+
+        public void DownloadUpdateAsync(string outputPath)
+        {
+            UpdatePath = outputPath;
+            Log.O("Download Elpis Update...");
+            Task.Factory.StartNew(() => PRequest.FileRequestAsync(DownloadUrl, outputPath, 
+                DownloadProgressChanged, DownloadFileCompleted));
+        }
+
+        private void DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            if (e.Error == null)
+                Log.O("Update Download Complete.");
+            else
+                Log.O("Update Download Error: " + e.Error);
+
+            if (DownloadComplete != null)
+                DownloadComplete(e.Error != null, e.Error);
+        }
+
+        private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            if (DownloadProgress != null)
+                DownloadProgress(e.ProgressPercentage);
         }
     }
 }

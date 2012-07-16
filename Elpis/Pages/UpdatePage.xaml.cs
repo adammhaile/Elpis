@@ -20,6 +20,10 @@
 using System.Windows;
 using System.Windows.Controls;
 using Elpis.UpdateSystem;
+using System.IO;
+using Util;
+using System;
+using System.Diagnostics;
 
 namespace Elpis
 {
@@ -45,9 +49,63 @@ namespace Elpis
             lblCurrVer.Content = _update.CurrentVersion.ToString();
             lblNewVer.Content = _update.NewVersion.ToString();
             txtReleaseNotes.Text = _update.ReleaseNotes;
+
+            _update.DownloadProgress += _update_DownloadProgress;
+            _update.DownloadComplete += _update_DownloadComplete;
         }
 
         public event UpdateSelectionEventHandler UpdateSelectionEvent;
+
+        public void DownloadUpdate()
+        {
+            string downloadDir = Path.Combine(Config.ElpisAppData, "Updates");
+            if (!Directory.Exists(downloadDir))
+            {
+                try
+                {
+                    Directory.CreateDirectory(downloadDir);
+                }
+                catch(Exception ex)
+                {
+                    Log.O("Trouble creating update directory! " + ex.ToString());
+                    return;
+                }
+            }
+
+            string downloadFile = Path.Combine(downloadDir, "ElpisUpdate.exe");
+            if (File.Exists(downloadFile))
+                File.Delete(downloadFile);
+
+            _update.DownloadUpdateAsync(downloadFile);
+        }
+
+        void _update_DownloadComplete(bool error, Exception ex)
+        {
+            this.BeginDispatch(() =>
+            {
+                if (error)
+                {
+                    Log.O("Error Downloading Update!");
+                    lblDownloadStatus.Text = "Error downloading update. Please try again later.";
+                    btnUpdate.Visibility = System.Windows.Visibility.Hidden;
+                    btnLater.Content = "Close";
+                }
+                else
+                {
+                    Process.Start(_update.UpdatePath);
+                    SendUpdateSelection(true);
+                }
+            });
+        }
+
+        void _update_DownloadProgress(int prog)
+        {
+            this.BeginDispatch(() =>
+            {
+                lblProgress.Content = prog.ToString() + "%";
+                progDownload.Value = prog;
+            });
+        }
 
         private void SendUpdateSelection(bool status)
         {
@@ -62,7 +120,16 @@ namespace Elpis
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
-            SendUpdateSelection(true);
+            //SendUpdateSelection(true);
+            gridReleaseNotes.Visibility = System.Windows.Visibility.Hidden;
+            gridDownload.Visibility = System.Windows.Visibility.Visible;
+            DownloadUpdate();
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            gridReleaseNotes.Visibility = System.Windows.Visibility.Visible;
+            gridDownload.Visibility = System.Windows.Visibility.Hidden;
         }
     }
 }

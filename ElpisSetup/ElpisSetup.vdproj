@@ -362,9 +362,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=1.1.4579.12855, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=1.1.4579.36215, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_24DA1CC45ED300D3CFE2977A810C684B"
+                    {
+                    "Name" = "8:PandoraSharp.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:PandoraSharp.dll"
             "TargetName" = "8:"
@@ -411,6 +416,11 @@
             "AssemblyAsmDisplayName" = "8:PlayerControlQuery, Version=1.0.4.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_6CAA6E65D3BF9BE1EF407EED235D57BB"
+                    {
+                    "Name" = "8:PlayerControlQuery.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:PlayerControlQuery.dll"
             "TargetName" = "8:"
@@ -434,9 +444,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=1.1.4579.12855, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=1.1.4579.36215, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_7122CD5C70DAB91B9680160F33CD617C"
+                    {
+                    "Name" = "8:BassPlayer.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:BassPlayer.dll"
             "TargetName" = "8:"
@@ -463,6 +478,11 @@
             "AssemblyAsmDisplayName" = "8:PandoraSharpScrobbler, Version=1.0.4.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_79277F9996AE33BC8885B2EC3CA65127"
+                    {
+                    "Name" = "8:PandoraSharpScrobbler.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:PandoraSharpScrobbler.dll"
             "TargetName" = "8:"
@@ -509,6 +529,11 @@
             "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_A250E15B9C9B737304C6CEA8B8713944"
+                    {
+                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Newtonsoft.Json.dll"
             "TargetName" = "8:"
@@ -552,9 +577,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=1.1.4579.12855, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=1.1.4579.36215, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_B13920AFDB893CA91AE4DC8DB3977AA1"
+                    {
+                    "Name" = "8:PandoraSharpPlayer.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:PandoraSharpPlayer.dll"
             "TargetName" = "8:"
@@ -578,9 +608,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Util, Version=1.1.4579.12855, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Util, Version=1.1.4579.36215, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_D03DF41CB9CDA43D34FEEF6CA6B3A60E"
+                    {
+                    "Name" = "8:Util.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Util.dll"
             "TargetName" = "8:"
@@ -647,6 +682,11 @@
             "AssemblyAsmDisplayName" = "8:Bass.Net, Version=2.4.8.3, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_EC9CFCE0051270FB77B9DACE642EDEC5"
+                    {
+                    "Name" = "8:Bass.Net.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Bass.Net.dll"
             "TargetName" = "8:"
@@ -670,9 +710,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Lpfm.LastFmScrobbler, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Lpfm.LastFmScrobbler, Version=1.0.4579.13034, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_FC6F5492F2523524F50A2757573F21F0"
+                    {
+                    "Name" = "8:Lpfm.LastFmScrobbler.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Lpfm.LastFmScrobbler.dll"
             "TargetName" = "8:"
@@ -759,15 +804,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Elpis"
-        "ProductCode" = "8:{C44DF060-A9B5-4A97-8B56-C0CCE5EA2A87}"
-        "PackageCode" = "8:{D7EAD3A6-4BAF-48B5-A662-E8818242356E}"
+        "ProductCode" = "8:{E158F67E-9912-42A4-9576-53912917A856}"
+        "PackageCode" = "8:{D44FA80B-4AB8-4FF0-934F-E48DC8D61807}"
         "UpgradeCode" = "8:{F0962B86-5C6F-4A2C-98F4-2FF9D0AC46AD}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.04.0"
+        "ProductVersion" = "8:1.4.1"
         "Manufacturer" = "8:Adam Haile"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1376,7 +1421,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C0D607861CBA44EB990DD3A2C241B2C6"
             {
-            "SourcePath" = "8:..\\Elpis\\obj\\x86\\AppRelease\\Elpis.exe"
+            "SourcePath" = "8:..\\Elpis\\obj\\x86\\Debug\\Elpis.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C7AF4829359247308B6C1AC2B71027D8"
