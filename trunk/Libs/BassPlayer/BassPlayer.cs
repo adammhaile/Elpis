@@ -727,6 +727,7 @@ namespace BassPlayer
                 Log.Info("BASS: Initializing BASS audio engine...");
                 bool initOK = false;
 
+                Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_DEV_DEFAULT, true); //Allows following Default device (Win 7 Only)
                 int soundDevice = GetSoundDevice();
 
                 initOK =
