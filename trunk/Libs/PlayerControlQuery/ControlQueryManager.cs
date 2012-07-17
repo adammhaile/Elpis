@@ -24,12 +24,12 @@ namespace PandoraSharp.ControlQuery
         {
             _lastQuerySong = new QuerySong();
             _lastProgress = new QueryProgress();
-            _lastQueryStatus = new QueryStatusValue();
 
             _pcqList = new List<IPlayerControlQuery>();
         }
 
         public QuerySong LastSong { get { lock (_lastQuerySongLock) { return _lastQuerySong; } } }
+        public QueryStatusValue LastQueryStatus { get { lock (_lastQueryStatusLock) { return _lastQueryStatus; } } }
 
         public void RegisterPlayerControlQuery(IPlayerControlQuery obj)
         {

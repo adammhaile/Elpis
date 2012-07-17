@@ -181,11 +181,7 @@ namespace PandoraSharpPlayer
 
         QueryStatusValue _cqman_PlayStateRequest(object sender)
         {
-            //Need something better than this, but for now, this will do.
-            if (Playing) return QueryStatusValue.Playing;
-            else if (Paused) return QueryStatusValue.Paused;
-            else if (Stopped) return QueryStatusValue.Stopped;
-            else return QueryStatusValue.Invalid;
+            return _cqman.LastQueryStatus;
         }
 
         void _cqman_StopRequest(object sender)

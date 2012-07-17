@@ -619,6 +619,7 @@ namespace Elpis
             _player.AudioFormat = _config.Fields.Pandora_AudioFormat;
             _player.SetStationSortOrder(_config.Fields.Pandora_StationSortOrder);
             _player.Volume = _config.Fields.Elpis_Volume;
+            _player.PauseOnLock = _config.Fields.Elpis_PauseOnLock;
 
             //_player.ForceSSL = _config.Fields.Misc_ForceSSL;
 
