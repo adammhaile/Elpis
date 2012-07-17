@@ -1,3 +1,19 @@
+*IMPORTANT NOTE!* Those updating from v1.0.3;
+Due to a bug, Elpis will likely crash after launching the download page.
+After downloading and installing the update, the bug will be fixed.
+
+v1.4.2
+Added Last.FM Scrobbler support
+Added UI for Proxy configuration
+Added beginnings of plugin interface
+Added Pause on System Lock
+Added in-client update downloads
+Added close to tray option
+
+Changed version scheme
+Fixed bug where MP3 HiFi option was not kept
+Fixed issue with not playing to default audio device (Win7 only)
+
 v1.0.3
 Completely rewritten Pandora back-end to use JSON API
 Added Proxy Support (enabled in %AppData%\Elpis\elpis.config only)
