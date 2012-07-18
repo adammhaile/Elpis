@@ -64,6 +64,9 @@ namespace Lpfm.LastFmScrobbler
     public class ScrobbleResponse : Response
     {}
 
+    /// <summary>
+    /// A Rating (Love, UnLove, Ban, UnBan) Response DTO
+    /// </summary>
     public class RatingResponse : Response
     {
         public bool Success { get { return ErrorCode == 0; } }

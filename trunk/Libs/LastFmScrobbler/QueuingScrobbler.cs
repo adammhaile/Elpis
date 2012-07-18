@@ -90,21 +90,41 @@ namespace Lpfm.LastFmScrobbler
             ScrobbleQueue.Enqueue(track);
         }
 
+        /// <summary>
+        /// Enqueues a Love request but does not send it. Call <see cref="Process"/> to send
+        /// </summary>
+        /// <param name="track">The <see cref="Track"/> that has played</param>
+        /// <remarks>This method is thread-safe. Will not check for invalid tracks until Processed.</remarks>
         public void Love(Track track)
         {
             RatingQueue.Enqueue(new RatingObject() { Track = track, RatingType = Rating.love });
         }
 
+        /// <summary>
+        /// Enqueues a UnLove request but does not send it. Call <see cref="Process"/> to send
+        /// </summary>
+        /// <param name="track">The <see cref="Track"/> that has played</param>
+        /// <remarks>This method is thread-safe. Will not check for invalid tracks until Processed.</remarks>
         public void UnLove(Track track)
         {
             RatingQueue.Enqueue(new RatingObject() { Track = track, RatingType = Rating.unlove });
         }
 
+        /// <summary>
+        /// Enqueues a Ban request but does not send it. Call <see cref="Process"/> to send
+        /// </summary>
+        /// <param name="track">The <see cref="Track"/> that has played</param>
+        /// <remarks>This method is thread-safe. Will not check for invalid tracks until Processed.</remarks>
         public void Ban(Track track)
         {
             RatingQueue.Enqueue(new RatingObject() { Track = track, RatingType = Rating.ban });
         }
 
+        /// <summary>
+        /// Enqueues a UnBan request but does not send it. Call <see cref="Process"/> to send
+        /// </summary>
+        /// <param name="track">The <see cref="Track"/> that has played</param>
+        /// <remarks>This method is thread-safe. Will not check for invalid tracks until Processed.</remarks>
         public void UnBan(Track track)
         {
             RatingQueue.Enqueue(new RatingObject() { Track = track, RatingType = Rating.unban });

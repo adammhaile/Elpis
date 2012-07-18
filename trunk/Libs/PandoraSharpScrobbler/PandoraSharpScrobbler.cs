@@ -19,7 +19,9 @@ namespace PandoraSharp.Plugins
      * the 'played' definition - currently hardcoded to half the tracklength */
     {
         private const double PercentNowPlaying = 5.0;
-        private const double PercentBeforeScrobble = 75.0;
+        private const double SecondsBeforeScrobble = 4*60 + 5;
+        private const double PercentBeforeScrobble = 51.0;
+        private const double MinTrackLength = 35.0; //buffered to 35 seconds, just in case 
 
         private bool _doneScrobble;
         private bool _doneNowPlaying;
@@ -190,7 +192,16 @@ namespace PandoraSharp.Plugins
                     _scrobbler.NowPlaying(QueryProgressToTrack(progress));
                     _doneNowPlaying = true;
                 }
-                if (progress.Progress.Percent > PercentBeforeScrobble && !_doneScrobble)
+
+                //A track should only be scrobbled when the following conditions have been met: 
+                //The track must be longer than 30 seconds. 
+                //And the track has been played for at least half its duration, 
+                //or for 4 minutes (whichever occurs earlier). 
+                //See http://www.last.fm/api/scrobbling
+                //This is enforced by LPFM so might as well enforce it here to avoid issues
+                if (progress.Progress.TotalTime.TotalSeconds >= MinTrackLength && 
+                    (progress.Progress.ElapsedTime.TotalSeconds >= SecondsBeforeScrobble || progress.Progress.Percent > PercentBeforeScrobble) && 
+                    !_doneScrobble)
                 {
                     _doneNowPlaying = false;
                     Log.O("LastFM, Scrobbling: {0} - {1}", progress.Song.Artist, progress.Song.Title);
