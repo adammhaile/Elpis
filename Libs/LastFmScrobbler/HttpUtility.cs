@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using System;
 
+//reimplementation of a subset of System.Web.HttpUtility
+//For use only with .NET 4.0 Client Profile
 namespace System.Web
 {
     public sealed class HttpUtility
