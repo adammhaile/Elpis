@@ -28,7 +28,8 @@ namespace RequestDecrypter
 
         private void btnDecrypt_Click(object sender, RoutedEventArgs e)
         {
-            //txtDecrypted.Text = PandoraSharp.PandoraCrypt.DecryptRPCRequest(txtEncrypted.Text);
+            //txtDecrypted.Text = 
+            string text = PandoraSharp.Crypto.out_key.Decrypt(txtEncrypted.Text);
         }
     }
 }

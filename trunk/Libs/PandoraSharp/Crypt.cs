@@ -5,7 +5,7 @@ using Util;
 
 namespace PandoraSharp
 {
-    class Crypto
+    public class Crypto
     {
         internal static long DecryptSyncTime(string s)
         {
@@ -21,8 +21,8 @@ namespace PandoraSharp
             }
         }
 
-        internal static Blowfish in_key = new Blowfish(Const.CRYPT_IN_KEY);
-        internal static Blowfish out_key = new Blowfish(Const.CRYPT_OUT_KEY);
+        public static Blowfish in_key = new Blowfish(Const.CRYPT_IN_KEY);
+        public static Blowfish out_key = new Blowfish(Const.CRYPT_OUT_KEY);
 
         public class Blowfish
         {
@@ -446,7 +446,7 @@ namespace PandoraSharp
 
             public string Encrypt(string p)
             {
-                byte[] bytes = Encoding.ASCII.GetBytes(p);
+                byte[] bytes = Encoding.UTF8.GetBytes(p);
 
                 this.Encrypt(ref bytes);
 
