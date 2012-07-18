@@ -126,6 +126,7 @@ namespace Elpis
 
         private void StationList_Loaded(object sender, RoutedEventArgs e)
         {
+            CloseRename();
             ShowWait(false);
             if (_player.StationSortOrder != _currSort)
                 _player.RefreshStations();
@@ -133,6 +134,7 @@ namespace Elpis
 
         private void StationList_Unloaded(object sender, RoutedEventArgs e)
         {
+            CloseRename();
             ShowWait(false);
         }
 
@@ -143,6 +145,19 @@ namespace Elpis
             _player.PlayStation(station);
         }
 
+        private void CloseRename()
+        {
+            if (_currMenuStation == null || _currStationItem == null) return;
+
+            var btnSaveRename = _currStationItem.FindChildByName<Button>("btnSaveRename");
+            var txtStationName = _currStationItem.FindChildByName<TextBlock>("txtStationName");
+            var txtRename = _currStationItem.FindChildByName<TextBox>("txtRename");
+
+            txtStationName.Visibility = Visibility.Visible;
+            txtRename.Visibility = Visibility.Hidden;
+            btnSaveRename.Visibility = Visibility.Hidden;
+        }
+
         private void DoRename()
         {
             if (_currMenuStation == null || _currStationItem == null) return;
@@ -151,14 +166,11 @@ namespace Elpis
 
             _player.StationRename(_currMenuStation, name);
 
-            var btnSaveRename = _currStationItem.FindChildByName<Button>("btnSaveRename");
             var txtStationName = _currStationItem.FindChildByName<TextBlock>("txtStationName");
-            var txtRename = _currStationItem.FindChildByName<TextBox>("txtRename");
 
             txtStationName.Text = name;
-            txtStationName.Visibility = Visibility.Visible;
-            txtRename.Visibility = Visibility.Hidden;
-            btnSaveRename.Visibility = Visibility.Hidden;
+
+            CloseRename();
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
@@ -200,6 +212,8 @@ namespace Elpis
 
         private void btnMenu_Click(object sender, RoutedEventArgs e)
         {
+            CloseRename();
+
             _currMenuStation = GetItemStation(sender);
             _currStationItem = GetStationItem(sender);
 
