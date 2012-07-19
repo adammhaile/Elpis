@@ -115,6 +115,7 @@ namespace PandoraSharp.Plugins
             }
             catch (LastFmApiException exception)
             {
+                Log.O("LastFM Error: " + exception.ToString());
                 throw;
             }
             return SessionKey;
