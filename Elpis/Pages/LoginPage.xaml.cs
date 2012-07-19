@@ -39,10 +39,12 @@ namespace Elpis
         private readonly Config _config;
         private readonly Player _player;
         private ErrorCodes _error = ErrorCodes.SUCCESS;
-        private bool _loginFailed;
+        private bool _loginFailed = false;
 
         private const string _initEmail = "enter email address";
         private const string _initPass = "enter password";
+
+        public ErrorCodes ErrorCode { get { return _error; } set { _error = value; } }
 
         public bool LoginFailed { get { return _loginFailed; } set { _loginFailed = value; } }
         public LoginPage(Player player, Config config)

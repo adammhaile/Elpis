@@ -318,23 +318,60 @@ namespace Elpis
             }
         }
 
-        private void GetLastFMSessionKey()
+        DateTime _lastFMStart;
+        bool _lastFMAuth = false;
+        private void DoLastFMAuth()
         {
-            _loadingPage.UpdateStatus("Fetching Last.FM Session");
-            transitionControl.ShowPage(_loadingPage);
-
             try
             {
                 string sk = _scrobbler.GetAuthSessionKey();
                 _config.Fields.LastFM_Scrobble = true;
                 _config.Fields.LastFM_SessionKey = sk;
                 _config.SaveConfig();
-                transitionControl.ShowPage(_settingsPage);
+
+                DoLastFMSuccess();
             }
             catch (Exception ex)
             {
-                ShowError(ErrorCodes.ERROR_GETTING_SESSION, ex);
+                _config.Fields.LastFM_Scrobble = false;
+                _config.Fields.LastFM_SessionKey = string.Empty;
+                _config.SaveConfig();
+
+                DoLastFMError(ex);
             }
+        }
+
+        private void DoLastFMSuccess()
+        {
+            _lastFMStart = DateTime.Now;
+            this.BeginDispatch(() => _loadingPage.UpdateStatus("Success!"));
+            while ((DateTime.Now - _lastFMStart).TotalMilliseconds < 1500) Thread.Sleep(10);
+            this.BeginDispatch(() => transitionControl.ShowPage(_settingsPage));
+            _lastFMAuth = false;
+        }
+
+        private void DoLastFMError(Exception ex)
+        {
+            _lastFMStart = DateTime.Now;
+            this.BeginDispatch(() =>
+                {
+                    _lastError = ErrorCodes.ERROR_GETTING_SESSION;
+                    //ShowError(_lastError, ex);
+                    _loadingPage.UpdateStatus("Error Fetching Last.FM Session");
+                });
+            while ((DateTime.Now - _lastFMStart).TotalMilliseconds < 3000) Thread.Sleep(10);
+            this.BeginDispatch(() => transitionControl.ShowPage(_settingsPage));
+            _lastFMAuth = false;
+        }
+
+        private void GetLastFMSessionKey()
+        {
+            _lastFMAuth = true;
+            _lastFMStart = DateTime.Now;
+            _loadingPage.UpdateStatus("Fetching Last.FM Session");
+            transitionControl.ShowPage(_loadingPage);
+
+            Task.Factory.StartNew(() => DoLastFMAuth());
         }
 
         private void SetupUIEvents()
@@ -895,7 +932,7 @@ namespace Elpis
                         _lastException = ex;
                         mainBar.ShowError(Errors.GetErrorMessage(code));
 
-                        if (transitionControl.CurrentPage == _loadingPage)
+                        if (transitionControl.CurrentPage == _loadingPage && !_lastFMAuth)
                         {
                             _loginPage.LoginFailed = true;
                             transitionControl.ShowPage(_loginPage);
