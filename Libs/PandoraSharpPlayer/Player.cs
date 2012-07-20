@@ -433,6 +433,8 @@ namespace PandoraSharpPlayer
                 try
                 {
                     _bass.Play(song.AudioUrl, song.FileGain);
+                    _cqman.SendSongUpdate(song);
+                    //_cqman.SendStatusUpdate(QueryStatusValue.Playing);
                 }
                 catch (BassStreamException ex)
                 {
@@ -453,9 +455,6 @@ namespace PandoraSharpPlayer
                 {
                     _playNext = false;
                 }
-
-                _cqman.SendSongUpdate(song);
-                _cqman.SendStatusUpdate(QueryStatusValue.Playing);
 
                 _playNext = false; 
             }
