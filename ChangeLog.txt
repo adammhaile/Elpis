@@ -2,7 +2,7 @@
 Due to a bug, Elpis will likely crash after launching the download page.
 After downloading and installing the update, the bug will be fixed.
 
-v1.4.2
+v1.4.5
 Added Last.FM Scrobbler support
 Added UI for Proxy configuration
 Added beginnings of plugin interface
