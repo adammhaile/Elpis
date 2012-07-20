@@ -22,6 +22,7 @@ using System.Net;
 using Util;
 using Newtonsoft.Json.Linq;
 using PandoraSharp.Exceptions;
+using System.Collections.Generic;
 
 namespace PandoraSharp
 {
@@ -31,8 +32,13 @@ namespace PandoraSharp
         private readonly Pandora _pandora;
         private byte[] _albumImage;
 
+        private readonly object metaLock = new object();
+        private Dictionary<object, object> metaDict;
+
         public Song(Pandora p, JToken song)
         {
+            metaDict = new Dictionary<object, object>();
+
             _pandora = p;
 
             TrackToken = (string)song["trackToken"];
@@ -169,6 +175,23 @@ namespace PandoraSharp
                 {
                     _albumImage = value;
                 }
+            }
+        }
+
+        public void SetMetaObject(object key, object value)
+        {
+            lock (metaLock)
+            {
+                metaDict[key] = value;
+            }
+        }
+
+        public object GetMetaObject(object key)
+        {
+            lock (metaLock)
+            {
+                if (metaDict.ContainsKey(key)) return metaDict[key];
+                else return null;
             }
         }
 

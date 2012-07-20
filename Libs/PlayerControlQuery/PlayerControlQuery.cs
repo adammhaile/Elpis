@@ -11,7 +11,7 @@ namespace PandoraSharp.ControlQuery
         public string Artist { get; set; }
         public string Album { get; set; }
         public string Title { get; set; }
-        public SongRating Rating { get; set; }
+        public object Meta { get; set; }
     }
 
     public class QueryTrackProgress
@@ -74,6 +74,8 @@ namespace PandoraSharp.ControlQuery
     public delegate void NextRequestEvent(object sender);
     public delegate void StopRequestEvent(object sender);
 
+    public delegate void SetSongMetaRequestEvent(object sender, object meta);
+
     public interface IPlayerControlQuery
     {    
         void SongUpdateReceiver(QuerySong song);
@@ -89,6 +91,8 @@ namespace PandoraSharp.ControlQuery
         event PauseRequestEvent PauseRequest;
         event NextRequestEvent NextRequest;
         event StopRequestEvent StopRequest;
+
+        event SetSongMetaRequestEvent SetSongMetaRequest;
 
         //TODO: Add Control Methods
     }
