@@ -15,6 +15,8 @@ namespace PandoraSharpPlayer
         public event NextRequestEvent NextRequest;
         public event StopRequestEvent StopRequest;
 
+        public event SetSongMetaRequestEvent SetSongMetaRequest;
+
         private Util.SystemSessionState _sessionState;
 
         public bool IsEnabled { get; set; }

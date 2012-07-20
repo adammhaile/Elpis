@@ -324,6 +324,9 @@ namespace Elpis
         {
             try
             {
+                _lastFMStart = DateTime.Now;
+                while ((DateTime.Now - _lastFMStart).TotalMilliseconds < 5000) Thread.Sleep(10);
+
                 string sk = _scrobbler.GetAuthSessionKey();
                 _config.Fields.LastFM_Scrobble = true;
                 _config.Fields.LastFM_SessionKey = sk;
@@ -713,6 +716,15 @@ namespace Elpis
                 _scrobbler = new PandoraSharpScrobbler(apiKey, apiSecret);
 
             _scrobbler.IsEnabled = _config.Fields.LastFM_Scrobble;
+#if APP_RELEASE
+#else
+            if (_config.Fields.LastFM_Scrobble && !_scrobbler.IsEnabled)
+            {
+                System.Windows.MessageBox.Show("You are trying to use Last.FM Scrobbler without a LastFM API key. " +
+                                               "In order to use it while in Debug mode, edit apiKey and apiSecret in LoadLastFM() in MainWindow.xaml.cs");
+            }
+#endif
+ 
 
             if (_config.Fields.Proxy_Address != string.Empty)
                 _scrobbler.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,

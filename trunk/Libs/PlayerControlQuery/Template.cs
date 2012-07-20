@@ -16,6 +16,8 @@ namespace Template
         public event NextRequestEvent NextRequest;
         public event StopRequestEvent StopRequest;
 
+        public event SetSongMetaRequestEvent SetSongMetaRequest;
+
         public void SongUpdateReceiver(QuerySong song)
         {
 

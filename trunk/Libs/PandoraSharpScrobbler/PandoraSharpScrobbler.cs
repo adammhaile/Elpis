@@ -27,9 +27,6 @@ namespace PandoraSharp.Plugins
         private bool _doneNowPlaying;
         private QuerySong _currentSong;
 
-        private object _currentTrackLock = new object();
-        private Track _currentTrack;
-
         QueuingScrobbler _scrobbler;
 
         ProcessScrobblesDelegate _processScrobbleDelegate;
@@ -73,12 +70,13 @@ namespace PandoraSharp.Plugins
                 var response = _scrobbler.Process();
                 if (response.Count == 1)
                 {
+                    if (response[0].Exception != null)
+                    {
+                        Log.O("Last.FM Error!: " + response[0].Exception.ToString());
+                    }
                     if (response[0] is NowPlayingResponse || response[0] is ScrobbleResponse)
                     {
-                        lock (_currentTrackLock)
-                        {
-                            _currentTrack = response[0].Track;
-                        }
+                        SetSongMetaRequest(this, response[0].Track);
                     }
                 }
             }
@@ -162,7 +160,9 @@ namespace PandoraSharp.Plugins
         public event PauseRequestEvent PauseRequest;
         public event NextRequestEvent NextRequest;
         public event StopRequestEvent StopRequest;
-        
+
+        public event SetSongMetaRequestEvent SetSongMetaRequest;
+
         public void SongUpdateReceiver(QuerySong song)
         {
             //Nothing to do here
@@ -185,8 +185,6 @@ namespace PandoraSharp.Plugins
             {
                 if (progress.Progress.Percent < PercentNowPlaying && !_doneNowPlaying)
                 {
-                    lock (_currentTrackLock) { _currentTrack = null; }
-
                     _doneScrobble = false;
                     Log.O("LastFM, Now Playing: {0} - {1}", progress.Song.Artist, progress.Song.Title);
                     _currentSong = progress.Song;
@@ -230,22 +228,21 @@ namespace PandoraSharp.Plugins
                 //Get corrected track if there is one
                 //Without getting the corrected track, 
                 //ratings will not work if there were corrections.
-                lock (_currentTrackLock)
+                if (song.Meta == null)
                 {
-                    if (_currentTrack == null)
-                    {
-                        track = QuerySongToTrack(song);
-                    }
-                    else
-                        track = _currentTrack;
+                    track = QuerySongToTrack(song);
                 }
+                else
+                    track = (Track)song.Meta;
 
                 switch (newRating)
                 {
                     case SongRating.love:
+                        _scrobbler.UnBan(track);
                         _scrobbler.Love(track);
                         break;
                     case SongRating.ban:
+                        _scrobbler.UnLove(track);
                         _scrobbler.Ban(track);
                         break;
                     case SongRating.none:

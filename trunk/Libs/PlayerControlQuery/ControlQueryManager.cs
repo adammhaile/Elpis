@@ -15,20 +15,16 @@ namespace PandoraSharp.ControlQuery
         private QueryStatusValue _lastQueryStatus = QueryStatusValue.Waiting;
 
         private object _lastQuerySongLock = new object();
-        private QuerySong _lastQuerySong;
-
-        private object _lastProgressLock = new object();
-        private QueryProgress _lastProgress;
+        private Song _lastQuerySong;
 
         public ControlQueryManager()
         {
-            _lastQuerySong = new QuerySong();
-            _lastProgress = new QueryProgress();
+            _lastQuerySong = null;
 
             _pcqList = new List<IPlayerControlQuery>();
         }
 
-        public QuerySong LastSong { get { lock (_lastQuerySongLock) { return _lastQuerySong; } } }
+        public Song LastSong { get { lock (_lastQuerySongLock) { return _lastQuerySong; } } }
         public QueryStatusValue LastQueryStatus { get { lock (_lastQueryStatusLock) { return _lastQueryStatus; } } }
 
         public void RegisterPlayerControlQuery(IPlayerControlQuery obj)
@@ -40,6 +36,8 @@ namespace PandoraSharp.ControlQuery
             obj.PauseRequest += PauseRequestHandler;
             obj.NextRequest += NextRequestHandler;
             obj.StopRequest += StopRequestHandler;
+
+            obj.SetSongMetaRequest += obj_SetSongMetaRequest;
         }
 
         public event PlayStateRequestEvent PlayStateRequest;
@@ -47,6 +45,13 @@ namespace PandoraSharp.ControlQuery
         public event PauseRequestEvent PauseRequest;
         public event NextRequestEvent NextRequest;
         public event StopRequestEvent StopRequest;
+
+        public event SetSongMetaRequestEvent SetSongMetaRequest;
+
+        void obj_SetSongMetaRequest(object sender, object meta)
+        {
+            if (SetSongMetaRequest != null) SetSongMetaRequest(sender, meta);
+        }
 
         void StopRequestHandler(object sender)
         {
@@ -74,23 +79,24 @@ namespace PandoraSharp.ControlQuery
             else return QueryStatusValue.Invalid;
         }
 
-        public void SendSongUpdate(QuerySong song)
+        public void SendSongUpdate(Song song)
         {
             lock (_lastQuerySongLock)
             {
                 _lastQuerySong = song;
             }
 
-            Log.O("Song Update: {0} | {1} | {2}", song.Artist, song.Album, song.Title);
+            Log.O("Song Update: {0} | {1} | {2}", song.Artist, song.Album, song.SongTitle);
             foreach (var obj in _pcqList)
             {
-                obj.SongUpdateReceiver(song);
+                obj.SongUpdateReceiver(new QuerySong() 
+                { 
+                    Artist = song.Artist,
+                    Album = song.Album,
+                    Title = song.SongTitle,
+                    Meta = song.GetMetaObject(obj)
+                });
             }
-        }
-
-        public void SendSongUpdate(string artist, string album, string song)
-        {
-            SendSongUpdate(new QuerySong() { Artist = artist, Album = album, Title = song});
         }
 
         public void SendStatusUpdate(QueryStatus status)
@@ -120,25 +126,27 @@ namespace PandoraSharp.ControlQuery
             SendStatusUpdate(_lastQueryStatus, current);
         }
 
-        public void SendProgressUpdate(QueryProgress progress)
+        public void SendProgressUpdate(Song song, QueryTrackProgress progress)
         {
-            lock (_lastProgressLock)
-            {
-                _lastProgress = progress;
-            }
-
             foreach (var obj in _pcqList)
             {
-                obj.ProgressUpdateReciever(progress);
+                var prog = new QueryProgress()
+                {
+                    Song = new QuerySong()
+                    {
+                        Artist = song.Artist,
+                        Album = song.Album,
+                        Title = song.SongTitle,
+                        Meta = song.GetMetaObject(obj)
+                    },
+                    Progress = progress
+                };
+
+                obj.ProgressUpdateReciever(prog);
             }
         }
 
-        public void SendProgressUpdate(QuerySong song, QueryTrackProgress progress)
-        {
-            SendProgressUpdate(new QueryProgress() { Song = song, Progress = progress });
-        }
-
-        public void SendProgressUpdate(QuerySong song, TimeSpan TotalTime, TimeSpan ElapsedTime)
+        public void SendProgressUpdate(Song song, TimeSpan TotalTime, TimeSpan ElapsedTime)
         {
             SendProgressUpdate(song, new QueryTrackProgress() { TotalTime = TotalTime, ElapsedTime = ElapsedTime });
         }

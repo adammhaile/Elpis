@@ -141,6 +141,7 @@ namespace PandoraSharpPlayer
             _cqman.PlayRequest += _cqman_PlayRequest;
             _cqman.StopRequest += _cqman_StopRequest;
             _cqman.PlayStateRequest += _cqman_PlayStateRequest;
+            _cqman.SetSongMetaRequest += _cqman_SetSongMetaRequest;
 
             _sessionWatcher = new SessionWatcher();
             RegisterPlayerControlQuery(_sessionWatcher);
@@ -171,6 +172,14 @@ namespace PandoraSharpPlayer
 
             LoggedIn = false;
             return true;
+        }
+
+        void _cqman_SetSongMetaRequest(object sender, object meta)
+        {
+            if (CurrentSong != null)
+            {
+                CurrentSong.SetMetaObject(sender, meta);
+            }
         }
 
         public bool PauseOnLock
@@ -445,7 +454,7 @@ namespace PandoraSharpPlayer
                     _playNext = false;
                 }
 
-                _cqman.SendSongUpdate(song.Artist, song.Album, song.SongTitle);
+                _cqman.SendSongUpdate(song);
                 _cqman.SendStatusUpdate(QueryStatusValue.Playing);
 
                 _playNext = false; 
