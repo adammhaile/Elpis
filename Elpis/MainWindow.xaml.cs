@@ -660,6 +660,7 @@ namespace Elpis
             _player.SetStationSortOrder(_config.Fields.Pandora_StationSortOrder);
             _player.Volume = _config.Fields.Elpis_Volume;
             _player.PauseOnLock = _config.Fields.Elpis_PauseOnLock;
+            _player.MaxPlayed = _config.Fields.Elpis_MaxHistory;
 
             //_player.ForceSSL = _config.Fields.Misc_ForceSSL;
 

@@ -59,6 +59,7 @@ namespace Elpis
         public static MapConfigEntry Elpis_StartupSize = new MapConfigEntry("Elpis_StartupSize", "");
         public static MapConfigEntry Elpis_Volume = new MapConfigEntry("Elpis_Volume", 100);
         public static MapConfigEntry Elpis_PauseOnLock = new MapConfigEntry("Elpis_PauseOnLock", false);
+        public static MapConfigEntry Elpis_MaxHistory = new MapConfigEntry("Elpis_MaxHistory", 8);
 
         public static MapConfigEntry LastFM_Scrobble = new MapConfigEntry("LastFM_Scrobble", false);
         public static MapConfigEntry LastFM_SessionKey = new MapConfigEntry("LastFM_SessionKey", "");
@@ -100,6 +101,7 @@ namespace Elpis
         public bool Elpis_ShowTrayNotifications { get; set; }
         public int Elpis_Volume { get; set; }
         public bool Elpis_PauseOnLock { get; set; }
+        public int Elpis_MaxHistory { get; set; }
 
         public bool LastFM_Scrobble { get; set; }
         public string LastFM_SessionKey { get; set; }
@@ -186,6 +188,7 @@ namespace Elpis
             Fields.Elpis_ShowTrayNotifications = (bool) _c.GetValue(ConfigItems.Elpis_ShowTrayNotifications);
             Fields.Elpis_Volume = (int)_c.GetValue(ConfigItems.Elpis_Volume);
             Fields.Elpis_PauseOnLock = (bool)_c.GetValue(ConfigItems.Elpis_PauseOnLock);
+            Fields.Elpis_MaxHistory = (int)_c.GetValue(ConfigItems.Elpis_MaxHistory);
 
             Fields.LastFM_Scrobble = (bool)_c.GetValue(ConfigItems.LastFM_Scrobble);
             Fields.LastFM_SessionKey = _c.GetEncryptedString(ConfigItems.LastFM_SessionKey);
@@ -247,6 +250,7 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Elpis_MinimizeToTray, Fields.Elpis_MinimizeToTray);
                 _c.SetValue(ConfigItems.Elpis_ShowTrayNotifications, Fields.Elpis_ShowTrayNotifications);
                 _c.SetValue(ConfigItems.Elpis_PauseOnLock, Fields.Elpis_PauseOnLock);
+                _c.SetValue(ConfigItems.Elpis_MaxHistory, Fields.Elpis_MaxHistory);
 
                 _c.SetValue(ConfigItems.LastFM_Scrobble, Fields.LastFM_Scrobble);
                 _c.SetEncryptedString(ConfigItems.LastFM_SessionKey, Fields.LastFM_SessionKey);

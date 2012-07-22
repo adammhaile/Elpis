@@ -227,6 +227,12 @@ namespace PandoraSharpPlayer
                 _bass.SetProxy(address, port, user, password);
         }
 
+        public int MaxPlayed
+        {
+            get { return _playlist.MaxPlayed; }
+            set { _playlist.MaxPlayed = value; }
+        }
+
         #region Properties
 
         private bool _paused;
