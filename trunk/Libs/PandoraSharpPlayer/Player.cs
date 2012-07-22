@@ -609,31 +609,37 @@ namespace PandoraSharpPlayer
         }
         public void SongThumbUp(Song song)
         {
+            if (!IsStationLoaded) return;
             RunTask(() => RateSong(song, SongRating.love));
         }
 
         public void SongThumbDown(Song song)
         {
+            if (!IsStationLoaded) return;
             RunTask(() => RateSong(song, SongRating.ban));
         }
 
         public void SongDeleteFeedback(Song song)
         {
+            if (!IsStationLoaded) return;
             RunTask(() => RateSong(song, SongRating.none));
         }
 
         public void SongTired(Song song)
         {
+            if (!IsStationLoaded) return;
             RunTask(song.SetTired);
         }
 
         public void SongBookmarkArtist(Song song)
         {
+            if (!IsStationLoaded) return;
             RunTask(song.BookmarkArtist);
         }
 
         public void SongBookmark(Song song)
         {
+            if (!IsStationLoaded) return;
             RunTask(song.Bookmark);
         }
 
@@ -724,21 +730,25 @@ namespace PandoraSharpPlayer
 
         public void PlayPause()
         {
+            if (!IsStationLoaded) return;
             RunTask(() => _bass.PlayPause());
         }
 
         public void Play()
         {
+            if (!IsStationLoaded) return;
             if (Paused) PlayPause();
         }
 
         public void Pause()
         {
+            if (!IsStationLoaded) return;
             if (Playing) PlayPause();
         }
 
         public void Stop()
         {
+            if (!IsStationLoaded) return;
             RunTask(() =>
                         {
                             CurrentStation = null;
@@ -748,6 +758,7 @@ namespace PandoraSharpPlayer
 
         public void Next()
         {
+            if (!IsStationLoaded) return;
             RunTask(() => PlayNextSong());
         }
 
