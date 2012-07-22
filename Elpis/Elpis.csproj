@@ -84,7 +84,7 @@
     <Compile Include="Controls\TextBlockUtils.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Errors.cs" />
-    <Compile Include="KeyboardHook.cs" />
+    <Compile Include="Hotkeys.cs" />
     <Compile Include="Pages\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>

@@ -28,7 +28,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using BassPlayer;
-using Elpis.KeyboardHook;
+using Elpis.Hotkeys;
 using Elpis.UpdateSystem;
 using GUI.BorderlessWindow;
 using GUI.PageTransition;
@@ -49,7 +49,7 @@ namespace Elpis
 #region Globals
 
         private readonly ErrorPage _errorPage;
-        private readonly KeyboardListener _keyListen;
+        private HotKeyHost _keyHost;
         private readonly LoadingPage _loadingPage;
         private readonly ToolStripSeparator _notifyMenu_BreakSong = new ToolStripSeparator();
         private readonly ToolStripSeparator _notifyMenu_BreakStation = new ToolStripSeparator();
@@ -122,10 +122,6 @@ namespace Elpis
             var args = Environment.GetCommandLineArgs();
             
             InitializeComponent();
-
-            _keyListen = new KeyboardListener();
-            _keyListen.KeyDown += _keyListen_KeyDown;
-            _keyListen.KeyUp += _keyListen_KeyUp;
 
             //ContentBackground.Background.Opacity = 1.0;
             new WindowResizer(this,
@@ -224,6 +220,7 @@ namespace Elpis
         private void CloseSettings()
         {
             _scrobbler.IsEnabled = _config.Fields.LastFM_Scrobble;
+            _keyHost.GlobalEnabled = _config.Fields.Elpis_GlobalMediaKeys;
             RestorePrevPage();
         }
 
@@ -672,6 +669,12 @@ namespace Elpis
 
             _loadingPage.UpdateStatus("Setting up UI...");
 
+            this.Dispatch(() => {
+                _keyHost = new HotKeyHost(this);
+                ConfigureHotKeys();
+            });
+            
+
             this.Dispatch(SetupNotifyIcon);
 
             this.Dispatch(() => mainBar.DataContext = _player); //To bind playstate
@@ -783,122 +786,45 @@ namespace Elpis
             return (IsActive && transitionControl.CurrentPage == _playlistPage);
         }
 
-        private void HandleKeyHook(Key key, bool down)
+        private void ConfigureHotKeys()
         {
-            if (!_finalComplete) return;
+            _keyHost.GlobalEnabled = _config.Fields.Elpis_GlobalMediaKeys;
+            //Global Hotkeys
+            _keyHost.AddHotKey(new HotKey(Key.MediaPlayPause, ModifierKeys.None, new Action(_player.PlayPause)));
+            _keyHost.AddHotKey(new HotKey(Key.MediaNextTrack, ModifierKeys.None, new Action(_player.Next)));
 
-            if ((IsActive || !IsActive && _config.Fields.Elpis_GlobalMediaKeys) && _player.IsStationLoaded)
+            //Active Window Only
+            _keyHost.AddHotKey(new HotKey(Key.Space, ModifierKeys.None, true, true, new Action(() => 
             {
-                
-                switch (key)
-                {
-                    case Key.MediaPlayPause:
-                        if (down)
-                        {
-                            if (!_mediaPlayDown)
-                            {
-                                _mediaPlayDown = true;
-                                _player.PlayPause();
-                            }
-                        }
-                        else
-                        {
-                            _mediaPlayDown = false;
-                        }
-                        break;
-                    case Key.MediaNextTrack:
-                        if (down)
-                        {
-                            if (!_mediaNextDown)
-                            {
-                                _mediaNextDown = true;
-                                _player.Next();
-                            }
-                        }
-                        else
-                        {
-                            _mediaNextDown = false;
-                        }
-                        break;
-                    case Key.Space:
-                        if (down)
-                        {
-                            if (!_mediaSpaceDown)
-                            {
-                                _mediaSpaceDown = true;
-                                if (IsOnPlaylist())
-                                    _player.PlayPause();
-                            }
-                        }
-                        else
-                        {
-                            _mediaSpaceDown = false;
-                        }
-                        break;
-                    case Key.Return:
-                        if (down)
-                        {
-                            if (!_mediaReturnDown)
-                            {
-                                _mediaReturnDown = true;
-                                if (IsOnPlaylist())
-                                    _player.PlayPause();
-                            }
-                        }
-                        else
-                        {
-                            _mediaReturnDown = false;
-                        }
-                        break;
-                    case Key.Right:
-                        if (down)
-                        {
-                            if (!_mediaArrowNextDown)
-                            {
-                                _mediaArrowNextDown = true;
-                                if (IsOnPlaylist())
-                                    _player.Next();
-                            }
-                        }
-                        else
-                        {
-                            _mediaArrowNextDown = false;
-                        }
-                        break;
-                    case Key.Up:
-                        if (down)
-                        {
-                            if (!_mediaArrowLove)
-                            {
-                                _mediaArrowLove = true;
-                                if (IsOnPlaylist())
-                                    if (_player.CurrentSong != null)
-                                        _playlistPage.ThumbUpCurrent();
-                            }
-                        }
-                        else
-                        {
-                            _mediaArrowLove = false;
-                        }
-                        break;
-                    case Key.Down:
-                        if (down)
-                        {
-                            if (!_mediaArrowBan)
-                            {
-                                _mediaArrowBan = true;
-                                if (IsOnPlaylist())
-                                    if(_player.CurrentSong != null)
-                                        _playlistPage.ThumbDownCurrent();
-                            }
-                        }
-                        else
-                        {
-                            _mediaArrowBan = false;
-                        }
-                        break;
-                }
-            }
+                if (IsOnPlaylist())
+                    _player.PlayPause();
+            })));
+
+            _keyHost.AddHotKey(new HotKey(Key.Return, ModifierKeys.None, true, true, new Action(() =>
+            {
+                if (IsOnPlaylist())
+                    _player.PlayPause();
+            })));
+
+            _keyHost.AddHotKey(new HotKey(Key.Right, ModifierKeys.None, true, true, new Action(() =>
+            {
+                if (IsOnPlaylist())
+                    _player.Next();
+            })));
+
+            _keyHost.AddHotKey(new HotKey(Key.Up, ModifierKeys.None, true, true, new Action(() =>
+            {
+                if (IsOnPlaylist())
+                    if (_player.CurrentSong != null)
+                        _playlistPage.ThumbUpCurrent();
+            })));
+
+            _keyHost.AddHotKey(new HotKey(Key.Down, ModifierKeys.None, true, true, new Action(() =>
+            {
+                if (IsOnPlaylist())
+                    if (_player.CurrentSong != null)
+                        _playlistPage.ThumbDownCurrent();
+            })));
         }
 
         public void ShowStationList()
@@ -961,16 +887,6 @@ namespace Elpis
         void mainBar_ErrorClicked()
         {
             ShowError(ErrorCodes.SUCCESS, null, true);
-        }
-
-        private void _keyListen_KeyDown(object sender, RawKeyEventArgs args)
-        {
-            this.BeginDispatch(() => HandleKeyHook(args.Key, true));
-        }
-
-        void _keyListen_KeyUp(object sender, RawKeyEventArgs args)
-        {
-            this.BeginDispatch(() => HandleKeyHook(args.Key, false));
         }
 
         private void _player_StationsRefreshing(object sender)
