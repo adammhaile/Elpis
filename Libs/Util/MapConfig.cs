@@ -28,15 +28,15 @@ namespace Util
     {
         public MapConfigEntry(string key, object def)
         {
-            Type t = def.GetType();
-            if (t != typeof (string) &&
-                t != typeof (String) &&
-                t != typeof (int) &&
-                t != typeof (double) &&
-                t != typeof (bool))
-            {
-                throw new Exception("Type must be string, int, double or bool");
-            }
+            //Type t = def.GetType();
+            //if (t != typeof (string) &&
+            //    t != typeof (String) &&
+            //    t != typeof (int) &&
+            //    t != typeof (double) &&
+            //    t != typeof (bool))
+            //{
+            //    throw new Exception("Type must be string, int, double or bool");
+            //}
 
             Key = key;
             Default = def;
@@ -203,10 +203,11 @@ namespace Util
             if (t != entry.Default.GetType())
                 throw new Exception("Value type does not equal default value type.");
 
-            if (t == typeof (string) || t == typeof (String)) SetValue(entry.Key, (string) value);
-            else if (t == typeof (int)) SetValue(entry.Key, (int) value);
-            else if (t == typeof (double)) SetValue(entry.Key, (double) value);
-            else if (t == typeof (bool) || t == typeof (Boolean)) SetValue(entry.Key, (bool) value);
+            if (t == typeof(string) || t == typeof(String)) SetValue(entry.Key, (string)value);
+            else if (t == typeof(int)) SetValue(entry.Key, (int)value);
+            else if (t == typeof(double)) SetValue(entry.Key, (double)value);
+            else if (t == typeof(bool) || t == typeof(Boolean)) SetValue(entry.Key, (bool)value);
+            else SetValue(entry.Key, value.ToString());
         }
 
         public void SetEncryptedString(MapConfigEntry entry, string value)
@@ -260,9 +261,10 @@ namespace Util
             Type t = entry.Default.GetType();
 
             if (t == typeof (string) || t == typeof (String)) return GetValue(entry.Key, (string) entry.Default);
-            if (t == typeof (int)) return GetValue(entry.Key, (int) entry.Default);
-            if (t == typeof (double)) return GetValue(entry.Key, (double) entry.Default);
-            if (t == typeof (bool) || t == typeof (Boolean)) return GetValue(entry.Key, (bool) entry.Default);
+            else if (t == typeof (int)) return GetValue(entry.Key, (int) entry.Default);
+            else if (t == typeof (double)) return GetValue(entry.Key, (double) entry.Default);
+            else if (t == typeof (bool) || t == typeof (Boolean)) return GetValue(entry.Key, (bool) entry.Default);
+            else return GetValue(entry.Key, (string)entry.Default.ToString()); //On their own to parse it
 
             throw new Exception("Default Type must be string, int, double or bool");
         }

@@ -601,11 +601,15 @@ namespace PandoraSharpPlayer
             return false;
         }
 
+        bool _isRating = false;
         private void RateSong(Song song, SongRating rating)
         {
+            if (_isRating) return;
+            _isRating = true;
             SongRating oldRating = song.Rating;
             song.Rate(rating);
             _cqman.SendRatingUpdate(song.Artist, song.Album, song.SongTitle, oldRating, rating);
+            _isRating = false;
         }
         public void SongThumbUp(Song song)
         {
@@ -728,10 +732,17 @@ namespace PandoraSharpPlayer
             });
         }
 
+        bool _isPlayPause = false;
         public void PlayPause()
         {
             if (!IsStationLoaded) return;
-            RunTask(() => _bass.PlayPause());
+            RunTask(() => 
+            {
+                if (_isPlayPause) return;
+                _isPlayPause = true;
+                _bass.PlayPause();
+                _isPlayPause = false;
+            });
         }
 
         public void Play()
@@ -756,10 +767,17 @@ namespace PandoraSharpPlayer
                         });
         }
 
+        bool _isNext = false;
         public void Next()
         {
             if (!IsStationLoaded) return;
-            RunTask(() => PlayNextSong());
+            RunTask(() =>
+            {
+                if (_isNext) return;
+                _isNext = true;
+                PlayNextSong();
+                _isNext = false;
+            });
         }
 
         #endregion

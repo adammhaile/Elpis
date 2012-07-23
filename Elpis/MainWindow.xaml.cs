@@ -774,13 +774,6 @@ namespace Elpis
 #endregion
 
 #region Misc Methods
-        private bool _mediaPlayDown = false;
-        private bool _mediaNextDown = false;
-        private bool _mediaSpaceDown = false;
-        private bool _mediaReturnDown = false;
-        private bool _mediaArrowNextDown = false;
-        private bool _mediaArrowLove = false;
-        private bool _mediaArrowBan = false;
         private bool IsOnPlaylist()
         {
             return (IsActive && transitionControl.CurrentPage == _playlistPage);
@@ -789,9 +782,40 @@ namespace Elpis
         private void ConfigureHotKeys()
         {
             _keyHost.GlobalEnabled = _config.Fields.Elpis_GlobalMediaKeys;
+
             //Global Hotkeys
-            _keyHost.AddHotKey(new HotKey(Key.MediaPlayPause, ModifierKeys.None, new Action(_player.PlayPause)));
-            _keyHost.AddHotKey(new HotKey(Key.MediaNextTrack, ModifierKeys.None, new Action(_player.Next)));
+            _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_PlayPause.Key,
+                _config.Fields.HotKey_PlayPause.Modifier,
+                false, 
+                _config.Fields.HotKey_PlayPause.Enabled,
+                new Action(_player.PlayPause)));
+
+            _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_Next.Key,
+                _config.Fields.HotKey_Next.Modifier,
+                false,
+                _config.Fields.HotKey_Next.Enabled,
+                new Action(_player.Next)));
+
+            _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_ThumbsUp.Key,
+                _config.Fields.HotKey_ThumbsUp.Modifier,
+                false,
+                _config.Fields.HotKey_ThumbsUp.Enabled,
+                new Action(() =>
+                {
+                    if (_player.CurrentSong != null)
+                        _playlistPage.ThumbUpCurrent();
+                })));
+
+            _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_ThumbsDown.Key,
+                _config.Fields.HotKey_ThumbsDown.Modifier,
+                false,
+                _config.Fields.HotKey_ThumbsDown.Enabled,
+                new Action(() =>
+                {
+                    if (_player.CurrentSong != null)
+                        _playlistPage.ThumbDownCurrent();
+                })));
+
 
             //Active Window Only
             _keyHost.AddHotKey(new HotKey(Key.Space, ModifierKeys.None, true, true, new Action(() => 

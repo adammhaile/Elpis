@@ -22,9 +22,54 @@ using System.IO;
 using PandoraSharp;
 using Util;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Elpis
 {
+    public class KeyObject
+    {
+        public KeyObject(Key key, ModifierKeys modifier, bool enabled = true)
+        {
+            Key = key;
+            Modifier = modifier;
+            Enabled = enabled;
+        }
+
+        public KeyObject(string data, KeyObject def)
+        {
+            var split = data.Split('*');
+
+            bool success = false;
+            if (split.Length == 3)
+            {
+                try
+                {
+                    Key = (Key)Enum.Parse(typeof(Key), split[0]);
+                    Modifier = (ModifierKeys)Enum.Parse(typeof(ModifierKeys), split[1]);
+                    Enabled = bool.Parse(split[2]);
+                    success = true;
+                }
+                catch{}
+            }
+
+            if(!success)
+            {
+                Key = def.Key;
+                Modifier = def.Modifier;
+                Enabled = def.Enabled;
+            }
+        }
+
+        public override string ToString()
+        {
+            return Key.ToString() + "*" + Modifier.ToString() + "*" + Enabled.ToString();
+        }
+
+        public Key Key { get; set; }
+        public ModifierKeys Modifier { get; set; }
+        public bool Enabled { get; set; }
+    }
+
     public struct ConfigItems
     {
         public static MapConfigEntry Debug_WriteLog = new MapConfigEntry("Debug_WriteLog", false);
@@ -63,6 +108,11 @@ namespace Elpis
 
         public static MapConfigEntry LastFM_Scrobble = new MapConfigEntry("LastFM_Scrobble", false);
         public static MapConfigEntry LastFM_SessionKey = new MapConfigEntry("LastFM_SessionKey", "");
+
+        public static MapConfigEntry HotKey_PlayPause = new MapConfigEntry("HotKey_PlayPause", new KeyObject(Key.MediaPlayPause, ModifierKeys.None));
+        public static MapConfigEntry HotKey_Next = new MapConfigEntry("HotKey_Next", new KeyObject(Key.MediaNextTrack, ModifierKeys.None));
+        public static MapConfigEntry HotKey_ThumbsUp = new MapConfigEntry("HotKey_ThumbsUp", new KeyObject(Key.Add, ModifierKeys.Alt));
+        public static MapConfigEntry HotKey_ThumbsDown = new MapConfigEntry("HotKey_ThumbsDown", new KeyObject(Key.Subtract, ModifierKeys.Alt));
 
         //public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
     }
@@ -110,6 +160,12 @@ namespace Elpis
 
         public Point Elpis_StartupLocation { get; set; }
         public Size Elpis_StartupSize { get; set; }
+
+        public KeyObject HotKey_PlayPause { get; set; }
+        public KeyObject HotKey_Next { get; set; }
+        public KeyObject HotKey_ThumbsUp { get; set; }
+        public KeyObject HotKey_ThumbsDown { get; set; }
+
     }
 
     public class Config
@@ -213,10 +269,20 @@ namespace Elpis
                 Fields.Elpis_StartupSize = new Size(0, 0);
             }
 
+            Fields.HotKey_PlayPause = GetKeyObject(ConfigItems.HotKey_PlayPause);
+            Fields.HotKey_Next = GetKeyObject(ConfigItems.HotKey_Next);
+            Fields.HotKey_ThumbsUp = GetKeyObject(ConfigItems.HotKey_ThumbsUp);
+            Fields.HotKey_ThumbsDown = GetKeyObject(ConfigItems.HotKey_ThumbsDown);
+
             Log.O("Config File Contents:");
             Log.O(_c.LastConfig);
 
             return true;
+        }
+
+        public KeyObject GetKeyObject(MapConfigEntry entry)
+        {
+            return new KeyObject((string)_c.GetValue(entry), (KeyObject)entry.Default);
         }
 
         public bool SaveConfig()
@@ -259,6 +325,11 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Elpis_StartupLocation, Fields.Elpis_StartupLocation.ToString());
                 _c.SetValue(ConfigItems.Elpis_StartupSize, Fields.Elpis_StartupSize.ToString());
                 _c.SetValue(ConfigItems.Elpis_Volume, Fields.Elpis_Volume);
+
+                _c.SetValue(ConfigItems.HotKey_PlayPause, Fields.HotKey_PlayPause);
+                _c.SetValue(ConfigItems.HotKey_Next, Fields.HotKey_Next);
+                _c.SetValue(ConfigItems.HotKey_ThumbsUp, Fields.HotKey_ThumbsUp);
+                _c.SetValue(ConfigItems.HotKey_ThumbsDown, Fields.HotKey_ThumbsDown);
             }
             catch (Exception ex)
             {
