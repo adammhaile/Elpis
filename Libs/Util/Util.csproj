@@ -77,6 +77,7 @@
     <Compile Include="HttpUtility.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MapConfig.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="PostSubmitter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringCrypt.cs" />
