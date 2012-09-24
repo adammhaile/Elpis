@@ -582,6 +582,19 @@ namespace PandoraSharpPlayer
             return null;
         }
 
+        public Station GetStationFromName(string stationName)
+        {
+            foreach (Station s in Stations)
+            {
+                if (stationName == s.Name)
+                {
+                    return s;
+                }
+            }
+
+            return null;
+        }
+
         public void PlayStation(Station station)
         {
             CurrentStation = station;

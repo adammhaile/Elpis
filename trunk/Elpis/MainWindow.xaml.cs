@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -32,6 +33,7 @@ using Elpis.Hotkeys;
 using Elpis.UpdateSystem;
 using GUI.BorderlessWindow;
 using GUI.PageTransition;
+using NDesk.Options;
 using PandoraSharp;
 using PandoraSharpPlayer;
 using Util;
@@ -80,6 +82,7 @@ namespace Elpis
         private Search _searchPage;
         private Settings _settingsPage;
         private bool _showingError;
+        private string _startupStation = null;
         private bool _stationLoaded;
 
         private SearchMode _searchMode = SearchMode.NewStation;
@@ -149,14 +152,38 @@ namespace Elpis
 
             transitionControl.ShowPage(_loadingPage);
 
-            string configSuffix = "";
-            if (args.Length >= 3)
+            bool show_help = false;
+            string configPath = null;
+            string stationname = null;
+            
+            OptionSet p = new OptionSet()
+              .Add("c|config=", "a {CONFIG} file to load ", delegate(string v) { configPath = v; })
+              .Add("h|?|help", "show this message and exit", delegate(string v) { show_help = v != null; })
+              .Add("s|station=", "start Elpis tuned to station \"{STATIONNAME}\" - puts quotes around station names with spaces", delegate(string v) { stationname = v; });
+            
+            List<string> extra;
+            try
             {
-                if (args[1] == "-config")
-                {
-                    configSuffix = args[2];
-                }
+                p.Parse(args);
             }
+            catch (OptionException e)
+            {
+                Console.Write("Elpis: ");
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Try `Elpis --help' for more information.");
+                return;
+            }
+
+            if (show_help)
+            {
+                ShowHelp(p);
+                return;
+            }
+
+            if (stationname != null) _startupStation = stationname;
+
+            string configSuffix = "";
+            if (configPath != null) configSuffix = configPath;
 
             _config = new Config(configSuffix);
 
@@ -185,6 +212,8 @@ namespace Elpis
                     this.Height = size.Height;
                 }
             }
+
+
         }
 
         public void ShowWindow()
@@ -193,6 +222,16 @@ namespace Elpis
                 WindowState = WindowState.Normal;
 
             Microsoft.Shell.NativeMethods.ShowToFront((new System.Windows.Interop.WindowInteropHelper(this)).Handle);
+        }
+
+        static void ShowHelp(OptionSet p)
+        {
+            Console.WriteLine("Usage: Elpis [OPTIONS]");
+            Console.WriteLine("Greet a list of individuals with an optional message.");
+            Console.WriteLine("If no message is specified, a generic greeting is used.");
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            p.WriteOptionDescriptions(Console.Out);
         }
 
 #region Setups
@@ -1161,7 +1200,15 @@ namespace Elpis
             {
                 if (_config.Fields.Pandora_AutoPlay)
                 {
-                    Station s = _player.GetStationFromID(_config.Fields.Pandora_LastStationID);
+                    Station s = null;
+                    if(_startupStation != null)
+                    {
+                        s = _player.GetStationFromName(_startupStation);
+                    }
+                    if (s == null)
+                    {
+                        s = _player.GetStationFromID(_config.Fields.Pandora_LastStationID);
+                    }
                     if (s != null)
                     {
                         _loadingPage.UpdateStatus("Loading Station:" + Environment.NewLine + s.Name);
