@@ -40,89 +40,107 @@ namespace Elpis.Hotkeys
     public class HotKeyAlreadyRegisteredException : Exception
     {
         public HotKey HotKey { get; private set; }
-        public HotKeyAlreadyRegisteredException(string message, HotKey hotKey) : base(message) { HotKey = hotKey; }
-        public HotKeyAlreadyRegisteredException(string message, HotKey hotKey, Exception inner) : base(message, inner) { HotKey = hotKey; }
+
+        public HotKeyAlreadyRegisteredException(string message, HotKey hotKey) : base(message)
+        {
+            HotKey = hotKey;
+        }
+
+        public HotKeyAlreadyRegisteredException(string message, HotKey hotKey, Exception inner) : base(message, inner)
+        {
+            HotKey = hotKey;
+        }
     }
 
     public class HotKey : INotifyPropertyChanged, IEquatable<HotKey>
     {
-        public HotKey(Key key, ModifierKeys modifiers, bool activeOnly, bool enabled = true, Action func = null)
+        public HotKey(Key key, ModifierKeys modifiers, bool activeOnly, bool enabled = true, RoutedCommand command = null)
         {
             Key = key;
             Modifiers = modifiers;
             Enabled = enabled;
             ActiveOnly = activeOnly;
-            Func = func;
+            Command = command;
         }
 
-        public HotKey(Key key, ModifierKeys modifiers, Action func) : this(key, modifiers, false, true, func) { }
-        public HotKey(Key key, ModifierKeys modifiers) : this(key, modifiers, false, true, null) { }
-
-        private Action _func;
-        public Action Func
+        public HotKey(Key key, ModifierKeys modifiers, RoutedCommand command ) : this(key, modifiers, false, true, command)
         {
-            get { return _func; }
+        }
+
+        public HotKey(Key key, ModifierKeys modifiers) : this(key, modifiers, false, true, null)
+        {
+        }
+
+        private RoutedCommand _command;
+
+        public RoutedCommand Command
+        {
+            get { return _command; }
             set
             {
-                if (_func != value)
+                if (_command != value)
                 {
-                    _func = value;
-                    OnPropertyChanged("Func");
+                    _command = value;
+                    OnPropertyChanged("Command");
                 }
             }
         }
-        
-        private Key key;
+
+        private Key _key;
+
         public Key Key
         {
-            get { return key; }
+            get { return _key; }
             set
             {
-                if (key != value)
+                if (_key != value)
                 {
-                    key = value;
+                    _key = value;
                     OnPropertyChanged("Key");
                 }
             }
         }
 
-        private ModifierKeys modifiers;
+        private ModifierKeys _modifiers;
+
         public ModifierKeys Modifiers
         {
-            get { return modifiers; }
+            get { return _modifiers; }
             set
             {
-                if (modifiers != value)
+                if (_modifiers != value)
                 {
-                    modifiers = value;
+                    _modifiers = value;
                     OnPropertyChanged("Modifiers");
                 }
             }
         }
 
-        private bool enabled;
+        private bool _enabled;
+
         public bool Enabled
         {
-            get { return enabled; }
+            get { return _enabled; }
             set
             {
-                if (value != enabled)
+                if (value != _enabled)
                 {
-                    enabled = value;
+                    _enabled = value;
                     OnPropertyChanged("Enabled");
                 }
             }
         }
 
-        private bool activeOnly;
+        private bool _activeOnly;
+
         public bool ActiveOnly
         {
-            get { return activeOnly; }
+            get { return _activeOnly; }
             set
             {
-                if (value != activeOnly)
+                if (value != _activeOnly)
                 {
-                    activeOnly = value;
+                    _activeOnly = value;
                     OnPropertyChanged("ActiveOnly");
                 }
             }
@@ -153,15 +171,15 @@ namespace Elpis.Hotkeys
 
         public override int GetHashCode()
         {
-            return (int)Modifiers + 10 * (int)Key;
+            return (int) Modifiers + 10*(int) Key;
         }
 
         public override string ToString()
         {
             return string.Format("{0} + {1} ({2}Enabled), {3}",
-                Key, Modifiers, 
-                Enabled ? "" : "Not ", 
-                ActiveOnly ? "Active Window Only" : "");
+                                 Key, Modifiers,
+                                 Enabled ? "" : "Not ",
+                                 ActiveOnly ? "Active Window Only" : "");
         }
 
         public event EventHandler<HotKeyEventArgs> HotKeyPressed;
@@ -171,9 +189,9 @@ namespace Elpis.Hotkeys
             if (HotKeyPressed != null)
                 HotKeyPressed(this, new HotKeyEventArgs(this));
 
-            if (Func != null)
+            if (Command != null)
             {
-                Func();
+                Command.Execute(null,null);
             }
         }
 
@@ -188,7 +206,7 @@ namespace Elpis.Hotkeys
         public HotKeyHost(Window window)
         {
             _window = window;
-            var hwnd = (HwndSource)HwndSource.FromVisual(window);
+            var hwnd = (HwndSource) HwndSource.FromVisual(window);
             Init(hwnd);
         }
 
@@ -208,6 +226,31 @@ namespace Elpis.Hotkeys
         public bool IsEnabled { get; set; }
         public bool GlobalEnabled { get; set; }
 
+        private void RegisterHotKey(int id, HotKey hotKey)
+        {
+            if (!hotKey.ActiveOnly && GlobalEnabled)
+            {
+                RegisterGlobalHotKey(id, hotKey);
+            }
+            else
+            {
+                RegisterActiveWindowHotkey(hotKey);
+            }
+        }
+
+        private void UnregisterHotKey(int id)
+        {
+            HotKey hotKey = hotKeys[id];
+            if (!hotKey.ActiveOnly && GlobalEnabled)
+            {
+                UnregisterGlobalHotKey(id);
+            }
+            else
+            {
+                UnregisterActiveWindowHotkey(hotKey);
+            }
+        }
+
         #region HotKey Interop
 
         private const int WM_HotKey = 786;
@@ -215,12 +258,12 @@ namespace Elpis.Hotkeys
         private Window _window;
 
         [DllImport("user32", CharSet = CharSet.Ansi,
-                   SetLastError = true, ExactSpelling = true)]
+            SetLastError = true, ExactSpelling = true)]
         private static extern int RegisterHotKey(IntPtr hwnd,
-                int id, int modifiers, int key);
+                                                 int id, int modifiers, int key);
 
         [DllImport("user32", CharSet = CharSet.Ansi,
-                   SetLastError = true, ExactSpelling = true)]
+            SetLastError = true, ExactSpelling = true)]
         private static extern int UnregisterHotKey(IntPtr hwnd, int id);
 
         #endregion
@@ -230,11 +273,11 @@ namespace Elpis.Hotkeys
         private HwndSourceHook hook;
         private HwndSource hwndSource;
 
-        private void RegisterHotKey(int id, HotKey hotKey)
+        private void RegisterGlobalHotKey(int id, HotKey hotKey)
         {
-            if ((int)hwndSource.Handle != 0)
+            if ((int) hwndSource.Handle != 0)
             {
-                RegisterHotKey(hwndSource.Handle, id, (int)hotKey.Modifiers, KeyInterop.VirtualKeyFromKey(hotKey.Key));
+                RegisterHotKey(hwndSource.Handle, id, (int) hotKey.Modifiers, KeyInterop.VirtualKeyFromKey(hotKey.Key));
                 int error = Marshal.GetLastWin32Error();
                 if (error != 0)
                 {
@@ -250,9 +293,9 @@ namespace Elpis.Hotkeys
                 throw new InvalidOperationException("Handle is invalid");
         }
 
-        private void UnregisterHotKey(int id)
+        private void UnregisterGlobalHotKey(int id)
         {
-            if ((int)hwndSource.Handle != 0)
+            if ((int) hwndSource.Handle != 0)
             {
                 UnregisterHotKey(hwndSource.Handle, id);
                 int error = Marshal.GetLastWin32Error();
@@ -263,20 +306,20 @@ namespace Elpis.Hotkeys
 
         #endregion
 
-        public event EventHandler<HotKeyEventArgs> HotKeyPressed;
+        public event EventHandler<HotKeyEventArgs> GlobalHotKeyPressed;
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == WM_HotKey)
             {
-                if (IsEnabled && hotKeys.ContainsKey((int)wParam))
+                if (IsEnabled && hotKeys.ContainsKey((int) wParam))
                 {
-                    HotKey h = hotKeys[(int)wParam];
-                    if (!h.ActiveOnly && GlobalEnabled || h.ActiveOnly && _window.IsActive)
+                    HotKey h = hotKeys[(int) wParam];
+                    if (!h.ActiveOnly && GlobalEnabled)
                     {
                         h.RaiseOnHotKeyPressed();
-                        if (HotKeyPressed != null)
-                            HotKeyPressed(this, new HotKeyEventArgs(h));
+                        if (GlobalHotKeyPressed != null)
+                            GlobalHotKeyPressed(this, new HotKeyEventArgs(h));
                     }
                 }
             }
@@ -284,26 +327,48 @@ namespace Elpis.Hotkeys
             return new IntPtr(0);
         }
 
+        #region ActiveWindowHotkeyBinding
 
-        void hotKey_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void RegisterActiveWindowHotkey(HotKey hotkey)
+        {
+            hotkey.Command.InputGestures.Add(new KeyGesture(hotkey.Key, hotkey.Modifiers));
+        }
+
+        private void UnregisterActiveWindowHotkey(HotKey hotkey)
+        {
+            foreach (KeyGesture keygesture in hotkey.Command.InputGestures)
+            {
+                if (keygesture.Key == hotkey.Key && keygesture.Modifiers == hotkey.Modifiers)
+                {
+                    hotkey.Command.InputGestures.Remove(keygesture);
+                    break;
+                }
+            }
+        }
+
+        #endregion
+
+        private void hotKey_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var kvPair = hotKeys.FirstOrDefault(h => h.Value == sender);
             if (kvPair.Value != null)
             {
-                if (e.PropertyName == "Enabled")
+                switch (e.PropertyName)
                 {
-                    if (kvPair.Value.Enabled)
-                        RegisterHotKey(kvPair.Key, kvPair.Value);
-                    else
-                        UnregisterHotKey(kvPair.Key);
-                }
-                else if (e.PropertyName == "Key" || e.PropertyName == "Modifiers")
-                {
-                    if (kvPair.Value.Enabled)
-                    {
-                        UnregisterHotKey(kvPair.Key);
-                        RegisterHotKey(kvPair.Key, kvPair.Value);
-                    }
+                    case "Enabled":
+                        if (kvPair.Value.Enabled)
+                            RegisterHotKey(kvPair.Key, kvPair.Value);
+                        else
+                            UnregisterHotKey(kvPair.Key);
+                        break;
+                    case "Modifiers":
+                    case "Key":
+                        if (kvPair.Value.Enabled)
+                        {
+                            UnregisterHotKey(kvPair.Key);
+                            RegisterHotKey(kvPair.Key, kvPair.Value);
+                        }
+                        break;
                 }
             }
         }
@@ -327,10 +392,16 @@ namespace Elpis.Hotkeys
             }
         }
 
-        public IEnumerable<HotKey> HotKeys { get { return hotKeys.Values; } }
+        public IEnumerable<HotKey> HotKeys
+        {
+            get { return hotKeys.Values; }
+        }
 
 
-        private static readonly SerialCounter idGen = new SerialCounter(1); //Annotation: Can be replaced with "Random"-class
+        private static readonly SerialCounter idGen = new SerialCounter(1);
+                                              //Annotation: Can be replaced with "Random"-class
+
+        public static readonly RoutedCommand ActiveWindowCommand = new RoutedCommand();
 
         public void AddHotKey(HotKey hotKey)
         {
@@ -343,10 +414,13 @@ namespace Elpis.Hotkeys
 
             int id = idGen.Next();
             if (hotKey.Enabled)
+            {
                 RegisterHotKey(id, hotKey);
+            }
             hotKey.PropertyChanged += hotKey_PropertyChanged;
             hotKeys[id] = hotKey;
         }
+
 
         public bool RemoveHotKey(HotKey hotKey)
         {
@@ -397,5 +471,13 @@ namespace Elpis.Hotkeys
         }
 
         #endregion
+    }
+
+    public static class CustomCommands
+    {
+        public static RoutedCommand PlayPause = MediaCommands.TogglePlayPause;
+        public static RoutedCommand Next = MediaCommands.NextTrack;
+        public static RoutedCommand ThumbsUp = new RoutedCommand();
+        public static RoutedCommand ThumbsDown = new RoutedCommand();
     }
 }

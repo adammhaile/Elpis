@@ -26,7 +26,7 @@ namespace Elpis
         public event CancelHandler CancelEvent;
         public event CloseHandler CloseEvent;
 
-        private PandoraSharpPlayer.Player _player = null;
+        private readonly PandoraSharpPlayer.Player _player = null;
 
         public QuickMixPage(PandoraSharpPlayer.Player player)
         {
