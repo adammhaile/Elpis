@@ -788,67 +788,36 @@ namespace Elpis
                 _config.Fields.HotKey_PlayPause.Modifier,
                 false, 
                 _config.Fields.HotKey_PlayPause.Enabled,
-                new Action(_player.PlayPause)));
+                CustomCommands.PlayPause));
 
             _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_Next.Key,
                 _config.Fields.HotKey_Next.Modifier,
                 false,
                 _config.Fields.HotKey_Next.Enabled,
-                new Action(_player.Next)));
+                CustomCommands.Next));
 
             _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_ThumbsUp.Key,
                 _config.Fields.HotKey_ThumbsUp.Modifier,
                 false,
                 _config.Fields.HotKey_ThumbsUp.Enabled,
-                new Action(() =>
-                {
-                    if (_player.CurrentSong != null)
-                        _playlistPage.ThumbUpCurrent();
-                })));
+                CustomCommands.ThumbsUp));
 
             _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_ThumbsDown.Key,
                 _config.Fields.HotKey_ThumbsDown.Modifier,
                 false,
                 _config.Fields.HotKey_ThumbsDown.Enabled,
-                new Action(() =>
-                {
-                    if (_player.CurrentSong != null)
-                        _playlistPage.ThumbDownCurrent();
-                })));
-
-
+                CustomCommands.ThumbsDown));
+            
             //Active Window Only
-            _keyHost.AddHotKey(new HotKey(Key.Space, ModifierKeys.None, true, true, new Action(() => 
-            {
-                if (IsOnPlaylist())
-                    _player.PlayPause();
-            })));
+            _keyHost.AddHotKey(new HotKey(Key.Space, ModifierKeys.None, true, true, CustomCommands.PlayPause));
 
-            _keyHost.AddHotKey(new HotKey(Key.Return, ModifierKeys.None, true, true, new Action(() =>
-            {
-                if (IsOnPlaylist())
-                    _player.PlayPause();
-            })));
+            _keyHost.AddHotKey(new HotKey(Key.Return, ModifierKeys.None, true, true, CustomCommands.PlayPause));
 
-            _keyHost.AddHotKey(new HotKey(Key.Right, ModifierKeys.None, true, true, new Action(() =>
-            {
-                if (IsOnPlaylist())
-                    _player.Next();
-            })));
+            _keyHost.AddHotKey(new HotKey(Key.Right, ModifierKeys.None, true, true, CustomCommands.Next));
 
-            _keyHost.AddHotKey(new HotKey(Key.Up, ModifierKeys.None, true, true, new Action(() =>
-            {
-                if (IsOnPlaylist())
-                    if (_player.CurrentSong != null)
-                        _playlistPage.ThumbUpCurrent();
-            })));
+            _keyHost.AddHotKey(new HotKey(Key.Up, ModifierKeys.None, true, true, CustomCommands.ThumbsUp));
 
-            _keyHost.AddHotKey(new HotKey(Key.Down, ModifierKeys.None, true, true, new Action(() =>
-            {
-                if (IsOnPlaylist())
-                    if (_player.CurrentSong != null)
-                        _playlistPage.ThumbDownCurrent();
-            })));
+            _keyHost.AddHotKey(new HotKey(Key.Down, ModifierKeys.None, true, true, CustomCommands.ThumbsDown));
         }
 
         public void ShowStationList()
@@ -1260,6 +1229,53 @@ namespace Elpis
                 ShowInTaskbar = true;
         }
 
-#endregion      
+        private void PlayPauseToggled(object sender, ExecutedRoutedEventArgs e)
+        {
+            _player.PlayPause();
+        }
+
+        private void SkipTrack(object sender, ExecutedRoutedEventArgs e)
+        {
+            _player.Next();
+        }
+
+        private void CanExecutePlayPauseSkip(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (IsOnPlaylist())
+            {
+                e.CanExecute = true;
+            }
+            else
+            {
+                e.CanExecute = false;
+            }
+        }
+
+        private void ExecuteThumbsUp(object sender, ExecutedRoutedEventArgs e)
+        {
+            _playlistPage.ThumbUpCurrent();
+        }
+
+
+        private void ExecuteThumbsDown(object sender, ExecutedRoutedEventArgs e)
+        {
+            _playlistPage.ThumbDownCurrent();
+        }
+
+        private void CanExecuteThumbsUpDown(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (IsOnPlaylist() && _player.CurrentSong != null)
+            {
+                e.CanExecute = true;
+            }
+            else
+            {
+                e.CanExecute = false;
+            }
+        }
+
+#endregion
+
+
     }
 }
