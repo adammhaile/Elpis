@@ -23,6 +23,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -1203,7 +1204,14 @@ namespace Elpis
                     Station s = null;
                     if(_startupStation != null)
                     {
-                        s = _player.GetStationFromName(_startupStation);
+                        if (Regex.IsMatch(_startupStation, @"^[0-9]+$"))
+                        {
+                            s = _player.GetStationFromID(_startupStation);
+                        }
+                        else
+                        {
+                            s = _player.GetStationFromName(_startupStation);
+                        }
                     }
                     if (s == null)
                     {

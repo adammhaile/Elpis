@@ -21,6 +21,7 @@
                 <MenuItem Name="mnuEditQuickMix" Click="mnuEditQuickMix_Click" Header="Edit QuickMix"/>
                 <MenuItem Name="mnuAddVariety" Click="mnuAddVariety_Click" Header="Add Variety"/>
                 <MenuItem Name="mnuInfo" Click="mnuInfo_Click" Header="Station Info"/>
+                <MenuItem Name="mnuMakeShortcut" Click="mnuMakeShortcut_Click" Header="Create Shortcut"/>
             </ContextMenu>
         </ResourceDictionary>
     </UserControl.Resources>
