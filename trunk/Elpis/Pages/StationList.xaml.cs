@@ -272,5 +272,16 @@ namespace Elpis
                     AddVarietyEvent(_currMenuStation);
             }
         }
+
+
+        private void mnuMakeShortcut_Click(object sender, RoutedEventArgs e)
+        {
+         /*TODO: Add some kind of visual feedback to make it obvious creating the shortcut succeeded*/   
+            if (_currMenuStation != null)
+            {
+                _currMenuStation.CreateShortcut();
+            }
+
+        }
     }
 }

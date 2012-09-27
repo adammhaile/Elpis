@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using Util;
 using PandoraSharp.Exceptions;
 using Newtonsoft.Json.Linq;
@@ -269,6 +270,42 @@ namespace PandoraSharp
                 {
                 }
             }
+        }
+
+        public void CreateShortcut()
+        {
+            IWshRuntimeLibrary.WshShellClass wsh = new IWshRuntimeLibrary.WshShellClass();
+
+            string targetPathWithoutExtension = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Elpis - " + Name;
+            for (int i = 1; File.Exists(targetPathWithoutExtension+".lnk"); i++ )
+            {
+                targetPathWithoutExtension = targetPathWithoutExtension + i;
+            }
+            IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut)wsh.CreateShortcut(targetPathWithoutExtension + ".lnk");
+            if(shortcut != null)
+            {
+                shortcut.Arguments = String.Format("--station={0}", this.ID);
+                shortcut.TargetPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Elpis.exe";
+                // not sure about what this is for
+                shortcut.WindowStyle = 1;
+                shortcut.Description = String.Format("Start Elpis tuned to {0}", this.Name);
+                shortcut.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                
+                //Get the assembly.
+                System.Reflection.Assembly currAssembly = System.Reflection.Assembly.LoadFrom(shortcut.TargetPath);
+
+                //Gets the image from the exe resources
+                System.IO.Stream stream = currAssembly.GetManifestResourceStream("main_icon.ico");
+                if (null != stream)
+                {
+                    string temp = Path.GetTempFileName();
+                    System.Drawing.Image.FromStream(stream).Save(temp);
+                    shortcut.IconLocation = temp;
+                }
+
+                shortcut.Save();
+            }
+
         }
     }
 }
