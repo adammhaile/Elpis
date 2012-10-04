@@ -17,11 +17,17 @@
  * along with Elpis. If not, see http://www.gnu.org/licenses/.
 */
 
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
+using Elpis.Hotkeys;
 using PandoraSharpPlayer;
 using System;
-using Util;
+using KeyEventArgs = System.Windows.Input.KeyEventArgs;
+using TextBox = System.Windows.Controls.TextBox;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace Elpis
 {
@@ -47,13 +53,16 @@ namespace Elpis
         private readonly Config _config;
 
         private readonly Player _player;
+        private HotKeyHost _keyHost;
 
-        public Settings(Player player, Config config)
+        public Settings(Player player, Config config, HotKeyHost keyHost)
         {
             InitializeComponent();
 
             _config = config;
             _player = player;
+            _keyHost = keyHost;
+            HotKeyItems.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("HotKeys") {Source = _keyHost, NotifyOnSourceUpdated=true, Mode=BindingMode.OneWay });
         }
 
         public event CloseEvent Close;
@@ -74,7 +83,6 @@ namespace Elpis
 
             chkAutoPlay.IsChecked = _config.Fields.Pandora_AutoPlay;
             chkCheckUpdates.IsChecked = _config.Fields.Elpis_CheckUpdates;
-            chkGlobalMediaKeys.IsChecked = _config.Fields.Elpis_GlobalMediaKeys;
             chkTrayMinimize.IsChecked = _config.Fields.Elpis_MinimizeToTray;
             chkShowNotify.IsChecked = _config.Fields.Elpis_ShowTrayNotifications;
             chkPauseOnLock.IsChecked = _config.Fields.Elpis_PauseOnLock;
@@ -105,7 +113,6 @@ namespace Elpis
                 _config.Fields.Pandora_LastStationID = _player.CurrentStation.ID;
             _config.Fields.Pandora_AutoPlay = (bool) chkAutoPlay.IsChecked;
             _config.Fields.Elpis_CheckUpdates = (bool) chkCheckUpdates.IsChecked;
-            _config.Fields.Elpis_GlobalMediaKeys = (bool) chkGlobalMediaKeys.IsChecked;
             _config.Fields.Elpis_MinimizeToTray = (bool) chkTrayMinimize.IsChecked;
             _config.Fields.Elpis_ShowTrayNotifications = (bool) chkShowNotify.IsChecked;
            _player.PauseOnLock = _config.Fields.Elpis_PauseOnLock = (bool)chkPauseOnLock.IsChecked;
@@ -125,6 +132,12 @@ namespace Elpis
             _config.Fields.Proxy_Password = txtProxyPassword.Password;
 
             _config.Fields.LastFM_Scrobble = (bool)chkEnableScrobbler.IsChecked;
+            Dictionary<int, HotkeyConfig> keys = new Dictionary<int, HotkeyConfig>();
+            foreach (KeyValuePair<int,HotKey> pair in _keyHost.HotKeys)
+            {
+                keys.Add(pair.Key,new HotkeyConfig(pair.Value));
+            }
+            _config.Fields.Elpis_HotKeys = keys;
 
             _config.SaveConfig();
         }
@@ -232,6 +245,57 @@ namespace Elpis
 
             chkEnableScrobbler.IsChecked = false;
             UpdateLastFMControlState();
+        }
+
+        private void btnAddHotKey_Click(object sender, RoutedEventArgs e)
+        {
+            _keyHost.AddHotKey(new HotKey(PlayerCommands.PlayPause,Key.None,ModifierKeys.None));
+        }
+
+        private void btnDelHotkey_Click(object sender, RoutedEventArgs e)
+        {
+            KeyValuePair<int, HotKey> pair = (KeyValuePair<int, HotKey>) ((FrameworkElement)sender).DataContext;
+            _keyHost.RemoveHotKey(pair.Value);
+        }
+    }
+
+    public class HotKeyBox : TextBox
+    {
+        public HotKeyBox() : base() { }
+
+        static HotKeyBox()
+        {
+            TextProperty.OverrideMetadata(typeof(HotKeyBox),
+                                                  new FrameworkPropertyMetadata()
+                                                      {
+                                                          BindsTwoWayByDefault = false,
+                                                          Journal = true,
+                                                          DefaultUpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+                                                      });
+        }
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            base.OnPreviewKeyDown(e);
+            KeyValuePair<int, HotKey> pair = (KeyValuePair<int, HotKey>) DataContext;
+            HotKey h = pair.Value;
+            switch (e.Key)
+            {
+                case Key.LeftShift:
+                case Key.LeftAlt:
+                case Key.LeftCtrl:
+                case Key.RightCtrl:
+                case Key.RightAlt:
+                case Key.RightShift:
+                    break;
+                default:
+                    h.SetKeyCombo(e.Key, Keyboard.Modifiers);
+                    e.Handled = true;
+                    GetBindingExpression(TextBox.TextProperty).UpdateTarget();
+                    //HACK: This is a cheap-and-nasty way to shift focus from the textbox
+                    IsEnabled = false;
+                    IsEnabled = true;
+                    break;
+            }
         }
     }
 }

@@ -18,7 +18,9 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using Elpis.Hotkeys;
 using PandoraSharp;
 using Util;
 using System.Windows;
@@ -26,27 +28,33 @@ using System.Windows.Input;
 
 namespace Elpis
 {
-    public class KeyObject
+    public class HotkeyConfig: HotKey
     {
-        public KeyObject(Key key, ModifierKeys modifier, bool enabled = true)
+        private HotkeyConfig(RoutedCommand c, Key k, ModifierKeys m) : base(c, k, m) { }
+
+        public HotkeyConfig(HotKey h)
         {
-            Key = key;
-            Modifier = modifier;
-            Enabled = enabled;
+            Command = h.Command;
+            Key = h.Key;
+            Modifiers = h.Modifiers;
+            Global = h.Global;
+            Enabled = h.Enabled;
         }
 
-        public KeyObject(string data, KeyObject def)
+        public HotkeyConfig(string data, HotkeyConfig def)
         {
             var split = data.Split('*');
 
             bool success = false;
-            if (split.Length == 3)
+            if (split.Length == 5)
             {
                 try
                 {
-                    Key = (Key)Enum.Parse(typeof(Key), split[0]);
-                    Modifier = (ModifierKeys)Enum.Parse(typeof(ModifierKeys), split[1]);
-                    Enabled = bool.Parse(split[2]);
+                    Command = PlayerCommands.getCommandByName(split[0]);
+                    Key = (Key)Enum.Parse(typeof(Key), split[1]);
+                    Modifiers = (ModifierKeys)Enum.Parse(typeof(ModifierKeys), split[2]);
+                    Global = bool.Parse(split[3]);
+                    Enabled = bool.Parse(split[4]);
                     success = true;
                 }
                 catch{}
@@ -55,19 +63,20 @@ namespace Elpis
             if(!success)
             {
                 Key = def.Key;
-                Modifier = def.Modifier;
+                Modifiers = def.Modifiers;
                 Enabled = def.Enabled;
             }
         }
 
-        public override string ToString()
+        public static HotkeyConfig Default
         {
-            return Key.ToString() + "*" + Modifier.ToString() + "*" + Enabled.ToString();
+            get { return new HotkeyConfig(PlayerCommands.PlayPause,Key.Space,ModifierKeys.None); }
         }
 
-        public Key Key { get; set; }
-        public ModifierKeys Modifier { get; set; }
-        public bool Enabled { get; set; }
+        public override string ToString()
+        {
+            return Command.Name + "*" + Key.ToString() + "*" + Modifiers.ToString() + "*" + Global.ToString() + "*" + Enabled.ToString();
+        }
     }
 
     public struct ConfigItems
@@ -97,7 +106,6 @@ namespace Elpis
         public static MapConfigEntry Elpis_Version = new MapConfigEntry("Elpis_Version", (new Version()).ToString());
         public static MapConfigEntry Elpis_InstallID = new MapConfigEntry("Elpis_InstallID", Guid.NewGuid().ToString());
         public static MapConfigEntry Elpis_CheckUpdates = new MapConfigEntry("Elpis_CheckUpdates", true);
-        public static MapConfigEntry Elpis_GlobalMediaKeys = new MapConfigEntry("Elpis_GlobalMediaKeys", false);
         public static MapConfigEntry Elpis_MinimizeToTray = new MapConfigEntry("Elpis_MinimizeToTray", false);
         public static MapConfigEntry Elpis_ShowTrayNotifications = new MapConfigEntry("Elpis_ShowTrayNotifications", true);
         public static MapConfigEntry Elpis_StartupLocation = new MapConfigEntry("Elpis_StartupLocation", "");
@@ -109,10 +117,7 @@ namespace Elpis
         public static MapConfigEntry LastFM_Scrobble = new MapConfigEntry("LastFM_Scrobble", false);
         public static MapConfigEntry LastFM_SessionKey = new MapConfigEntry("LastFM_SessionKey", "");
 
-        public static MapConfigEntry HotKey_PlayPause = new MapConfigEntry("HotKey_PlayPause", new KeyObject(Key.MediaPlayPause, ModifierKeys.None));
-        public static MapConfigEntry HotKey_Next = new MapConfigEntry("HotKey_Next", new KeyObject(Key.MediaNextTrack, ModifierKeys.None));
-        public static MapConfigEntry HotKey_ThumbsUp = new MapConfigEntry("HotKey_ThumbsUp", new KeyObject(Key.Add, ModifierKeys.Alt));
-        public static MapConfigEntry HotKey_ThumbsDown = new MapConfigEntry("HotKey_ThumbsDown", new KeyObject(Key.Subtract, ModifierKeys.Alt));
+        public static MapConfigEntry HotKeysList = new MapConfigEntry("HotKeysList",new Dictionary<int,string>());
 
         //public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
     }
@@ -146,7 +151,6 @@ namespace Elpis
         public Version Elpis_Version { get; internal set; }
         public string Elpis_InstallID { get; internal set; }
         public bool Elpis_CheckUpdates { get; set; }
-        public bool Elpis_GlobalMediaKeys { get; set; }
         public bool Elpis_MinimizeToTray { get; set; }
         public bool Elpis_ShowTrayNotifications { get; set; }
         public int Elpis_Volume { get; set; }
@@ -161,10 +165,7 @@ namespace Elpis
         public Point Elpis_StartupLocation { get; set; }
         public Size Elpis_StartupSize { get; set; }
 
-        public KeyObject HotKey_PlayPause { get; set; }
-        public KeyObject HotKey_Next { get; set; }
-        public KeyObject HotKey_ThumbsUp { get; set; }
-        public KeyObject HotKey_ThumbsDown { get; set; }
+        public Dictionary<int,HotkeyConfig> Elpis_HotKeys { get; set; }
 
     }
 
@@ -194,6 +195,8 @@ namespace Elpis
 
             _c = new MapConfig(config);
 
+            Fields.Elpis_HotKeys = new Dictionary<int,HotkeyConfig>();
+
             //If not config file, init with defaults then save
             if (!File.Exists(config))
             {
@@ -207,7 +210,7 @@ namespace Elpis
             if (!_c.LoadConfig())
                 return false;
 
-            Fields.Debug_WriteLog = (bool)_c.GetValue(ConfigItems.Debug_WriteLog);
+            Fields.Debug_WriteLog = (bool) _c.GetValue(ConfigItems.Debug_WriteLog);
             Fields.Debug_Logpath = (string) _c.GetValue(ConfigItems.Debug_Logpath);
             Fields.Debug_Timestamp = (bool) _c.GetValue(ConfigItems.Debug_Timestamp);
 
@@ -227,9 +230,9 @@ namespace Elpis
             Fields.Pandora_LastStationID = (string) _c.GetValue(ConfigItems.Pandora_LastStationID);
             Fields.Pandora_StationSortOrder = (string) _c.GetValue(ConfigItems.Pandora_StationSortOrder);
 
-            Fields.Proxy_Address = (string)_c.GetValue(ConfigItems.Proxy_Address);
-            Fields.Proxy_Port = (int)_c.GetValue(ConfigItems.Proxy_Port);
-            Fields.Proxy_User = (string)_c.GetValue(ConfigItems.Proxy_User);
+            Fields.Proxy_Address = (string) _c.GetValue(ConfigItems.Proxy_Address);
+            Fields.Proxy_Port = (int) _c.GetValue(ConfigItems.Proxy_Port);
+            Fields.Proxy_User = (string) _c.GetValue(ConfigItems.Proxy_User);
             Fields.Proxy_Password = _c.GetEncryptedString(ConfigItems.Proxy_Password);
 
             var verStr = (string) _c.GetValue(ConfigItems.Elpis_Version);
@@ -239,14 +242,13 @@ namespace Elpis
 
             Fields.Elpis_InstallID = (string) _c.GetValue(ConfigItems.Elpis_InstallID);
             Fields.Elpis_CheckUpdates = (bool) _c.GetValue(ConfigItems.Elpis_CheckUpdates);
-            Fields.Elpis_GlobalMediaKeys = (bool) _c.GetValue(ConfigItems.Elpis_GlobalMediaKeys);
             Fields.Elpis_MinimizeToTray = (bool) _c.GetValue(ConfigItems.Elpis_MinimizeToTray);
             Fields.Elpis_ShowTrayNotifications = (bool) _c.GetValue(ConfigItems.Elpis_ShowTrayNotifications);
-            Fields.Elpis_Volume = (int)_c.GetValue(ConfigItems.Elpis_Volume);
-            Fields.Elpis_PauseOnLock = (bool)_c.GetValue(ConfigItems.Elpis_PauseOnLock);
-            Fields.Elpis_MaxHistory = (int)_c.GetValue(ConfigItems.Elpis_MaxHistory);
+            Fields.Elpis_Volume = (int) _c.GetValue(ConfigItems.Elpis_Volume);
+            Fields.Elpis_PauseOnLock = (bool) _c.GetValue(ConfigItems.Elpis_PauseOnLock);
+            Fields.Elpis_MaxHistory = (int) _c.GetValue(ConfigItems.Elpis_MaxHistory);
 
-            Fields.LastFM_Scrobble = (bool)_c.GetValue(ConfigItems.LastFM_Scrobble);
+            Fields.LastFM_Scrobble = (bool) _c.GetValue(ConfigItems.LastFM_Scrobble);
             Fields.LastFM_SessionKey = _c.GetEncryptedString(ConfigItems.LastFM_SessionKey);
 
             var location = (string) _c.GetValue(ConfigItems.Elpis_StartupLocation);
@@ -256,10 +258,10 @@ namespace Elpis
             }
             catch
             {
-                Fields.Elpis_StartupLocation = new Point(-1,-1);
+                Fields.Elpis_StartupLocation = new Point(-1, -1);
             }
 
-            var size = (string)_c.GetValue(ConfigItems.Elpis_StartupSize);
+            var size = (string) _c.GetValue(ConfigItems.Elpis_StartupSize);
             try
             {
                 Fields.Elpis_StartupSize = Size.Parse(size);
@@ -269,20 +271,23 @@ namespace Elpis
                 Fields.Elpis_StartupSize = new Size(0, 0);
             }
 
-            Fields.HotKey_PlayPause = GetKeyObject(ConfigItems.HotKey_PlayPause);
-            Fields.HotKey_Next = GetKeyObject(ConfigItems.HotKey_Next);
-            Fields.HotKey_ThumbsUp = GetKeyObject(ConfigItems.HotKey_ThumbsUp);
-            Fields.HotKey_ThumbsDown = GetKeyObject(ConfigItems.HotKey_ThumbsDown);
+            var list = _c.GetValue(ConfigItems.HotKeysList) as Dictionary<int,string>;
+            if (list != null){
+                foreach (KeyValuePair<int,string> pair in list)
+                {
+                Fields.Elpis_HotKeys.Add(pair.Key,new HotkeyConfig(pair.Value, HotkeyConfig.Default));
+                }
+            }
 
-            Log.O("Config File Contents:");
+        Log.O("Config File Contents:");
             Log.O(_c.LastConfig);
 
             return true;
         }
 
-        public KeyObject GetKeyObject(MapConfigEntry entry)
+        public HotkeyConfig GetKeyObject(MapConfigEntry entry)
         {
-            return new KeyObject((string)_c.GetValue(entry), (KeyObject)entry.Default);
+            return new HotkeyConfig((string)_c.GetValue(entry), (HotkeyConfig)entry.Default);
         }
 
         public bool SaveConfig()
@@ -312,7 +317,6 @@ namespace Elpis
 
                 _c.SetValue(ConfigItems.Elpis_Version, Fields.Elpis_Version.ToString());
                 _c.SetValue(ConfigItems.Elpis_CheckUpdates, Fields.Elpis_CheckUpdates);
-                _c.SetValue(ConfigItems.Elpis_GlobalMediaKeys, Fields.Elpis_GlobalMediaKeys);
                 _c.SetValue(ConfigItems.Elpis_MinimizeToTray, Fields.Elpis_MinimizeToTray);
                 _c.SetValue(ConfigItems.Elpis_ShowTrayNotifications, Fields.Elpis_ShowTrayNotifications);
                 _c.SetValue(ConfigItems.Elpis_PauseOnLock, Fields.Elpis_PauseOnLock);
@@ -326,10 +330,13 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Elpis_StartupSize, Fields.Elpis_StartupSize.ToString());
                 _c.SetValue(ConfigItems.Elpis_Volume, Fields.Elpis_Volume);
 
-                _c.SetValue(ConfigItems.HotKey_PlayPause, Fields.HotKey_PlayPause);
-                _c.SetValue(ConfigItems.HotKey_Next, Fields.HotKey_Next);
-                _c.SetValue(ConfigItems.HotKey_ThumbsUp, Fields.HotKey_ThumbsUp);
-                _c.SetValue(ConfigItems.HotKey_ThumbsDown, Fields.HotKey_ThumbsDown);
+                Dictionary<int, string> hotkeysFlattened = new Dictionary<int, string>();
+                foreach(KeyValuePair<int,HotkeyConfig> pair in Fields.Elpis_HotKeys)
+                {
+                    hotkeysFlattened.Add(pair.Key,pair.Value.ToString());
+                }
+                _c.SetValue(ConfigItems.HotKeysList,hotkeysFlattened);
+
             }
             catch (Exception ex)
             {

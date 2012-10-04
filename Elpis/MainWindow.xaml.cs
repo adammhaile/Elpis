@@ -40,9 +40,6 @@ using PandoraSharpPlayer;
 using Util;
 using Log = Util.Log;
 using UserControl = System.Windows.Controls.UserControl;
-using WinForms = System.Windows.Forms;
-using System.Windows.Interop;
-
 using PandoraSharp.Plugins;
 
 namespace Elpis
@@ -103,6 +100,8 @@ namespace Elpis
         private Exception _lastException = null;
 
         private PandoraSharpScrobbler _scrobbler;
+
+        private bool _isActiveWindow;
 
 #endregion
 
@@ -260,7 +259,6 @@ namespace Elpis
         private void CloseSettings()
         {
             _scrobbler.IsEnabled = _config.Fields.LastFM_Scrobble;
-            _keyHost.GlobalEnabled = _config.Fields.Elpis_GlobalMediaKeys;
             RestorePrevPage();
         }
 
@@ -454,7 +452,7 @@ namespace Elpis
             _searchPage = new Search(_player);
             transitionControl.AddPage(_searchPage);
 
-            _settingsPage = new Settings(_player, _config);
+            _settingsPage = new Settings(_player, _config, _keyHost);
             transitionControl.AddPage(_settingsPage);
 
             _restartPage = new RestartPage();
@@ -821,43 +819,24 @@ namespace Elpis
 
         private void ConfigureHotKeys()
         {
-            _keyHost.GlobalEnabled = _config.Fields.Elpis_GlobalMediaKeys;
 
-            //Global Hotkeys
-            _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_PlayPause.Key,
-                _config.Fields.HotKey_PlayPause.Modifier,
-                false, 
-                _config.Fields.HotKey_PlayPause.Enabled,
-                CustomCommands.PlayPause));
+            foreach(HotKey h in _config.Fields.Elpis_HotKeys.Values)
+            {
+                _keyHost.AddHotKey(h);
+            }
+            if(new List<HotKey>(_config.Fields.Elpis_HotKeys.Values).Count==0)
+            {
+             //Active Window Only
+            _keyHost.AddHotKey(new HotKey(PlayerCommands.PlayPause, Key.Space, ModifierKeys.None, false, true));
 
-            _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_Next.Key,
-                _config.Fields.HotKey_Next.Modifier,
-                false,
-                _config.Fields.HotKey_Next.Enabled,
-                CustomCommands.Next));
+            _keyHost.AddHotKey(new HotKey(PlayerCommands.PlayPause, Key.Return, ModifierKeys.None, false, true));
 
-            _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_ThumbsUp.Key,
-                _config.Fields.HotKey_ThumbsUp.Modifier,
-                false,
-                _config.Fields.HotKey_ThumbsUp.Enabled,
-                CustomCommands.ThumbsUp));
+            _keyHost.AddHotKey(new HotKey(PlayerCommands.Next, Key.Right, ModifierKeys.None, false, true));
 
-            _keyHost.AddHotKey(new HotKey(_config.Fields.HotKey_ThumbsDown.Key,
-                _config.Fields.HotKey_ThumbsDown.Modifier,
-                false,
-                _config.Fields.HotKey_ThumbsDown.Enabled,
-                CustomCommands.ThumbsDown));
-            
-            //Active Window Only
-            _keyHost.AddHotKey(new HotKey(Key.Space, ModifierKeys.None, true, true, CustomCommands.PlayPause));
+            _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsUp, Key.Up, ModifierKeys.None, false, true));
 
-            _keyHost.AddHotKey(new HotKey(Key.Return, ModifierKeys.None, true, true, CustomCommands.PlayPause));
-
-            _keyHost.AddHotKey(new HotKey(Key.Right, ModifierKeys.None, true, true, CustomCommands.Next));
-
-            _keyHost.AddHotKey(new HotKey(Key.Up, ModifierKeys.None, true, true, CustomCommands.ThumbsUp));
-
-            _keyHost.AddHotKey(new HotKey(Key.Down, ModifierKeys.None, true, true, CustomCommands.ThumbsDown));
+            _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsDown, Key.Down, ModifierKeys.None, false, true));
+            }
         }
 
         public void ShowStationList()
@@ -914,6 +893,18 @@ namespace Elpis
             }
         }
 #endregion
+
+        protected override void OnActivated(EventArgs e)
+        {
+            _isActiveWindow = true;
+            base.OnActivated(e);
+        }
+
+        protected override void OnDeactivated(EventArgs e)
+        {
+            _isActiveWindow = false;
+            base.OnDeactivated(e);
+        }
 
 #region Event Handlers
 
@@ -1296,13 +1287,20 @@ namespace Elpis
 
         private void CanExecutePlayPauseSkip(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (IsOnPlaylist())
+            if (!_isActiveWindow)
             {
                 e.CanExecute = true;
             }
             else
             {
-                e.CanExecute = false;
+                if (IsOnPlaylist())
+                {
+                    e.CanExecute = true;
+                }
+                else
+                {
+                    e.CanExecute = false;
+                }
             }
         }
 
@@ -1319,13 +1317,20 @@ namespace Elpis
 
         private void CanExecuteThumbsUpDown(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (IsOnPlaylist() && _player.CurrentSong != null)
+            if (!_isActiveWindow&& _player.CurrentSong != null)
             {
                 e.CanExecute = true;
             }
             else
             {
-                e.CanExecute = false;
+                if (IsOnPlaylist() && _player.CurrentSong != null)
+                {
+                    e.CanExecute = true;
+                }
+                else
+                {
+                    e.CanExecute = false;
+                }
             }
         }
 
