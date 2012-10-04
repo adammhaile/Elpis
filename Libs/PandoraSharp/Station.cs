@@ -248,12 +248,20 @@ namespace PandoraSharp
 
         public void Rename(string newName)
         {
-            if (newName == Name)
-                return;
-            Log.O("Pandora: Renaming Station");
-            _pandora.CallRPC("station.renameStation", "stationToken", IdToken, "stationName", newName);
+            try
+            {
+                TransformIfShared();
+                if (newName == Name)
+                    return;
+                Log.O("Pandora: Renaming Station");
+                _pandora.CallRPC("station.renameStation", "stationToken", IdToken, "stationName", newName);
 
-            Name = newName;
+                Name = newName;
+            }
+            catch (Exception ex)
+            {
+                Log.O(ex.ToString());
+            }
         }
 
         public void Delete()
