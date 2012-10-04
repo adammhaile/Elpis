@@ -48,7 +48,7 @@ namespace Util
 
     public class MapConfig
     {
-        private readonly Dictionary<string, string> _map;
+        private readonly Dictionary<string, object> _map;
 
         private const string _cryptCheck = "*_a3fc756b42_*";
         private readonly string _cryptPass = SystemInfo.GetUniqueHash();
@@ -59,7 +59,7 @@ namespace Util
             AutoSave = false;
             AutoSetDefaults = true;
 
-            _map = new Dictionary<string, string>();
+            _map = new Dictionary<string, object>();
         }
 
         private string _lastConfig = string.Empty;
@@ -123,10 +123,24 @@ namespace Util
 
                         if (split.Length == 2)
                         {
-                            if (_map.ContainsKey(split[0]))
-                                _map[split[0]] = split[1]; //cascading style. newer values override old
+                            //Deal with our lists of config items saved out to keys that look like Key[ID]
+                            if(split[0].Contains("["))
+                            {
+                                string[] splitList = split[0].Split(new []{"[","]"}, StringSplitOptions.None);
+                                if(!_map.ContainsKey(splitList[0]))
+                                {
+                                    _map[splitList[0]] = new Dictionary<int, string>();
+                                }
+                                ((Dictionary<int,string>)_map[splitList[0]])[int.Parse(splitList[1])] = split[1];
+                            }
+                            //This is the normal stype of config entry - just a string
                             else
-                                _map.Add(split[0], split[1]);
+                            {
+                                if (_map.ContainsKey(split[0]))
+                                    _map[split[0]] = split[1]; //cascading style. newer values override old
+                                else
+                                    _map.Add(split[0], split[1]);
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -143,7 +157,22 @@ namespace Util
         {
             var configs = new List<string>();
 
-            foreach (var kvp in _map) configs.Add(kvp.Key + '|' + kvp.Value);
+            foreach (var kvp in _map)
+            {
+                Type t = kvp.Value.GetType();
+                if (t.IsGenericType)
+                {
+                    foreach (var item in (Dictionary<int, string>)kvp.Value)
+                    {
+                        configs.Add(kvp.Key + '[' + item.Key + ']' + '|' + item.Value);
+                    }
+                }
+                else
+                {
+                    configs.Add(kvp.Key + '|' + kvp.Value);
+                }
+            }
+            
 
             bool result = true;
             StreamWriter sw = null;
@@ -168,6 +197,14 @@ namespace Util
             }
 
             return result;
+        }
+
+        public void SetValue(string key, Dictionary<int,string> value )
+        {
+            if (_map.ContainsKey(key))
+                _map[key] = value;
+            else
+                _map.Add(key, value);
         }
 
         public void SetValue(string key, string value)
@@ -200,13 +237,15 @@ namespace Util
         public void SetValue(MapConfigEntry entry, object value)
         {
             Type t = value.GetType();
-            if (t != entry.Default.GetType())
+            Type dType = entry.Default.GetType();
+            if (t != dType && !(t.IsGenericType && t.GetGenericTypeDefinition() == dType.GetGenericTypeDefinition()))
                 throw new Exception("Value type does not equal default value type.");
 
             if (t == typeof(string) || t == typeof(String)) SetValue(entry.Key, (string)value);
             else if (t == typeof(int)) SetValue(entry.Key, (int)value);
             else if (t == typeof(double)) SetValue(entry.Key, (double)value);
             else if (t == typeof(bool) || t == typeof(Boolean)) SetValue(entry.Key, (bool)value);
+            else if (t == typeof(Dictionary<int,string>)) SetValue(entry.Key, (Dictionary<int,string>)value);
             else SetValue(entry.Key, value.ToString());
         }
 
@@ -221,15 +260,13 @@ namespace Util
 
         public string GetValue(string key, string defValue)
         {
-            if (_map.ContainsKey(key))
-                return _map[key].Replace(@"&sep;", @"|");
-            else
-            {
-                if (AutoSetDefaults)
-                    SetValue(key, defValue);
+            if (_map.ContainsKey(key) && _map[key] as string != null)
+               return ((string) _map[key]).Replace(@"&sep;", @"|");
 
-                return defValue;
-            }
+           if (AutoSetDefaults)
+               SetValue(key, defValue);
+            return defValue;
+            
         }
 
         public int GetValue(string key, int defValue)
@@ -256,17 +293,30 @@ namespace Util
             return result;
         }
 
+        private Dictionary<int,string> GetValue(string key, Dictionary<int, string> defValue)
+        {
+             if (_map.ContainsKey(key))
+                    return (Dictionary<int,string>) _map[key];
+
+            if (AutoSetDefaults)
+                SetValue(key, defValue);
+                
+            return defValue;
+        }
+
         public object GetValue(MapConfigEntry entry)
         {
             Type t = entry.Default.GetType();
 
-            if (t == typeof (string) || t == typeof (String)) return GetValue(entry.Key, (string) entry.Default);
-            else if (t == typeof (int)) return GetValue(entry.Key, (int) entry.Default);
-            else if (t == typeof (double)) return GetValue(entry.Key, (double) entry.Default);
-            else if (t == typeof (bool) || t == typeof (Boolean)) return GetValue(entry.Key, (bool) entry.Default);
+            if (t == typeof(string) || t == typeof(String)) return GetValue(entry.Key, (string)entry.Default);
+            else if (t == typeof(int)) return GetValue(entry.Key, (int)entry.Default);
+            else if (t == typeof(double)) return GetValue(entry.Key, (double)entry.Default);
+            else if (t == typeof(bool) || t == typeof(Boolean)) return GetValue(entry.Key, (bool)entry.Default);
+            else if (t == typeof(Dictionary<int, string>))
+                return GetValue(entry.Key, ((Dictionary<int, string>) entry.Default));
             else return GetValue(entry.Key, (string)entry.Default.ToString()); //On their own to parse it
 
-            throw new Exception("Default Type must be string, int, double or bool");
+            throw new Exception("Default Type must be string, int, double, bool or Dictionary<int,string>");
         }
 
         public string GetEncryptedString(MapConfigEntry entry)

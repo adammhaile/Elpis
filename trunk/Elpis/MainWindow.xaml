@@ -16,19 +16,19 @@
   </Window.Resources>
 
   <Window.CommandBindings>
-        <CommandBinding Command="{x:Static  Hotkeys:CustomCommands.PlayPause}"
+        <CommandBinding Command="{x:Static  Hotkeys:PlayerCommands.PlayPause}"
                 Executed="PlayPauseToggled"
                 CanExecute="CanExecutePlayPauseSkip"
                 />
-        <CommandBinding Command="{x:Static Hotkeys:CustomCommands.Next}"
+        <CommandBinding Command="{x:Static Hotkeys:PlayerCommands.Next}"
                 Executed="SkipTrack"
                 CanExecute="CanExecutePlayPauseSkip"
                 />
-        <CommandBinding Command="{x:Static Hotkeys:CustomCommands.ThumbsUp}"
+        <CommandBinding Command="{x:Static Hotkeys:PlayerCommands.ThumbsUp}"
                 Executed="ExecuteThumbsUp"
                 CanExecute="CanExecuteThumbsUpDown"
                 />
-        <CommandBinding Command="{x:Static Hotkeys:CustomCommands.ThumbsDown}"
+        <CommandBinding Command="{x:Static Hotkeys:PlayerCommands.ThumbsDown}"
                 Executed="ExecuteThumbsDown"
                 CanExecute="CanExecuteThumbsUpDown"
                 />
