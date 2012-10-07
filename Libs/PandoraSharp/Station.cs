@@ -20,12 +20,16 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Windows.Shell;
+using IWshRuntimeLibrary;
 using Util;
 using PandoraSharp.Exceptions;
 using Newtonsoft.Json.Linq;
+using File = System.IO.File;
 
 namespace PandoraSharp
 {
@@ -81,7 +85,7 @@ namespace PandoraSharp
                 {
                     ArtUrl = value.ToString();
 
-                    if (ArtUrl != string.Empty)
+                    if (ArtUrl != String.Empty)
                     {
                         try
                         {
@@ -282,14 +286,14 @@ namespace PandoraSharp
 
         public void CreateShortcut()
         {
-            IWshRuntimeLibrary.WshShellClass wsh = new IWshRuntimeLibrary.WshShellClass();
+            WshShellClass wsh = new WshShellClass();
 
             string targetPathWithoutExtension = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Elpis - " + Name;
             for (int i = 1; File.Exists(targetPathWithoutExtension+".lnk"); i++ )
             {
                 targetPathWithoutExtension = targetPathWithoutExtension + i;
             }
-            IWshRuntimeLibrary.IWshShortcut shortcut = (IWshRuntimeLibrary.IWshShortcut)wsh.CreateShortcut(targetPathWithoutExtension + ".lnk");
+            IWshShortcut shortcut = (IWshShortcut)wsh.CreateShortcut(targetPathWithoutExtension + ".lnk");
             if(shortcut != null)
             {
                 shortcut.Arguments = String.Format("--station={0}", this.ID);
@@ -300,20 +304,30 @@ namespace PandoraSharp
                 shortcut.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 
                 //Get the assembly.
-                System.Reflection.Assembly currAssembly = System.Reflection.Assembly.LoadFrom(shortcut.TargetPath);
+                Assembly currAssembly = Assembly.LoadFrom(shortcut.TargetPath);
 
                 //Gets the image from the exe resources
-                System.IO.Stream stream = currAssembly.GetManifestResourceStream("main_icon.ico");
+                Stream stream = currAssembly.GetManifestResourceStream("main_icon.ico");
                 if (null != stream)
                 {
                     string temp = Path.GetTempFileName();
-                    System.Drawing.Image.FromStream(stream).Save(temp);
+                    Image.FromStream(stream).Save(temp);
                     shortcut.IconLocation = temp;
                 }
 
                 shortcut.Save();
             }
 
+        }
+
+        public JumpTask asJumpTask()
+        {
+            var task = new JumpTask();
+            task.Title = Name;
+            task.Description = "Play station " + Name;
+            task.ApplicationPath = Assembly.GetEntryAssembly().Location;
+            task.Arguments = "--station=" + ID;
+            return task;
         }
     }
 }

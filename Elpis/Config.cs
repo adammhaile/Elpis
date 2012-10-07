@@ -30,7 +30,7 @@ namespace Elpis
 {
     public class HotkeyConfig: HotKey
     {
-        private HotkeyConfig(RoutedCommand c, Key k, ModifierKeys m) : base(c, k, m) { }
+        private HotkeyConfig(RoutedUICommand c, Key k, ModifierKeys m) : base(c, k, m) { }
 
         public HotkeyConfig(HotKey h)
         {

@@ -1,0 +1,4 @@
+play-pause.ico
+skip-song.ico
+thumb-up.ico
+thumb-down.ico

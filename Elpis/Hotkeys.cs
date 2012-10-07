@@ -77,7 +77,7 @@ namespace Elpis.Hotkeys
         {
         }
 
-        public HotKey(RoutedCommand command, Key key, ModifierKeys modifiers, bool global, bool enabled = true)
+        public HotKey(RoutedUICommand command, Key key, ModifierKeys modifiers, bool global, bool enabled = true)
         {
             Key = key;
             Modifiers = modifiers;
@@ -86,14 +86,14 @@ namespace Elpis.Hotkeys
             Command = command;
         }
 
-        public HotKey(RoutedCommand command, Key key, ModifierKeys modifiers)
+        public HotKey(RoutedUICommand command, Key key, ModifierKeys modifiers)
             : this(command, key, modifiers, false, true)
         {
         }
 
-        private RoutedCommand _command;
+        private RoutedUICommand _command;
 
-        public RoutedCommand Command
+        public RoutedUICommand Command
         {
             get { return _command; }
             set
@@ -226,7 +226,7 @@ namespace Elpis.Hotkeys
 
     public static class PlayerCommands
     {
-        public static RoutedCommand getCommandByName(string name)
+        public static RoutedUICommand getCommandByName(string name)
         {
             if (name == PlayPause.Name) return PlayPause;
             if (name == Next.Name) return Next;
@@ -235,16 +235,16 @@ namespace Elpis.Hotkeys
             return null;
         }
 
-        public static List<RoutedCommand> AllCommands
+        public static List<RoutedUICommand> AllCommands
         {
-            get { return new List<RoutedCommand>() { PlayPause, Next, ThumbsUp, ThumbsDown }; }
+            get { return new List<RoutedUICommand>() { PlayPause, Next, ThumbsUp, ThumbsDown }; }
                 
         }
 
-        public static RoutedCommand PlayPause = new RoutedCommand("Play/Pause", typeof(PlayerCommands));
-        public static RoutedCommand Next = new RoutedCommand("Skip Song", typeof(PlayerCommands));
-        public static RoutedCommand ThumbsUp = new RoutedCommand("Thumbs Up",typeof(PlayerCommands));
-        public static RoutedCommand ThumbsDown = new RoutedCommand("Thumbs Down", typeof(PlayerCommands));
+        public static RoutedUICommand PlayPause = new RoutedUICommand("Pause currently playing track or Play if paused", "Play/Pause",typeof(PlayerCommands));
+        public static RoutedUICommand Next = new RoutedUICommand("Skips currently playing track", "Skip Song", typeof(PlayerCommands));
+        public static RoutedUICommand ThumbsUp = new RoutedUICommand("Marks this as a liked track that suits this station", "Thumbs Up", typeof(PlayerCommands));
+        public static RoutedUICommand ThumbsDown = new RoutedUICommand("Marks this as a disliked track or one that doesn't suit this station", "Thumbs Down", typeof(PlayerCommands));
     }
 
     public sealed class HotKeyHost : IDisposable
