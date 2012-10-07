@@ -1,5 +1,7 @@
 ﻿/*
- * Copyright 2012 - Adam Haile
+
+ * 
+ * * Copyright 2012 - Adam Haile
  * http://adamhaile.net
  *
  * This file is part of Elpis.
@@ -29,6 +31,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Shell;
 using BassPlayer;
 using Elpis.Hotkeys;
 using Elpis.UpdateSystem;
@@ -56,6 +59,8 @@ namespace Elpis
         private readonly ToolStripSeparator _notifyMenu_BreakVote = new ToolStripSeparator();
         private readonly ToolStripSeparator _notifyMenu_BreakExit = new ToolStripSeparator();
         private About _aboutPage;
+
+        private string _configLocation;
 
         private Config _config;
 
@@ -110,6 +115,18 @@ namespace Elpis
         private string _bassRegEmail = "";
         private string _bassRegKey = "";
 
+        public string ConfigLocation
+        {
+            get { return _configLocation; }
+            set { _configLocation = value; }
+        }
+
+        public string StartupStation
+        {
+            get { return _startupStation; }
+            set { _startupStation = value; }
+        }
+
         public void InitReleaseData()
         {
 #if APP_RELEASE
@@ -122,8 +139,6 @@ namespace Elpis
 
         public MainWindow()
         {
-            var args = Environment.GetCommandLineArgs();
-            
             InitializeComponent();
 
             //ContentBackground.Background.Opacity = 1.0;
@@ -152,40 +167,7 @@ namespace Elpis
 
             transitionControl.ShowPage(_loadingPage);
 
-            bool show_help = false;
-            string configPath = null;
-            string stationname = null;
-            
-            OptionSet p = new OptionSet()
-              .Add("c|config=", "a {CONFIG} file to load ", delegate(string v) { configPath = v; })
-              .Add("h|?|help", "show this message and exit", delegate(string v) { show_help = v != null; })
-              .Add("s|station=", "start Elpis tuned to station \"{STATIONNAME}\" - puts quotes around station names with spaces", delegate(string v) { stationname = v; });
-            
-            List<string> extra;
-            try
-            {
-                p.Parse(args);
-            }
-            catch (OptionException e)
-            {
-                Console.Write("Elpis: ");
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Try `Elpis --help' for more information.");
-                return;
-            }
-
-            if (show_help)
-            {
-                ShowHelp(p);
-                return;
-            }
-
-            if (stationname != null) _startupStation = stationname;
-
-            string configSuffix = "";
-            if (configPath != null) configSuffix = configPath;
-
-            _config = new Config(configSuffix);
+            _config = new Config(_configLocation ?? "");
 
             if (!_config.LoadConfig())
             {
@@ -200,13 +182,13 @@ namespace Elpis
                 var loc = _config.Fields.Elpis_StartupLocation;
                 var size = _config.Fields.Elpis_StartupSize;
 
-                if(loc.X != -1 && loc.Y != -1)
+                if (loc.X != -1 && loc.Y != -1)
                 {
                     this.Left = loc.X;
                     this.Top = loc.Y;
                 }
 
-                if(size.Width != 0 && size.Height != 0)
+                if (size.Width != 0 && size.Height != 0)
                 {
                     this.Width = size.Width;
                     this.Height = size.Height;
@@ -355,6 +337,7 @@ namespace Elpis
 
         DateTime _lastFMStart;
         bool _lastFMAuth = false;
+
         private void DoLastFMAuth()
         {
             try
@@ -711,8 +694,9 @@ namespace Elpis
                 _keyHost = new HotKeyHost(this);
                 ConfigureHotKeys();
             });
-            
 
+            this.Dispatch(SetupJumpList);
+            
             this.Dispatch(SetupNotifyIcon);
 
             this.Dispatch(() => mainBar.DataContext = _player); //To bind playstate
@@ -816,6 +800,27 @@ namespace Elpis
         {
             return (IsActive && transitionControl.CurrentPage == _playlistPage);
         }
+
+        private void SetupJumpList()
+        {
+            JumpList jumpList = new JumpList();
+            JumpList.SetJumpList(System.Windows.Application.Current, jumpList);
+
+            JumpTask pause = JumpListManager.createJumpTask(PlayerCommands.PlayPause, "--playpause",1);
+            jumpList.JumpItems.Add(pause);
+
+            JumpTask next = JumpListManager.createJumpTask(PlayerCommands.Next, "--next",2);
+            jumpList.JumpItems.Add(next);
+
+            JumpTask thumbsUp  = JumpListManager.createJumpTask(PlayerCommands.ThumbsUp, "--thumbsup",3);
+            jumpList.JumpItems.Add(thumbsUp);
+
+            JumpTask thumbsDown = JumpListManager.createJumpTask(PlayerCommands.ThumbsDown, "--thumbsdown",4);
+            jumpList.JumpItems.Add(thumbsDown);
+
+            jumpList.Apply();
+        }
+
 
         private void ConfigureHotKeys()
         {
@@ -1193,17 +1198,8 @@ namespace Elpis
                 if (_config.Fields.Pandora_AutoPlay)
                 {
                     Station s = null;
-                    if(_startupStation != null)
-                    {
-                        if (Regex.IsMatch(_startupStation, @"^[0-9]+$"))
-                        {
-                            s = _player.GetStationFromID(_startupStation);
-                        }
-                        else
-                        {
-                            s = _player.GetStationFromName(_startupStation);
-                        }
-                    }
+                    if (StartupStation != null)
+                        s = _player.GetStationFromString(StartupStation);
                     if (s == null)
                     {
                         s = _player.GetStationFromID(_config.Fields.Pandora_LastStationID);
@@ -1275,12 +1271,21 @@ namespace Elpis
                 ShowInTaskbar = true;
         }
 
-        private void PlayPauseToggled(object sender, ExecutedRoutedEventArgs e)
+        public void LoadStation(string station)
+        {
+            Station s = _player.GetStationFromString(station);
+            if(s != null)
+            {
+                _player.PlayStation(s);
+            }
+        }
+
+        public void PlayPauseToggled(object sender, ExecutedRoutedEventArgs e)
         {
             _player.PlayPause();
         }
 
-        private void SkipTrack(object sender, ExecutedRoutedEventArgs e)
+        public void SkipTrack(object sender, ExecutedRoutedEventArgs e)
         {
             _player.Next();
         }
@@ -1304,13 +1309,13 @@ namespace Elpis
             }
         }
 
-        private void ExecuteThumbsUp(object sender, ExecutedRoutedEventArgs e)
+        public void ExecuteThumbsUp(object sender, ExecutedRoutedEventArgs e)
         {
             _playlistPage.ThumbUpCurrent();
         }
 
 
-        private void ExecuteThumbsDown(object sender, ExecutedRoutedEventArgs e)
+        public void ExecuteThumbsDown(object sender, ExecutedRoutedEventArgs e)
         {
             _playlistPage.ThumbDownCurrent();
         }

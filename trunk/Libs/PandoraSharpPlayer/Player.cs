@@ -21,7 +21,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Shell;
 using BassPlayer;
 using PandoraSharp;
 using PandoraSharp.Exceptions;
@@ -569,6 +571,24 @@ namespace PandoraSharpPlayer
             _cqman.SendStatusUpdate(QueryStatusValue.Connecting);
         }
 
+        public Station GetStationFromString(string nameOrID)
+        {
+            Station s = null;
+            if(nameOrID != null)
+            {    
+                if (Regex.IsMatch(nameOrID, @"^[0-9]+$"))
+                {
+                    s = GetStationFromID(nameOrID);
+                }
+                else
+                {
+                    s = GetStationFromName(nameOrID);
+                }
+            }
+            
+            return s;
+        }
+
         public Station GetStationFromID(string stationID)
         {
             foreach (Station s in Stations)
@@ -598,6 +618,7 @@ namespace PandoraSharpPlayer
         public void PlayStation(Station station)
         {
             CurrentStation = station;
+            JumpList.AddToRecentCategory(station.asJumpTask());
 
             RunTask(PlayThread);
         }

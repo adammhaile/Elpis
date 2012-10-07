@@ -54,6 +54,10 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
+  <PropertyGroup>
+    <Win32Resource>
+    </Win32Resource>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -85,6 +89,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="Errors.cs" />
     <Compile Include="Hotkeys.cs" />
+    <Compile Include="JumpListManager.cs" />
     <Compile Include="Pages\About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
@@ -232,6 +237,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Resource Include="Resources\icon-list.txt" />
     <Resource Include="Styles\ScrollBars.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -381,7 +387,16 @@
     <Resource Include="Images\volume_66.png" />
     <Resource Include="Images\volume_66_hover.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\play-pause.ico" />
+    <Resource Include="Resources\skip-song.ico" />
+    <Resource Include="Resources\thumb-down.ico" />
+    <Resource Include="Resources\thumb-up.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"$(ProjectDir)Resources\InsertIcons.exe" "$(TargetPath)" "$(ProjectDir)Resources\icon-list.txt"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

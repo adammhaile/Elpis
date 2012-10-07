@@ -64,6 +64,7 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\JSON.NET\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
