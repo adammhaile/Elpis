@@ -78,8 +78,7 @@ namespace Elpis
             throw new NotImplementedException();
         }
 
-        #region ISingleInstanceApp Members
-        public bool SignalExternalCommandLineArgs(IList<string> args)
+        public bool HandleCommandLine(IList<string> args)
         {
             string station = null;
             bool playpause = false;
@@ -107,7 +106,7 @@ namespace Elpis
                 //TODO: Throw up a dialogue?
             }
 
-            if(skiptrack && MainWindow != null)
+            if (skiptrack && MainWindow != null)
             {
                 ((Elpis.MainWindow)MainWindow).SkipTrack(null, null);
             }
@@ -117,9 +116,9 @@ namespace Elpis
                 ((Elpis.MainWindow)MainWindow).PlayPauseToggled(null, null);
             }
 
-            if(thumbsUp && MainWindow != null)
+            if (thumbsUp && MainWindow != null)
             {
-                ((Elpis.MainWindow) MainWindow).ExecuteThumbsUp(null, null);
+                ((Elpis.MainWindow)MainWindow).ExecuteThumbsUp(null, null);
             }
 
             if (thumbsdown && MainWindow != null)
@@ -131,7 +130,7 @@ namespace Elpis
             {
                 ((Elpis.MainWindow)MainWindow).LoadStation(station);
             }
-            
+
             if (MainWindow != null)
             {
                 var mw = (Elpis.MainWindow)MainWindow;
@@ -139,6 +138,12 @@ namespace Elpis
             }
 
             return true;
+        }
+
+        #region ISingleInstanceApp Members
+        public bool SignalExternalCommandLineArgs(IList<string> args)
+        {
+            return HandleCommandLine(args);
         }
 
         #endregion
