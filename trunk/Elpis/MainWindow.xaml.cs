@@ -804,6 +804,7 @@ namespace Elpis
         private void SetupJumpList()
         {
             JumpList jumpList = new JumpList();
+            jumpList.ShowRecentCategory = true;
             JumpList.SetJumpList(System.Windows.Application.Current, jumpList);
 
             JumpTask pause = JumpListManager.createJumpTask(PlayerCommands.PlayPause, "--playpause",1);
