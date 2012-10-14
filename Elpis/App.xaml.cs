@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Microsoft.Shell;
 using NDesk.Options;
 using Util;
+using System.IO;
 
 namespace Elpis
 {
@@ -33,69 +34,35 @@ namespace Elpis
             this.InitializeComponent();
         }
 
- /*       protected override void OnStartup(StartupEventArgs e)
-        {            
+        protected override void OnStartup(StartupEventArgs e)
+        {       
             base.OnStartup(e);
- 
-            bool show_help = false;
-            string configPath = null;
-            string startupStation = null;
+            HandleCommandLine(System.Environment.GetCommandLineArgs());
+            if(Elpis.MainWindow._clo.ShowHelp)
+                Application.Current.Shutdown();
+        }
 
-            OptionSet p = new OptionSet()
-              .Add("c|config=", "a {CONFIG} file to load ", delegate(string v) { configPath = v; })
-              .Add("h|?|help", "show this message and exit", delegate(string v) { show_help = v != null; })
-              .Add("s|station=", "start Elpis tuned to station \"{STATIONNAME}\" - puts quotes around station names with spaces", delegate(string v) { startupStation = v; });
-
-            List<string> extra;
-            try
-            {
-                p.Parse(e.Args);
-            }
-            catch (OptionException ex)
-            {
-                Console.Write("Elpis: ");
-                Console.WriteLine(ex.Message);
-                Console.WriteLine("Try `Elpis --help' for more information.");
-                return;
-            }
-
-            if (startupStation != null)
-            {
-                Dispatcher.BeginInvoke(() => ((Elpis.MainWindow) MainWindow).StartupStation = startupStation);
-            }
-
-            ((Elpis.MainWindow)MainWindow).ConfigLocation = configPath;
-
-            if (show_help)
-            {
-                ShowHelp(p);
-                return;
-            }
-        }*/
-
-        private void ShowHelp(OptionSet optionSet)
+        private void ShowHelp(OptionSet optionSet, string msg = null)
         {
-            throw new NotImplementedException();
+            StringWriter sw = new StringWriter();
+            optionSet.WriteOptionDescriptions(sw);
+            string output = sw.ToString();
+            if(msg != null)
+                output += "\r\n\r\n" + msg;
+            MessageBox.Show(output, "Elpis Options");
         }
 
         public bool HandleCommandLine(IList<string> args)
         {
-            string station = null;
-            bool playpause = false;
-            bool skiptrack = false;
-            bool thumbsUp = false;
-            bool thumbsdown = false;
-            bool show_help = false;
-            string configPath = null;
-
+            CommandLineOptions clo = new CommandLineOptions();
             OptionSet p = new OptionSet()
-               .Add("c|config=", "a {CONFIG} file to load ", delegate(string v) { configPath = v; })
-               .Add("h|?|help", "show this message and exit", delegate(string v) { show_help = v != null; })
-               .Add("playpause", "toggles playback", delegate(string v) { playpause = v != null; })
-               .Add("next", "skips current track", delegate(string v) { skiptrack = v != null; })
-               .Add("thumbsup", "rates the song as suitable for this station", delegate(string v) { thumbsUp = v != null; })
-               .Add("thumbsdown", "rates the song as unsuitable for this station", delegate(string v) { thumbsdown = v != null; })
-               .Add("s|station=", "starts station \"{STATIONNAME}\" - puts quotes around station names with spaces", delegate(string v) { station = v; });
+               .Add("c|config=", "a {CONFIG} file to load ", delegate(string v) { clo.ConfigPath = v; })
+               .Add("h|?|help", "show this message and exit", delegate(string v) { clo.ShowHelp = v != null; })
+               .Add("playpause", "toggles playback", delegate(string v) { clo.TogglePlayPause = v != null; })
+               .Add("next", "skips current track", delegate(string v) { clo.SkipTrack = v != null; })
+               .Add("thumbsup", "rates the song as suitable for this station", delegate(string v) { clo.DoThumbsUp = v != null; })
+               .Add("thumbsdown", "rates the song as unsuitable for this station", delegate(string v) { clo.DoThumbsDown = v != null; })
+               .Add("s|station=", "starts station \"{STATIONNAME}\" - puts quotes around station names with spaces", delegate(string v) { clo.StationToLoad = v; });
 
             try
             {
@@ -103,38 +70,23 @@ namespace Elpis
             }
             catch (OptionException e)
             {
-                //TODO: Throw up a dialogue?
+                clo.ShowHelp = true;
+                Elpis.MainWindow.SetCommandLine(clo);
+                ShowHelp(p, e.Message);
             }
 
-            if (skiptrack && MainWindow != null)
-            {
-                ((Elpis.MainWindow)MainWindow).SkipTrack(null, null);
-            }
+            Elpis.MainWindow.SetCommandLine(clo);
 
-            if (playpause && MainWindow != null)
+            if (clo.ShowHelp)
             {
-                ((Elpis.MainWindow)MainWindow).PlayPauseToggled(null, null);
+                ShowHelp(p);
             }
-
-            if (thumbsUp && MainWindow != null)
+            else
             {
-                ((Elpis.MainWindow)MainWindow).ExecuteThumbsUp(null, null);
-            }
-
-            if (thumbsdown && MainWindow != null)
-            {
-                ((Elpis.MainWindow)MainWindow).ExecuteThumbsDown(null, null);
-            }
-
-            if (station != null && MainWindow != null)
-            {
-                ((Elpis.MainWindow)MainWindow).LoadStation(station);
-            }
-
-            if (MainWindow != null)
-            {
-                var mw = (Elpis.MainWindow)MainWindow;
-                mw.ShowWindow();
+                if (MainWindow != null)
+                {
+                    ((Elpis.MainWindow)MainWindow).DoCommandLine();
+                }
             }
 
             return true;

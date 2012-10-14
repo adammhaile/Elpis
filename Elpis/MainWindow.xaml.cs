@@ -49,7 +49,7 @@ namespace Elpis
 {
     public partial class MainWindow : Window
     {
-#region Globals
+        #region Globals
 
         private readonly ErrorPage _errorPage;
         private HotKeyHost _keyHost;
@@ -196,6 +196,40 @@ namespace Elpis
             }
 
 
+        }
+
+        public static CommandLineOptions _clo;
+        public static void SetCommandLine(CommandLineOptions clo)
+        {
+            _clo = clo;
+        }
+
+        public void DoCommandLine()
+        {
+            if (_clo.SkipTrack)
+            {
+                SkipTrack(null, null);
+            }
+
+            if (_clo.TogglePlayPause)
+            {
+                PlayPauseToggled(null, null);
+            }
+
+            if (_clo.DoThumbsUp)
+            {
+                ExecuteThumbsUp(null, null);
+            }
+
+            if (_clo.DoThumbsDown)
+            {
+                ExecuteThumbsDown(null, null);
+            }
+
+            if (_clo.StationToLoad != null)
+            {
+                LoadStation(_clo.StationToLoad);
+            }
         }
 
         public void ShowWindow()
