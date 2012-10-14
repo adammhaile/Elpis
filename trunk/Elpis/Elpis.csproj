@@ -84,6 +84,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Compile Include="CommandLineOptions.cs" />
     <Compile Include="Controls\ImageButton.cs" />
     <Compile Include="Controls\TextBlockUtils.cs" />
     <Compile Include="Enums.cs" />
