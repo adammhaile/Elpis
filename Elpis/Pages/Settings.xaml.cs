@@ -252,9 +252,15 @@ namespace Elpis
             _keyHost.AddHotKey(new HotKey(PlayerCommands.PlayPause,Key.None,ModifierKeys.None));
         }
 
-        private void btnDelHotkey_Click(object sender, RoutedEventArgs e)
+        //private void btnDelHotkey_Click(object sender, RoutedEventArgs e)
+        //{
+        //    KeyValuePair<int, HotKey> pair = (KeyValuePair<int, HotKey>) ((FrameworkElement)sender).DataContext;
+        //    _keyHost.RemoveHotKey(pair.Value);
+        //}
+
+        private void RemoveHotkey_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            KeyValuePair<int, HotKey> pair = (KeyValuePair<int, HotKey>) ((FrameworkElement)sender).DataContext;
+            KeyValuePair<int, HotKey> pair = (KeyValuePair<int, HotKey>)((FrameworkElement)sender).DataContext;
             _keyHost.RemoveHotKey(pair.Value);
         }
     }

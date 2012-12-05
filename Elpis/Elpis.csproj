@@ -89,6 +89,9 @@
     <Compile Include="Controls\TextBlockUtils.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Errors.cs" />
+    <Compile Include="Controls\HotKeyEditor.xaml.cs">
+      <DependentUpon>HotKeyEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Hotkeys.cs" />
     <Compile Include="JumpListManager.cs" />
     <Compile Include="Pages\About.xaml.cs">
@@ -135,6 +138,10 @@
     </Compile>
     <Compile Include="SingleInstance.cs" />
     <Compile Include="UpdateSystem\UpdateCheck.cs" />
+    <Page Include="Controls\HotKeyEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
