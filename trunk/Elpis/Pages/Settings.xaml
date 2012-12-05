@@ -119,6 +119,70 @@
                                   ToolTip="Elpis will pause when the system is locked and resume when unlocked." />
                     </Grid>
                 </Expander>
+                <Expander Header="Global Hotkeys" IsExpanded="True" Margin="5">
+                    <StackPanel Orientation="Vertical" Margin="0 2 0 5">
+                        <Grid Name="HotKeyGrid">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*" />
+                                <ColumnDefinition Width="5*"  />
+                                <ColumnDefinition Width="1*"  />
+                                <ColumnDefinition Width="1*"  />
+                                <ColumnDefinition Width="3*"  />
+                            </Grid.ColumnDefinitions>
+                            <Label Content="Command" Grid.Column="0" HorizontalContentAlignment="Left" />
+                            <Label Content="Hotkey" Grid.Column="1" HorizontalContentAlignment="Left" />
+                            <Label Grid.Row="0" Grid.Column="2" Content="Global" HorizontalContentAlignment="Center"/>
+                            <Label Grid.Row="0" Grid.Column="3" Content="Enabled" HorizontalContentAlignment="Center"/>
+                            <Label Grid.Row="0" Grid.Column="4" Content="Remove" HorizontalContentAlignment="Center"/>
+                        </Grid>
+
+                        <ItemsControl Name="HotKeyItems">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5*" />
+                                            <ColumnDefinition Width="5*"  />
+                                            <ColumnDefinition Width="1*"  />
+                                            <ColumnDefinition Width="1*"  />
+                                            <ColumnDefinition Width="3*"  />
+                                        </Grid.ColumnDefinitions>
+                                        <ComboBox Grid.Column="0" ItemsSource="{Binding Source={x:Static Hotkeys:PlayerCommands.AllCommands}}" 
+                                                  DisplayMemberPath="Name" SelectedItem="{Binding Path=Value.Command}" Margin="0 0 5 0" />
+                                        <config:HotKeyBox Grid.Column="1" IsReadOnly="True" 
+                                                          Text="{Binding Path=Value.KeysString, Mode=OneWay}" 
+                                                          Margin="0 0 5 0"  >
+                                        </config:HotKeyBox>
+                                        <CheckBox Grid.Column="2" IsChecked="{Binding Path=Value.Global}" HorizontalAlignment="Center"/>
+                                        <CheckBox Grid.Column="3" IsChecked="{Binding Path=Value.Enabled}" HorizontalAlignment="Center"/>
+                                        <!--<Button Grid.Column="4" Width ="10" Height ="10" Margin="5 0 5 0"
+                                                Padding="0" Click="btnDelHotkey_Click" >
+              
+                                            <TextBlock LineStackingStrategy="BlockLineHeight" LineHeight="10">X</TextBlock>
+                                        </Button>-->
+                                        <TextBlock Grid.Column="4" Text="r" FontFamily="Webdings" FontSize="16"
+                                                   Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   MouseDown="RemoveHotkey_MouseDown">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                  <Style.Triggers>
+                                                        <Trigger Property ="IsMouseOver" Value="True">
+                                                            <Setter Property= "Foreground" Value="{StaticResource ShadeMediumBrush}"/>
+                                                        </Trigger>
+                                                   </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Button Name="btnAddHotKey" Click="btnAddHotKey_Click" HorizontalAlignment="Right" Width="80" Height="30" Padding="2 2 2 2" Margin="0 4 4 5">Add New</Button>
+                    </StackPanel>
+                </Expander>
                 <Expander Header="Proxy - Changes Require Restarting Elpis" 
                           IsExpanded="False"
                           Margin="5">
@@ -183,51 +247,7 @@
                                 Click="btnLastFMDisable_Click"/>
                     </Grid>
                 </Expander>
-                <Expander Header="Global Hotkeys" IsExpanded="False" Margin="5">
-                    <StackPanel Orientation="Vertical" Margin="0 2 0 5">
-                        <Grid Name="HotKeyGrid">
-                            <Grid.RowDefinitions>
-                                <RowDefinition SharedSizeGroup="HeaderRow"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition SharedSizeGroup="Column1" />
-                                <ColumnDefinition SharedSizeGroup="Column2" />
-                                <ColumnDefinition SharedSizeGroup="Column3" />
-                                <ColumnDefinition SharedSizeGroup="Column4" />
-                                <ColumnDefinition SharedSizeGroup="Column5" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox Text="Command" Width="125" Grid.Column="0" />
-                            <TextBox Text="Hotkey" Grid.Column="1" />
-                            <TextBox Grid.Row="0" Grid.Column="2" Text="Global"/>
-                            <TextBox Grid.Row="0" Grid.Column="3" Text="Enabled"/>
-                            <TextBox Grid.Row="0" Grid.Column="4" Text="Remove"/>
-                        </Grid>
-
-                        <ItemsControl Name="HotKeyItems">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition SharedSizeGroup="Column1" />
-                                            <ColumnDefinition SharedSizeGroup="Column2" />
-                                            <ColumnDefinition SharedSizeGroup="Column3" />
-                                            <ColumnDefinition SharedSizeGroup="Column4" />
-                                            <ColumnDefinition SharedSizeGroup="Column5" />
-                                        </Grid.ColumnDefinitions>
-                                        <ComboBox Grid.Column="0" ItemsSource="{Binding Source={x:Static Hotkeys:PlayerCommands.AllCommands}}" DisplayMemberPath="Name" SelectedItem="{Binding Path=Value.Command}" />
-                                        <config:HotKeyBox Width="95" Grid.Column="1" IsReadOnly="True" Text="{Binding Path=Value.KeysString, Mode=OneWay}" />
-                                        <CheckBox Grid.Column="2" IsChecked="{Binding Path=Value.Global}"/>
-                                        <CheckBox Grid.Column="3" IsChecked="{Binding Path=Value.Enabled}"/>
-                                        <Button Grid.Column="4" Width ="10" Height ="10" Margin="5 0 5 0" Padding="0" Click="btnDelHotkey_Click">
-                                            <TextBlock LineStackingStrategy="BlockLineHeight" LineHeight="10">x</TextBlock>
-                                        </Button>
-                                    </Grid>
-                                </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                        <Button Name="btnAddHotKey" Click="btnAddHotKey_Click" HorizontalAlignment="Right" Width="80" Height="30" Padding="2 2 2 2" Margin="0 4 4 5">Add New</Button>
-                    </StackPanel>
-                </Expander>
+                
             </StackPanel>
         </ScrollViewer>
         <Grid Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">

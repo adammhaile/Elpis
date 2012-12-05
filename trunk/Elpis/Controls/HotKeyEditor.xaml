@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="Elpis.HotKeyEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:config="clr-namespace:Elpis"
+             xmlns:Controls="clr-namespace:Elpis.Controls" xmlns:Hotkeys="clr-namespace:Elpis.Hotkeys"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Elpis;component/Styles/Brushes.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/BaseControls.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/ScrollBars.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/Images.xaml" />
+                <ResourceDictionary Source="/Elpis;component/Styles/ImageButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <!--<StackPanel Orientation="Vertical" Margin="0 2 0 5">
+            <Grid Name="HotKeyGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition SharedSizeGroup="HeaderRow"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="Column1" />
+                    <ColumnDefinition SharedSizeGroup="Column2" />
+                    <ColumnDefinition SharedSizeGroup="Column3" />
+                    <ColumnDefinition SharedSizeGroup="Column4" />
+                    <ColumnDefinition SharedSizeGroup="Column5" />
+                </Grid.ColumnDefinitions>
+                <TextBox Text="Command" Width="125" Grid.Column="0" />
+                <TextBox Text="Hotkey" Grid.Column="1" />
+                <TextBox Grid.Row="0" Grid.Column="2" Text="Global"/>
+                <TextBox Grid.Row="0" Grid.Column="3" Text="Enabled"/>
+                <TextBox Grid.Row="0" Grid.Column="4" Text="Remove"/>
+            </Grid>
+
+            <ItemsControl Name="HotKeyItems">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition SharedSizeGroup="Column1" />
+                                <ColumnDefinition SharedSizeGroup="Column2" />
+                                <ColumnDefinition SharedSizeGroup="Column3" />
+                                <ColumnDefinition SharedSizeGroup="Column4" />
+                                <ColumnDefinition SharedSizeGroup="Column5" />
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" ItemsSource="{Binding Source={x:Static Hotkeys:PlayerCommands.AllCommands}}" 
+                                      DisplayMemberPath="Name" SelectedItem="{Binding Path=Value.Command}" />
+                            <config:HotKeyBox Width="95" Grid.Column="1" IsReadOnly="True" 
+                                              Text="{Binding Path=Value.KeysString, Mode=OneWay}" />
+                            <CheckBox Grid.Column="2" IsChecked="{Binding Path=Value.Global}"/>
+                            <CheckBox Grid.Column="3" IsChecked="{Binding Path=Value.Enabled}"/>
+                            <Button Grid.Column="4" Width ="10" Height ="10" Margin="5 0 5 0" 
+                                    Padding="0" Click="btnDelHotkey_Click">
+                                <TextBlock LineStackingStrategy="BlockLineHeight" LineHeight="10">x</TextBlock>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Name="btnAddHotKey" Click="btnAddHotKey_Click" HorizontalAlignment="Right" Width="80" Height="30" Padding="2 2 2 2" Margin="0 4 4 5">Add New</Button>
+        </StackPanel>-->
+    </Grid>
+</UserControl>
