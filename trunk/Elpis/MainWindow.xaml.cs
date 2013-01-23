@@ -729,7 +729,7 @@ namespace Elpis
                 ConfigureHotKeys();
             });
 
-            this.Dispatch(SetupJumpList);
+            //this.Dispatch(SetupJumpList);
             
             this.Dispatch(SetupNotifyIcon);
 
@@ -837,23 +837,23 @@ namespace Elpis
 
         private void SetupJumpList()
         {
-            JumpList jumpList = new JumpList();
-            jumpList.ShowRecentCategory = true;
-            JumpList.SetJumpList(System.Windows.Application.Current, jumpList);
+            //JumpList jumpList = new JumpList();
+            //jumpList.ShowRecentCategory = true;
+            //JumpList.SetJumpList(System.Windows.Application.Current, jumpList);
 
-            JumpTask pause = JumpListManager.createJumpTask(PlayerCommands.PlayPause, "--playpause",1);
-            jumpList.JumpItems.Add(pause);
+            //JumpTask pause = JumpListManager.createJumpTask(PlayerCommands.PlayPause, "--playpause",1);
+            //jumpList.JumpItems.Add(pause);
 
-            JumpTask next = JumpListManager.createJumpTask(PlayerCommands.Next, "--next",2);
-            jumpList.JumpItems.Add(next);
+            //JumpTask next = JumpListManager.createJumpTask(PlayerCommands.Next, "--next",2);
+            //jumpList.JumpItems.Add(next);
 
-            JumpTask thumbsUp  = JumpListManager.createJumpTask(PlayerCommands.ThumbsUp, "--thumbsup",3);
-            jumpList.JumpItems.Add(thumbsUp);
+            //JumpTask thumbsUp  = JumpListManager.createJumpTask(PlayerCommands.ThumbsUp, "--thumbsup",3);
+            //jumpList.JumpItems.Add(thumbsUp);
 
-            JumpTask thumbsDown = JumpListManager.createJumpTask(PlayerCommands.ThumbsDown, "--thumbsdown",4);
-            jumpList.JumpItems.Add(thumbsDown);
+            //JumpTask thumbsDown = JumpListManager.createJumpTask(PlayerCommands.ThumbsDown, "--thumbsdown",4);
+            //jumpList.JumpItems.Add(thumbsDown);
 
-            jumpList.Apply();
+            //jumpList.Apply();
         }
 
 
@@ -866,17 +866,27 @@ namespace Elpis
             }
             if(new List<HotKey>(_config.Fields.Elpis_HotKeys.Values).Count==0)
             {
-             //Active Window Only
-            _keyHost.AddHotKey(new HotKey(PlayerCommands.PlayPause, Key.Space, ModifierKeys.None, false, true));
+                _keyHost.AddHotKey(new HotKey(PlayerCommands.PlayPause, Key.Space, ModifierKeys.None, false, true));
 
-            _keyHost.AddHotKey(new HotKey(PlayerCommands.PlayPause, Key.Return, ModifierKeys.None, false, true));
+                _keyHost.AddHotKey(new HotKey(PlayerCommands.PlayPause, Key.MediaPlayPause, ModifierKeys.None, true, true));
 
-            _keyHost.AddHotKey(new HotKey(PlayerCommands.Next, Key.Right, ModifierKeys.None, false, true));
+                _keyHost.AddHotKey(new HotKey(PlayerCommands.Next, Key.Right, ModifierKeys.None, false, true));
 
-            _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsUp, Key.Up, ModifierKeys.None, false, true));
+                _keyHost.AddHotKey(new HotKey(PlayerCommands.Next, Key.MediaNextTrack, ModifierKeys.None, true, true));
 
-            _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsDown, Key.Down, ModifierKeys.None, false, true));
+                _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsUp, Key.Up, ModifierKeys.None, false, true));
+
+                _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsDown, Key.Down, ModifierKeys.None, false, true));
             }
+
+            Dictionary<int, HotkeyConfig> keys = new Dictionary<int, HotkeyConfig>();
+            foreach (KeyValuePair<int, HotKey> pair in _keyHost.HotKeys)
+            {
+                keys.Add(pair.Key, new HotkeyConfig(pair.Value));
+            }
+            _config.Fields.Elpis_HotKeys = keys;
+
+            _config.SaveConfig();
         }
 
         public void ShowStationList()
