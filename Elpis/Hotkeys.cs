@@ -26,6 +26,7 @@ using System.Windows.Interop;
 using System.Windows;
 using System.Windows.Threading;
 using DrWPF.Windows.Data;
+using Log = Util.Log;
 
 namespace Elpis.Hotkeys
 {
@@ -355,9 +356,11 @@ namespace Elpis.Hotkeys
         {
             if (msg == WM_HotKey)
             {
+                Log.O("HotKeys WndProc: IsEnabled - {0}", IsEnabled.ToString());
                 if (IsEnabled && hotKeys.ContainsKey((int) wParam))
                 {
                     HotKey h = hotKeys[(int) wParam];
+                    Log.O("HotKeys WndProc: HotKey - {0}", h.KeysString);
                     if (h.Global)
                     {
                         if (h.Command != null)

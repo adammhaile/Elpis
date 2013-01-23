@@ -272,12 +272,14 @@ namespace Elpis
             }
 
             var list = _c.GetValue(ConfigItems.HotKeysList) as Dictionary<int,string>;
+            /*
             if (list != null){
                 foreach (KeyValuePair<int,string> pair in list)
                 {
                 Fields.Elpis_HotKeys.Add(pair.Key,new HotkeyConfig(pair.Value, HotkeyConfig.Default));
                 }
             }
+             * */
 
         Log.O("Config File Contents:");
             Log.O(_c.LastConfig);
@@ -330,12 +332,14 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Elpis_StartupSize, Fields.Elpis_StartupSize.ToString());
                 _c.SetValue(ConfigItems.Elpis_Volume, Fields.Elpis_Volume);
 
+                /*
                 Dictionary<int, string> hotkeysFlattened = new Dictionary<int, string>();
                 foreach(KeyValuePair<int,HotkeyConfig> pair in Fields.Elpis_HotKeys)
                 {
                     hotkeysFlattened.Add(pair.Key,pair.Value.ToString());
                 }
                 _c.SetValue(ConfigItems.HotKeysList,hotkeysFlattened);
+                 */
 
             }
             catch (Exception ex)

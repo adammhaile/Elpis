@@ -109,8 +109,12 @@ namespace Util
                     case 6:
                         if (vs.Minor == 0)
                             operatingSystem = "Vista";
-                        else
+                        else if (vs.Minor == 1)
                             operatingSystem = "7";
+                        else if (vs.Minor == 2)
+                            operatingSystem = "8";
+                        else
+                            operatingSystem = "Future";
                         break;
                     default:
                         operatingSystem = "Future";

@@ -119,7 +119,7 @@
                                   ToolTip="Elpis will pause when the system is locked and resume when unlocked." />
                     </Grid>
                 </Expander>
-                <Expander Header="Global Hotkeys" IsExpanded="True" Margin="5">
+                <Expander Header="Global Hotkeys" IsExpanded="True" Margin="5" Visibility="Collapsed">
                     <StackPanel Orientation="Vertical" Margin="0 2 0 5">
                         <Grid Name="HotKeyGrid">
                             <Grid.RowDefinitions>
@@ -158,11 +158,6 @@
                                         </config:HotKeyBox>
                                         <CheckBox Grid.Column="2" IsChecked="{Binding Path=Value.Global}" HorizontalAlignment="Center"/>
                                         <CheckBox Grid.Column="3" IsChecked="{Binding Path=Value.Enabled}" HorizontalAlignment="Center"/>
-                                        <!--<Button Grid.Column="4" Width ="10" Height ="10" Margin="5 0 5 0"
-                                                Padding="0" Click="btnDelHotkey_Click" >
-              
-                                            <TextBlock LineStackingStrategy="BlockLineHeight" LineHeight="10">X</TextBlock>
-                                        </Button>-->
                                         <TextBlock Grid.Column="4" Text="r" FontFamily="Webdings" FontSize="16"
                                                    Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"
                                                    MouseDown="RemoveHotkey_MouseDown">
