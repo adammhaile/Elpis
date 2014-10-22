@@ -38,15 +38,3 @@ Afraid you might not have .NET 4.0 or don’t know what it is? No worries, if yo
  * [Pianobar](http://6xq.net/projects/pianobar/) (Linux command line client)
  * [LPFM](http://lpfm.codeplex.com/) - Elpis uses (and contributes to) LPFM, an open source .NET API for Last.FM
 
-## Screenshots
-
-![](http://elpis-pandora-client.googlecode.com/svn/wiki/ScreenShots/LoginPage.png)
-
-
-![](http://elpis-pandora-client.googlecode.com/svn/wiki/ScreenShots/PlaylistPage.png)
-
-
-![](http://elpis-pandora-client.googlecode.com/svn/wiki/ScreenShots/StationsPage.png)
-
-
-![](http://elpis-pandora-client.googlecode.com/svn/wiki/ScreenShots/SettingsPage.png)
