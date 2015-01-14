@@ -352,8 +352,18 @@ namespace Elpis
                 sArgs += (s + " ");
 
             sArgs += " -restart";
+            //Process.Start("Elpis.exe", sArgs);
+            try
+            {
+                //run the program again and close this one
+                Process.Start("Elpis.exe", sArgs);
+                //or you can use Application.ExecutablePath
 
-            Process.Start("Elpis.exe", sArgs);
+                //close this one
+                Process.GetCurrentProcess().Kill();
+            }
+            catch
+            { }
         }
 
         void _restartPage_RestartSelectionEvent(bool status)

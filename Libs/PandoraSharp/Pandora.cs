@@ -365,10 +365,12 @@ namespace PandoraSharp
             switch (StationSortOrder)
             {
                 case SortOrder.DateDesc:
-                    Stations = Stations.OrderByDescending(x => x.ID).ToList();
+                    //Stations = Stations.OrderByDescending(x => x.ID).ToList();
+                    Stations = Stations.OrderByDescending(x => Convert.ToInt64(x.ID)).ToList();
                     break;
                 case SortOrder.DateAsc:
-                    Stations = Stations.OrderBy(x => x.ID).ToList();
+                    //Stations = Stations.OrderBy(x => x.ID).ToList();
+                    Stations = Stations.OrderBy(x => Convert.ToInt64(x.ID)).ToList();
                     break;
                 case SortOrder.AlphaDesc:
                     Stations = Stations.OrderByDescending(x => x.Name).ToList();
