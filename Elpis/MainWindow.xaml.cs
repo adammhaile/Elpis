@@ -1296,6 +1296,7 @@ namespace Elpis
             if (!_forceClose && _config.Fields.Elpis_MinimizeToTray)
             {
                 WindowState = WindowState.Minimized;
+                this.Hide();
                 ShowInTaskbar = false;
 
                 e.Cancel = true;
@@ -1321,9 +1322,15 @@ namespace Elpis
         private void Window_StateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized && _config.Fields.Elpis_MinimizeToTray)
+            {
+                this.Hide();
                 ShowInTaskbar = false;
+            }
             else
+            {
+                this.Show();
                 ShowInTaskbar = true;
+            }
         }
 
         public void LoadStation(string station)
