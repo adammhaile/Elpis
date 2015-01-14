@@ -1,6 +1,3 @@
-# LOOKING FOR A NEW PROJECT LEADER!!
-
-*Are you interesting in working on Elpis? Unfortunately, in the last year my attention has had to be focused elsewhere. So I have not had the time I would like to devote to working on Elpis. If you are interested in becoming a developer for and possibly taking over this project, please email me via elpis@adamhaile.net*
 
 Elpis is native Windows client for the Pandora Radio music service, implemented in C# and WPF.  
 
