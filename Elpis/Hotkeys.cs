@@ -465,21 +465,36 @@ namespace Elpis.Hotkeys
 
         public HotKey AddHotKey(HotKey hotKey)
         {
-            if (hotKey == null)
-                throw new ArgumentNullException("value");
-            /* We let em add as many null keys to the list as they want, but never register them*/
-            if (hotKey.Key != Key.None && hotKeys.ContainsValue(hotKey))
-                throw new HotKeyAlreadyRegisteredException("HotKey already registered!", hotKey);
+            try
+                {
+                    if (hotKey == null)
+                        throw new ArgumentNullException("value");
+                    /* We let em add as many null keys to the list as they want, but never register them*/
+                    if (hotKey.Key != Key.None && hotKeys.ContainsValue(hotKey))
+                    {
+                        throw new HotKeyAlreadyRegisteredException("HotKey already registered!", hotKey);
+                        //Log.O("HotKey already registered!");
+                    }
+                
 
-            int id = idGen.Next();
-            if (hotKey.Enabled && hotKey.Key != Key.None)
+                    int id = idGen.Next();
+                    if (hotKey.Enabled && hotKey.Key != Key.None)
+                    {
+                
+                            RegisterHotKey(id, hotKey);
+                
+                
+                    }
+                    hotKey.PropertyChanging += hotKey_PropertyChanging;
+                    hotKey.PropertyChanged += hotKey_PropertyChanged;
+                    hotKeys[id] = hotKey;
+                    return hotKey;
+                }
+            catch (HotKeyAlreadyRegisteredException e)
             {
-                RegisterHotKey(id, hotKey);
+                Log.O("HotKey already registered!");
             }
-            hotKey.PropertyChanging += hotKey_PropertyChanging;
-            hotKey.PropertyChanged += hotKey_PropertyChanged;
-            hotKeys[id] = hotKey;
-            return hotKey;
+            return null;
         }
 
 
