@@ -49,7 +49,7 @@
                        TextAlignment="Center" FontSize="14"
                        VerticalAlignment="Top">
                 <Hyperlink Name="Project" Style="{StaticResource LinkStyle}"
-                         NavigateUri="http://code.google.com/p/elpis-pandora-client/issues/list"
+                         NavigateUri="https://github.com/adammhaile/Elpis/issues"
                   RequestNavigate="BugReport_Click">
                 <TextBlock FontStyle="Italic" 
                            Foreground="{StaticResource MainFontBrush}">

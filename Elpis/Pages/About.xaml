@@ -21,7 +21,7 @@
                VerticalAlignment="Center" TextAlignment="Center">
       Elpis <TextBlock Text="{Binding ., Converter={StaticResource assemblyVersion}}" />
       <LineBreak />
-      © Adam Haile - 2012
+      © Adam Haile - 2015
       <LineBreak />
       <LineBreak />
       <TextBlock FontWeight="DemiBold">Links:</TextBlock>
@@ -34,10 +34,10 @@
               </Hyperlink> 
       <LineBreak />
       <Hyperlink Name="TitleLink" Style="{StaticResource LinkStyle}"
-                         NavigateUri="http://code.google.com/p/elpis-pandora-client/"
+                         NavigateUri="https://github.com/adammhaile/Elpis"
                   RequestNavigate="RequestNavigate">
                 <TextBlock Text="Elpis Source Repository" FontStyle="Italic" Foreground="{StaticResource MainFontBrush}" 
-                           ToolTip="http://code.google.com/p/elpis-pandora-client/" />
+                           ToolTip="https://github.com/adammhaile/Elpis" />
               </Hyperlink> 
     </TextBlock>
 
