@@ -2,6 +2,12 @@
 Due to a bug, possible that Elpis may crash after launching the download page.
 After downloading and installing the update, the bug will be fixed.
 
+v1.4.6
+Stations are now listed in the same order as of Pandora Web-player
+After changing proxy settings, Elpis restarts correctly
+Elpis now not visible in ALT-TAB windows list while minimized on tray
+Links in Elpis UI now point to GitHub
+
 v1.4.5
 Added Last.FM Scrobbler support
 Added UI for Proxy configuration

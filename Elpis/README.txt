@@ -1,4 +1,4 @@
-Elpis (Pandora Radio Client) - (C) 2012 - Adam Haile
+Elpis (Pandora Radio Client) - (C) 2015 - Adam Haile
 
 This is not a license. Elpis itself and it's source code (unless otherwise stated) are licensed under the GNU Public License (GPL) v3, available from http://www.gnu.org/licenses/ and in the install directory of this application.
 
@@ -7,7 +7,7 @@ Elpis is also free (as in "free speech" and "free cookies") software. If you pai
 Elpis (as well as it's libraries) and it's creator are not affiliated  with or endorsed by Pandora Media, Inc.
 As such, Elpis depends on an independent implementation of their private API, meaning that changes made by Pandora can, and may, break compatability with Elpis at any time, without warning. 
 It is the intention of it's creator that Elpis be kept up to date and compatible with the Pandora service and any needed changes be made quickly, but NO GURANTEE is provided to this effect.  
-If you find that Elpis no longer functions with the Pandora service please either run the application again and let it check for updates (occurs on every application start) or visit http://elpis.adamhaile.net (or http://code.google.com/p/elpis-pandora-client/).
+If you find that Elpis no longer functions with the Pandora service please either run the application again and let it check for updates (occurs on every application start) or visit http://elpis.adamhaile.net (or https://github.com/adammhaile/Elpis).
 
 By installing Elpis, you agree to a small amount of data being collected and transmitted by the application for the purpose of providing the creator with minimal information on the current install base of the application.  This helps make the application better by allowing more targeted testing based on version and platform. 
 How small, you ask? This small:
