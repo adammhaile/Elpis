@@ -80,6 +80,7 @@
     <Compile Include="ReleaseData\ReleaseData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebInterface.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -329,6 +330,10 @@
     <ProjectReference Include="..\Libs\BassPlayer\BassPlayer.csproj">
       <Project>{D054F1ED-6A9C-4C4D-B500-7C1AF01F16C9}</Project>
       <Name>BassPlayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libs\kayak\Kayak\Kayak.csproj">
+      <Project>{79ddd0ce-6f79-4212-a972-8618ad6e405f}</Project>
+      <Name>Kayak</Name>
     </ProjectReference>
     <ProjectReference Include="..\Libs\PandoraSharpPlayer\PandoraSharpPlayer.csproj">
       <Project>{D49B479D-3D9A-4F03-A859-9E0C3A615326}</Project>

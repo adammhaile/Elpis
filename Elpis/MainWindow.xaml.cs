@@ -44,6 +44,15 @@ using Util;
 using Log = Util.Log;
 using UserControl = System.Windows.Controls.UserControl;
 using PandoraSharp.Plugins;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net;
+using System.Text;
+using Kayak;
+using Kayak.Http;
+using System.Windows.Threading;
 
 namespace Elpis
 {
@@ -79,8 +88,8 @@ namespace Elpis
         private ToolStripMenuItem _notifyMenu_UpVote;
         private ToolStripMenuItem _notifyMenu_DownVote;
         private ToolStripMenuItem _notifyMenu_Exit;
-        private Player _player;
-        private PlaylistPage _playlistPage;
+        public static Player _player;
+        public static PlaylistPage _playlistPage;
         private UserControl _prevPage;
         private Search _searchPage;
         private Settings _settingsPage;
@@ -107,6 +116,8 @@ namespace Elpis
         private PandoraSharpScrobbler _scrobbler;
 
         private bool _isActiveWindow;
+
+        public static DateTime lastTimeSkipped;
 
 #endregion
 
@@ -732,6 +743,10 @@ namespace Elpis
             if (!Directory.Exists(cachePath)) Directory.CreateDirectory(cachePath);
             _player.ImageCachePath = cachePath;
 
+            _loadingPage.UpdateStatus("Starting Web Server...");
+
+            startWebServer();
+
             _loadingPage.UpdateStatus("Setting up UI...");
 
             this.Dispatch(() => {
@@ -765,8 +780,47 @@ namespace Elpis
             _finalComplete = true;
         }
 
+        private void startWebServer()
+        {
+            WebInterface wi = new WebInterface();
+            Thread InstanceCaller = new Thread(new ThreadStart(wi.startInterface));
+            InstanceCaller.Start();
+            lastTimeSkipped = DateTime.Now;
+        }
 
-
+        public static bool Next()
+        {
+            if ((DateTime.Now - lastTimeSkipped).Seconds > 20)
+            {
+                _player.Next();
+                lastTimeSkipped = DateTime.Now;
+                return true;
+            }
+            return false;
+        }
+        public static void Pause()
+        {
+            _player.Pause();
+        }
+        public static void Play()
+        {
+            _player.Play();
+        }
+        public static void Like()
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                _playlistPage.ThumbUpCurrent();
+            }));
+            
+        }
+        public static void Dislike()
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                _playlistPage.ThumbDownCurrent();
+            }));
+        }
         private void LoadLastFM()
         {
             string apiKey = string.Empty;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id></id>
+    <version></version>
+    <authors>Benjamin van der Veen and contributors</authors>
+    <owners></owners>
+    <description>An HTTP parser built with Ragel.</description>
+    <language>en-US</language>
+    <projectUrl></projectUrl>
+    <licenseUrl></licenseUrl>
+    <tags></tags>
+  </metadata>
+</package>

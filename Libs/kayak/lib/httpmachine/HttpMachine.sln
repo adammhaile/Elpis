@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpMachine", "src\HttpMachine\HttpMachine.csproj", "{76FB25C5-15B1-4541-8D19-D78790257C95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HttpMachine.Tests", "tests\HttpMachine.Tests\HttpMachine.Tests.csproj", "{75BEA10B-761A-474F-9522-57E8974B52D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76FB25C5-15B1-4541-8D19-D78790257C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76FB25C5-15B1-4541-8D19-D78790257C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76FB25C5-15B1-4541-8D19-D78790257C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76FB25C5-15B1-4541-8D19-D78790257C95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75BEA10B-761A-474F-9522-57E8974B52D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75BEA10B-761A-474F-9522-57E8974B52D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75BEA10B-761A-474F-9522-57E8974B52D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75BEA10B-761A-474F-9522-57E8974B52D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,30 @@
+
+default include='**/AssemblyInfo.cs'
+default assemblyVersion=''
+default assemblyFileVersion='${assemblyVersion}'
+default assemblyDescription=''
+default assemblyTitle=''
+default assemblyProduct='${assemblyTitle}'
+default assemblyCopyright=''
+
+update-file each='var updateFile in Files.Include(include)'
+    @{
+        Action<string, string> replace = (name, value) => {
+            if (!string.IsNullOrWhiteSpace(value))
+                updateText = Replace(updateText, name + "\\([^\\)].*\\)", name + "(\"" + value + "\")");
+        };
+        replace("AssemblyVersion", assemblyVersion);
+        replace("AssemblyFileVersion", assemblyFileVersion);
+        replace("AssemblyTitle", assemblyTitle);
+        replace("AssemblyProduct", assemblyProduct);
+        replace("AssemblyCopyright", assemblyCopyright);
+        replace("AssemblyDescription", assemblyDescription);
+    }
+
+functions
+  @{
+    string Replace(string text, string pattern, string replace)
+    {
+        return System.Text.RegularExpressions.Regex.Replace(text, pattern, replace);
+    }
+  }

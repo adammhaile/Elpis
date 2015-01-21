@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id></id>
+    <version></version>
+    <authors></authors>
+    <owners></owners>
+    <description></description>
+    <language>en-US</language>
+    <projectUrl></projectUrl>
+    <licenseUrl></licenseUrl>
+    <tags></tags>
+  </metadata>
+  <files>
+    <file src="bin\*.*" target="lib\net40" />
+    <file src="..\Kayak\**\*.cs" target="src\Kayak" />
+	<file src="..\lib\HttpMachine\**\*.cs" target="src\HttpMachine" />
+	<file src="..\lib\HttpMachine\**\*.rl" target="src\HttpMachine" />
+  </files>
+</package>
