@@ -51,7 +51,7 @@ namespace Elpis
             public void OnRequest(HttpRequestHead request, IDataProducer requestBody,
                 IHttpResponseDelegate response)
             {
-                if (request.Method.ToUpperInvariant() == "POST" && request.Uri.StartsWith("/next"))
+                if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/next"))
                 {
                     // when you subecribe to the request body before calling OnResponse,
                     // the server will automatically send 100-continue if the client is 
@@ -71,89 +71,69 @@ namespace Elpis
                     };
                     response.OnResponse(headers, new BufferedProducer(body));
                 }
-                else if (request.Method.ToUpperInvariant() == "POST" && request.Uri.StartsWith("/pause"))
+                else if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/pause"))
                 {
                     MainWindow.Pause();
+                    var body = "Paused.";
+
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
                         Headers = new Dictionary<string, string>() 
-                        {
-                            { "Content-Type", "text/plain" },
-                            { "Connection", "close" }
-                        }
+                    {
+                        { "Content-Type", "text/plain" },
+                        { "Content-Length", body.Length.ToString() },
+                    }
                     };
-                    if (request.Headers.ContainsKey("Content-Length"))
-                        headers.Headers["Content-Length"] = request.Headers["Content-Length"];
-
-                    // if you call OnResponse before subscribing to the request body,
-                    // 100-continue will not be sent before the response is sent.
-                    // per rfc2616 this response must have a 'final' status code,
-                    // but the server does not enforce it.
-                    response.OnResponse(headers, requestBody);
+                    response.OnResponse(headers, new BufferedProducer(body));
                 }
-                else if (request.Method.ToUpperInvariant() == "POST" && request.Uri.StartsWith("/play"))
+                else if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/play"))
                 {
                     MainWindow.Play();
+                    var body = "Playing.";
+
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
                         Headers = new Dictionary<string, string>() 
-                        {
-                            { "Content-Type", "text/plain" },
-                            { "Connection", "close" }
-                        }
+                    {
+                        { "Content-Type", "text/plain" },
+                        { "Content-Length", body.Length.ToString() },
+                    }
                     };
-                    if (request.Headers.ContainsKey("Content-Length"))
-                        headers.Headers["Content-Length"] = request.Headers["Content-Length"];
-
-                    // if you call OnResponse before subscribing to the request body,
-                    // 100-continue will not be sent before the response is sent.
-                    // per rfc2616 this response must have a 'final' status code,
-                    // but the server does not enforce it.
-                    response.OnResponse(headers, requestBody);
+                    response.OnResponse(headers, new BufferedProducer(body));
                 }
-                else if (request.Method.ToUpperInvariant() == "POST" && request.Uri.StartsWith("/like"))
+                else if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/like"))
                 {
                     MainWindow.Like();
+                    var body = "Liked.";
+
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
                         Headers = new Dictionary<string, string>() 
-                        {
-                            { "Content-Type", "text/plain" },
-                            { "Connection", "close" }
-                        }
+                    {
+                        { "Content-Type", "text/plain" },
+                        { "Content-Length", body.Length.ToString() },
+                    }
                     };
-                    if (request.Headers.ContainsKey("Content-Length"))
-                        headers.Headers["Content-Length"] = request.Headers["Content-Length"];
-
-                    // if you call OnResponse before subscribing to the request body,
-                    // 100-continue will not be sent before the response is sent.
-                    // per rfc2616 this response must have a 'final' status code,
-                    // but the server does not enforce it.
-                    response.OnResponse(headers, requestBody);
+                    response.OnResponse(headers, new BufferedProducer(body));
                 }
-                else if (request.Method.ToUpperInvariant() == "POST" && request.Uri.StartsWith("/dislike"))
+                else if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/dislike"))
                 {
                     MainWindow.Dislike();
+                    var body = "Disliked.";
+
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
                         Headers = new Dictionary<string, string>() 
-                        {
-                            { "Content-Type", "text/plain" },
-                            { "Connection", "close" }
-                        }
+                    {
+                        { "Content-Type", "text/plain" },
+                        { "Content-Length", body.Length.ToString() },
+                    }
                     };
-                    if (request.Headers.ContainsKey("Content-Length"))
-                        headers.Headers["Content-Length"] = request.Headers["Content-Length"];
-
-                    // if you call OnResponse before subscribing to the request body,
-                    // 100-continue will not be sent before the response is sent.
-                    // per rfc2616 this response must have a 'final' status code,
-                    // but the server does not enforce it.
-                    response.OnResponse(headers, requestBody);
+                    response.OnResponse(headers, new BufferedProducer(body));
                 }
                 else if (request.Uri.StartsWith("/"))
                 {
