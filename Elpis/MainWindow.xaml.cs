@@ -821,6 +821,10 @@ namespace Elpis
                 _playlistPage.ThumbDownCurrent();
             }));
         }
+        public static Song GetCurrentSong()
+        {
+            return _player.CurrentSong;
+        }
         private void LoadLastFM()
         {
             string apiKey = string.Empty;

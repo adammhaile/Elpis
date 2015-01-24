@@ -10,6 +10,8 @@ using System.Net;
 using System.Text;
 using Kayak;
 using Kayak.Http;
+using PandoraSharp;
+using System.Web.Script.Serialization;
 
 namespace Elpis
 {
@@ -106,7 +108,9 @@ namespace Elpis
                 else if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/like"))
                 {
                     MainWindow.Like();
-                    var body = "Liked.";
+                    var body = "Like";
+                    if (MainWindow.GetCurrentSong().Loved)
+                        body = "Liked";
 
                     var headers = new HttpResponseHead()
                     {
@@ -123,6 +127,22 @@ namespace Elpis
                 {
                     MainWindow.Dislike();
                     var body = "Disliked.";
+
+                    var headers = new HttpResponseHead()
+                    {
+                        Status = "200 OK",
+                        Headers = new Dictionary<string, string>() 
+                    {
+                        { "Content-Type", "text/plain" },
+                        { "Content-Length", body.Length.ToString() },
+                    }
+                    };
+                    response.OnResponse(headers, new BufferedProducer(body));
+                }
+                else if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/currentsong"))
+                {
+                    Song s = MainWindow.GetCurrentSong();
+                    var body = new JavaScriptSerializer().Serialize(s);
 
                     var headers = new HttpResponseHead()
                     {

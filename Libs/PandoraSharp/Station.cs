@@ -30,6 +30,8 @@ using Util;
 using PandoraSharp.Exceptions;
 using Newtonsoft.Json.Linq;
 using File = System.IO.File;
+using System.Xml.Serialization;
+using System.Web.Script.Serialization;
 
 namespace PandoraSharp
 {
@@ -137,7 +139,8 @@ namespace PandoraSharp
         }
 
         public string ArtUrl { get; private set; }
-
+        [XmlIgnore]
+        [ScriptIgnore]
         public byte[] ArtImage
         {
             get

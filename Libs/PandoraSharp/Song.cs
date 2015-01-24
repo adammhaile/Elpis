@@ -23,6 +23,8 @@ using Util;
 using Newtonsoft.Json.Linq;
 using PandoraSharp.Exceptions;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+using System.Web.Script.Serialization;
 
 namespace PandoraSharp
 {
@@ -159,7 +161,8 @@ namespace PandoraSharp
 
         public string AmazonAlbumID { get; private set; }
         public string AmazonTrackID { get; private set; }
-
+        [XmlIgnore]
+        [ScriptIgnore]
         public byte[] AlbumImage
         {
             get
