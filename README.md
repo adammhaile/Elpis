@@ -22,6 +22,7 @@ Check out the main client page here: http://elpis.adamhaile.net
  * Media Key support (Global and Application level)
  * Automatic update check and download within the client
  * Last.FM Scrobbling
+ * HTTP Api allowing a user to control Elpis remotely. Here's a remote control called [ElpisRemote](https://github.com/seliver/ElpisRemote)
 
 ## Requirements
 
@@ -34,4 +35,5 @@ Afraid you might not have .NET 4.0 or don’t know what it is? No worries, if yo
  * [Pithos](http://kevinmehall.net/p/pithos/) (Linux Gnome client)
  * [Pianobar](http://6xq.net/projects/pianobar/) (Linux command line client)
  * [LPFM](http://lpfm.codeplex.com/) - Elpis uses (and contributes to) LPFM, an open source .NET API for Last.FM
+ * [ElpisRemote](https://github.com/seliver/ElpisRemote) - Android Remote Control for Elpis, built with Java on Eclipse.
 
