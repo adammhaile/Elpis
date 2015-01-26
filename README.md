@@ -19,7 +19,7 @@ Check out the main client page here: http://elpis.adamhaile.net
  * Purchase songs from Amazon
  * Automatically reconnects on session timeout (no more "Are you still listening...")
  * Creating stations
- * Media Key support (Global and Application level)
+ * Custom Media Key support (Global and Application level)
  * Automatic update check and download within the client
  * Last.FM Scrobbling
  * HTTP Api allowing a user to control Elpis remotely. Here's a remote control called [ElpisRemote](https://github.com/seliver/ElpisRemote)
