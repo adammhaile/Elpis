@@ -12,7 +12,8 @@
     <AssemblyName>PandoraSharpPlayer</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -91,7 +92,7 @@
       <Name>PandoraSharpScrobbler</Name>
     </ProjectReference>
     <ProjectReference Include="..\PandoraSharp\PandoraSharp.csproj">
-      <Project>{64DD2B7D-9069-41FF-A4E4-732F6DF82F09}</Project>
+      <Project>{64dd2b7d-9069-41ff-a4e4-732f6df82f09}</Project>
       <Name>PandoraSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\PlayerControlQuery\PlayerControlQuery.csproj">
