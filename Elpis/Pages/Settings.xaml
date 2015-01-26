@@ -119,7 +119,7 @@
                                   ToolTip="Elpis will pause when the system is locked and resume when unlocked." />
                     </Grid>
                 </Expander>
-                <Expander Header="Global Hotkeys" IsExpanded="True" Margin="5" Visibility="Collapsed">
+                <Expander Header="Global Hotkeys" IsExpanded="True" Margin="5" >
                     <StackPanel Orientation="Vertical" Margin="0 2 0 5">
                         <Grid Name="HotKeyGrid">
                             <Grid.RowDefinitions>
