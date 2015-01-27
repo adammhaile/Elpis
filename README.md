@@ -19,7 +19,7 @@ Check out the main client page here: http://elpis.adamhaile.net
  * Purchase songs from Amazon
  * Automatically reconnects on session timeout (no more "Are you still listening...")
  * Creating stations
- * Media Key support (Global and Application level)
+ * Custom Media Key support (Global and Application level)
  * Automatic update check and download within the client
  * Last.FM Scrobbling
  * HTTP Api allowing a user to control Elpis remotely. Here's a remote control called [ElpisRemote](https://github.com/seliver/ElpisRemote)
@@ -31,7 +31,7 @@ Elpis will run anywhere that the Microsoft .NET 4.0 Framework will run. In other
 Afraid you might not have .NET 4.0 or don’t know what it is? No worries, if you are running the Windows 7 SP1 and have Windows Update enabled, you’ve already got it. If not and the installer finds that it’s not installed, it will automatically download and install it for you. It only takes a few minutes.
 
 ## Other Links
-
+ * [Elpis on Facebook](https://www.facebook.com/elpis.pandora)
  * [Pithos](http://kevinmehall.net/p/pithos/) (Linux Gnome client)
  * [Pianobar](http://6xq.net/projects/pianobar/) (Linux command line client)
  * [LPFM](http://lpfm.codeplex.com/) - Elpis uses (and contributes to) LPFM, an open source .NET API for Last.FM
