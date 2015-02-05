@@ -233,7 +233,7 @@ namespace Elpis
             Fields.Pandora_LastStationID = (string) _c.GetValue(ConfigItems.Pandora_LastStationID);
             Fields.Pandora_StationSortOrder = (string) _c.GetValue(ConfigItems.Pandora_StationSortOrder);
 
-            Fields.Proxy_Address = (string) _c.GetValue(ConfigItems.Proxy_Address);
+            Fields.Proxy_Address = ((string) _c.GetValue(ConfigItems.Proxy_Address)).Trim();
             Fields.Proxy_Port = (int) _c.GetValue(ConfigItems.Proxy_Port);
             Fields.Proxy_User = (string) _c.GetValue(ConfigItems.Proxy_User);
             Fields.Proxy_Password = _c.GetEncryptedString(ConfigItems.Proxy_Password);
@@ -316,10 +316,10 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Pandora_LastStationID, Fields.Pandora_LastStationID);
                 _c.SetValue(ConfigItems.Pandora_StationSortOrder, Fields.Pandora_StationSortOrder);
 
-                _c.SetValue(ConfigItems.Proxy_Address, Fields.Proxy_Address);
+                _c.SetValue(ConfigItems.Proxy_Address, Fields.Proxy_Address.Trim());
                 _c.SetValue(ConfigItems.Proxy_Port, Fields.Proxy_Port);
-                _c.SetValue(ConfigItems.Proxy_User, Fields.Proxy_User);
-                _c.SetEncryptedString(ConfigItems.Proxy_Password, Fields.Proxy_Password);
+                _c.SetValue(ConfigItems.Proxy_User, Fields.Proxy_User.Trim());
+                _c.SetEncryptedString(ConfigItems.Proxy_Password, Fields.Proxy_Password.Trim());
 
                 _c.SetValue(ConfigItems.Elpis_Version, Fields.Elpis_Version.ToString());
                 _c.SetValue(ConfigItems.Elpis_CheckUpdates, Fields.Elpis_CheckUpdates);
