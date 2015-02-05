@@ -882,8 +882,8 @@ namespace Elpis
                                                    transitionControl.ShowPage(_updatePage);
                                                });
                     }
-                } 
-                if (_config.Fields.Elpis_CheckBetaUpdates)
+                }
+                if (_config.Fields.Elpis_CheckBetaUpdates && !foundNewUpdate)
                 {
                     _loadingPage.UpdateStatus("Checking for Beta updates...");
                     if (_update.CheckForBetaUpdate())
