@@ -23,6 +23,7 @@ Check out the main client page here: http://elpis.adamhaile.net
  * Automatic update check and download within the client
  * Last.FM Scrobbling
  * HTTP Api allowing a user to control Elpis remotely. Here's a remote control called [ElpisRemote](https://github.com/seliver/ElpisRemote)
+ * Beta testing (testing the newest commit done on Elpis without having to compile anything). For that, just check the option "Check for Beta Updates" on the Settings page.
 
 ## Requirements
 
