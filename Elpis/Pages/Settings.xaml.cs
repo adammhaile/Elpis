@@ -86,6 +86,7 @@ namespace Elpis
             chkTrayMinimize.IsChecked = _config.Fields.Elpis_MinimizeToTray;
             chkShowNotify.IsChecked = _config.Fields.Elpis_ShowTrayNotifications;
             chkPauseOnLock.IsChecked = _config.Fields.Elpis_PauseOnLock;
+            chkCheckBetaUpdates.IsChecked = _config.Fields.Elpis_CheckBetaUpdates;
 
             _config.Fields.Pandora_AudioFormat = _player.AudioFormat;
 
@@ -113,6 +114,7 @@ namespace Elpis
                 _config.Fields.Pandora_LastStationID = _player.CurrentStation.ID;
             _config.Fields.Pandora_AutoPlay = (bool) chkAutoPlay.IsChecked;
             _config.Fields.Elpis_CheckUpdates = (bool) chkCheckUpdates.IsChecked;
+            _config.Fields.Elpis_CheckBetaUpdates = (bool)chkCheckBetaUpdates.IsChecked;
             _config.Fields.Elpis_MinimizeToTray = (bool) chkTrayMinimize.IsChecked;
             _config.Fields.Elpis_ShowTrayNotifications = (bool) chkShowNotify.IsChecked;
            _player.PauseOnLock = _config.Fields.Elpis_PauseOnLock = (bool)chkPauseOnLock.IsChecked;

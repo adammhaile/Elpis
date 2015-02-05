@@ -73,7 +73,7 @@ namespace Elpis
 
         private Config _config;
 
-        private bool _finalComplete;
+        private bool _finalComplete = false;
         private bool _initComplete;
         private LoginPage _loginPage;
 
@@ -863,6 +863,7 @@ namespace Elpis
 
         private void LoadLogic()
         {
+            bool foundNewUpdate = false;
             if (InitLogic())
             {
 #if APP_RELEASE
@@ -872,6 +873,7 @@ namespace Elpis
                     _loadingPage.UpdateStatus("Checking for updates...");
                     if (_update.CheckForUpdate())
                     {
+                        foundNewUpdate = true;
                         this.BeginDispatch(() =>
                                                {
                                                    _updatePage = new UpdatePage(_update);
@@ -880,7 +882,25 @@ namespace Elpis
                                                    transitionControl.ShowPage(_updatePage);
                                                });
                     }
-                    else
+                } 
+                if (_config.Fields.Elpis_CheckBetaUpdates)
+                {
+                    _loadingPage.UpdateStatus("Checking for Beta updates...");
+                    if (_update.CheckForBetaUpdate())
+                    {
+                        foundNewUpdate = true;
+                        this.BeginDispatch(() =>
+                        {
+                            _updatePage = new UpdatePage(_update);
+                            _updatePage.UpdateSelectionEvent += _updatePage_UpdateSelectionEvent;
+                            transitionControl.AddPage(_updatePage);
+                            transitionControl.ShowPage(_updatePage);
+                        });
+                    }
+                }
+                if (_config.Fields.Elpis_CheckBetaUpdates || _config.Fields.Elpis_CheckUpdates)
+                {
+                    if (!foundNewUpdate)
                     {
                         FinalLoad();
                     }

@@ -93,7 +93,7 @@
                     </Grid>
                 </Expander>
                 <Expander Header="General" Margin="5" IsExpanded="True">
-                    <Grid>
+                    <Grid Height="89">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -117,6 +117,9 @@
                         <CheckBox Name="chkPauseOnLock" Grid.Row="0" Grid.Column="2" Margin="4"
                                   IsChecked="False" Content="Pause on SystemLock"
                                   ToolTip="Elpis will pause when the system is locked and resume when unlocked." />
+                        <CheckBox Name="chkCheckBetaUpdates" Grid.Row="2" Grid.Column="0" Margin="4"
+                                  IsChecked="False" Content="Check for Beta Updates"
+                                  ToolTip="These updates are experimental and are prone to break. Use it only if you want to test unstable code." />
                     </Grid>
                 </Expander>
                 <Expander Header="Global Hotkeys" IsExpanded="True" Margin="5" >

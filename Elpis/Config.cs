@@ -106,6 +106,7 @@ namespace Elpis
         public static MapConfigEntry Elpis_Version = new MapConfigEntry("Elpis_Version", (new Version()).ToString());
         public static MapConfigEntry Elpis_InstallID = new MapConfigEntry("Elpis_InstallID", Guid.NewGuid().ToString());
         public static MapConfigEntry Elpis_CheckUpdates = new MapConfigEntry("Elpis_CheckUpdates", true);
+        public static MapConfigEntry Elpis_CheckBetaUpdates = new MapConfigEntry("Elpis_CheckBetaUpdates", false);
         public static MapConfigEntry Elpis_MinimizeToTray = new MapConfigEntry("Elpis_MinimizeToTray", false);
         public static MapConfigEntry Elpis_ShowTrayNotifications = new MapConfigEntry("Elpis_ShowTrayNotifications", true);
         public static MapConfigEntry Elpis_StartupLocation = new MapConfigEntry("Elpis_StartupLocation", "");
@@ -151,6 +152,8 @@ namespace Elpis
         public Version Elpis_Version { get; internal set; }
         public string Elpis_InstallID { get; internal set; }
         public bool Elpis_CheckUpdates { get; set; }
+        public bool Elpis_CheckBetaUpdates { get; set; }
+
         public bool Elpis_MinimizeToTray { get; set; }
         public bool Elpis_ShowTrayNotifications { get; set; }
         public int Elpis_Volume { get; set; }
@@ -242,6 +245,7 @@ namespace Elpis
 
             Fields.Elpis_InstallID = (string) _c.GetValue(ConfigItems.Elpis_InstallID);
             Fields.Elpis_CheckUpdates = (bool) _c.GetValue(ConfigItems.Elpis_CheckUpdates);
+            Fields.Elpis_CheckBetaUpdates = (bool)_c.GetValue(ConfigItems.Elpis_CheckBetaUpdates);
             Fields.Elpis_MinimizeToTray = (bool) _c.GetValue(ConfigItems.Elpis_MinimizeToTray);
             Fields.Elpis_ShowTrayNotifications = (bool) _c.GetValue(ConfigItems.Elpis_ShowTrayNotifications);
             Fields.Elpis_Volume = (int) _c.GetValue(ConfigItems.Elpis_Volume);
@@ -319,6 +323,7 @@ namespace Elpis
 
                 _c.SetValue(ConfigItems.Elpis_Version, Fields.Elpis_Version.ToString());
                 _c.SetValue(ConfigItems.Elpis_CheckUpdates, Fields.Elpis_CheckUpdates);
+                _c.SetValue(ConfigItems.Elpis_CheckBetaUpdates, Fields.Elpis_CheckBetaUpdates);
                 _c.SetValue(ConfigItems.Elpis_MinimizeToTray, Fields.Elpis_MinimizeToTray);
                 _c.SetValue(ConfigItems.Elpis_ShowTrayNotifications, Fields.Elpis_ShowTrayNotifications);
                 _c.SetValue(ConfigItems.Elpis_PauseOnLock, Fields.Elpis_PauseOnLock);

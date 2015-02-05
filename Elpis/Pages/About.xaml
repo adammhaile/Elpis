@@ -21,7 +21,11 @@
                VerticalAlignment="Center" TextAlignment="Center">
       Elpis <TextBlock Text="{Binding ., Converter={StaticResource assemblyVersion}}" />
       <LineBreak />
-      © Adam Haile - 2015
+      © Adam Haile       
+      <LineBreak />
+      Alexey Seliverstov 
+      <LineBreak />
+      2015
       <LineBreak />
       <LineBreak />
       <TextBlock FontWeight="DemiBold">Links:</TextBlock>

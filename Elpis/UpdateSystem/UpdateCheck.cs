@@ -98,11 +98,11 @@ namespace Elpis.UpdateSystem
             _downloadComplete = true;
         }
 
-        private bool CheckForUpdateInternal()
+        private bool CheckForUpdateInternal(bool beta = false)
         {
             try
             {
-                Log.O("Checking for updates...");
+                Log.O("Checking for "+(beta?"beta ":"")+"updates...");
                 string updateUrl = "";
 
 #if APP_RELEASE
@@ -117,9 +117,9 @@ namespace Elpis.UpdateSystem
                 var mc = new MapConfig();
                 mc.LoadConfig(data);
 
-                string verStr = mc.GetValue("CurrentVersion", string.Empty);
-                DownloadUrl = mc.GetValue("DownloadUrl", string.Empty);
-                ReleaseNotesPath = mc.GetValue("ReleaseNotes", string.Empty);
+                string verStr = mc.GetValue(beta?"BetaVersion":"CurrentVersion", string.Empty);
+                DownloadUrl = mc.GetValue(beta ? "BetaDownloadUrl" : "DownloadUrl", string.Empty);
+                ReleaseNotesPath = mc.GetValue(beta ? "BetaReleaseNotes" : "ReleaseNotes", string.Empty);
 
                 ReleaseNotes = string.Empty;
                 if(ReleaseNotesPath != string.Empty)
@@ -157,6 +157,11 @@ namespace Elpis.UpdateSystem
         public bool CheckForUpdate()
         {
             return CheckForUpdateInternal();
+        }
+
+        public bool CheckForBetaUpdate()
+        {
+            return CheckForUpdateInternal(true);
         }
 
         public void CheckForUpdateAsync()
