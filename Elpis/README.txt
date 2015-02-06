@@ -20,7 +20,7 @@ Thes values are:
 0.8.1.991 - Newly installed version of the application
 Windows 7 Service Pack 1 32-bit - Windows Version
 
-The above CSV string is an actual data row from testing the application. No other data is ever or will ever be collected (check out the source if you would like: http://code.google.com/p/elpis-pandora-client/).
+The above CSV string is an actual data row from testing the application. No other data is ever or will ever be collected (check out the source if you would like: https://github.com/adammhaile/Elpis).
 
 IMPORTANT NOTE FROM THE CREATOR:
 Elpis was created out of a great love for the service provided by Pandora Media, Inc. 

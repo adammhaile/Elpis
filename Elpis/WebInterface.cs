@@ -173,6 +173,21 @@ namespace Elpis
                     };
                     response.OnResponse(headers, new BufferedProducer(body));
                 }
+                else if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/connect"))
+                {
+                    var body = "true";
+
+                    var headers = new HttpResponseHead()
+                    {
+                        Status = "200 OK",
+                        Headers = new Dictionary<string, string>() 
+                    {
+                        { "Content-Type", "text/plain" },
+                        { "Content-Length", body.Length.ToString() },
+                    }
+                    };
+                    response.OnResponse(headers, new BufferedProducer(body));
+                }
                 else if (request.Uri.StartsWith("/"))
                 {
                     var body = string.Format(

@@ -28,6 +28,9 @@ using System;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using TextBox = System.Windows.Controls.TextBox;
 using UserControl = System.Windows.Controls.UserControl;
+using System.Net.Sockets;
+using System.Net;
+using System.Linq;
 
 namespace Elpis
 {
@@ -99,9 +102,27 @@ namespace Elpis
 
             chkEnableScrobbler.IsChecked = _config.Fields.LastFM_Scrobble;
 
+            txtIPAddress.Text = getLocalIPAddress();
+
             _config.SaveConfig();
 
             UpdateLastFMControlState();
+        }
+
+        private string getLocalIPAddress()
+        {
+            IPAddress ipAdd;
+            if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                ipAdd = null;
+            }
+
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+
+            ipAdd = host
+                .AddressList
+                .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
+            return (ipAdd != null ? ipAdd.ToString() : "");
         }
 
         private void SaveConfig()
@@ -264,6 +285,11 @@ namespace Elpis
         {
             KeyValuePair<int, HotKey> pair = (KeyValuePair<int, HotKey>)((FrameworkElement)sender).DataContext;
             _keyHost.RemoveHotKey(pair.Value);
+        }
+
+        private void buttonCopyIP_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(txtIPAddress.Text);
         }
     }
 
