@@ -119,6 +119,10 @@ namespace Elpis
 
         public static DateTime lastTimeSkipped;
 
+        private WebInterface webInterfaceObject;
+
+        private bool restarting = false;
+
 #endregion
 
 #region Release Data Values
@@ -363,24 +367,15 @@ namespace Elpis
                 sArgs += (s + " ");
 
             sArgs += " -restart";
-            //Process.Start("Elpis.exe", sArgs);
-            try
-            {
-                //run the program again and close this one
-                Process.Start("Elpis.exe", sArgs);
-                //or you can use Application.ExecutablePath
 
-                //close this one
-                Process.GetCurrentProcess().Kill();
-            }
-            catch
-            { }
+            Process.Start("Elpis.exe", sArgs);
         }
 
         void _restartPage_RestartSelectionEvent(bool status)
         {
             if (status)
             {
+                restarting = true;
                 DoRestart();
                 Close();
             }
@@ -782,10 +777,15 @@ namespace Elpis
 
         private void startWebServer()
         {
-            WebInterface wi = new WebInterface();
-            Thread InstanceCaller = new Thread(new ThreadStart(wi.startInterface));
-            InstanceCaller.Start();
+            webInterfaceObject = new WebInterface();
+            Thread webInterfaceThread = new Thread(new ThreadStart(webInterfaceObject.startInterface));
+            webInterfaceThread.Start();            
             lastTimeSkipped = DateTime.Now;
+        }
+
+        public void stopWebServer()
+        {
+            webInterfaceObject.stopInterface();
         }
 
         public static bool Next()
@@ -1371,7 +1371,7 @@ namespace Elpis
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (!_forceClose && _config.Fields.Elpis_MinimizeToTray)
+            if (!_forceClose && _config.Fields.Elpis_MinimizeToTray && !restarting)
             {
                 WindowState = WindowState.Minimized;
                 this.Hide();
@@ -1395,6 +1395,7 @@ namespace Elpis
                     _config.Fields.Elpis_Volume = _player.Volume;
                 _config.SaveConfig();
             }
+            stopWebServer();
         }
 
         private void Window_StateChanged(object sender, EventArgs e)

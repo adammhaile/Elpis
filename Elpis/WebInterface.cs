@@ -35,6 +35,7 @@ namespace Elpis
 {
     class WebInterface
     {
+        IScheduler scheduler;
         public void startInterface()
         {
 #if DEBUG
@@ -42,7 +43,7 @@ namespace Elpis
             Debug.AutoFlush = true;
 #endif
 
-            var scheduler = KayakScheduler.Factory.Create(new SchedulerDelegate());
+            scheduler = KayakScheduler.Factory.Create(new SchedulerDelegate());
             var server = KayakServer.Factory.CreateHttp(new RequestDelegate(), scheduler);
 
             using (server.Listen(new IPEndPoint(IPAddress.Any, 35747)))
@@ -51,6 +52,11 @@ namespace Elpis
                 // someone calls Stop() on the scheduler.
                 scheduler.Start();
             }
+        }
+
+        public void stopInterface()
+        {
+            scheduler.Stop();
         }
         class SchedulerDelegate : ISchedulerDelegate
         {
