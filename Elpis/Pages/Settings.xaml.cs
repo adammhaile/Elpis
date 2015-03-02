@@ -102,27 +102,26 @@ namespace Elpis
 
             chkEnableScrobbler.IsChecked = _config.Fields.LastFM_Scrobble;
 
-            txtIPAddress.Text = getLocalIPAddress();
+            txtIPAddress.ItemsSource = getLocalIPAddresses();
 
             _config.SaveConfig();
 
             UpdateLastFMControlState();
         }
 
-        private string getLocalIPAddress()
+        private List<string> getLocalIPAddresses()
         {
-            IPAddress ipAdd;
-            if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            List<string> ips = new List<string>();
+            if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
             {
-                ipAdd = null;
+                IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (IPAddress ip in host.AddressList){
+                    if (!(ip.IsIPv6LinkLocal || ip.IsIPv6Multicast || ip.IsIPv6SiteLocal || ip.IsIPv6Teredo)){
+                        ips.Add(ip.ToString());
+                    }
+                }
             }
-
-            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-
-            ipAdd = host
-                .AddressList
-                .FirstOrDefault(ip => ip.AddressFamily == AddressFamily.InterNetwork);
-            return (ipAdd != null ? ipAdd.ToString() : "");
+            return ips;
         }
 
         private void SaveConfig()
@@ -287,9 +286,12 @@ namespace Elpis
             _keyHost.RemoveHotKey(pair.Value);
         }
 
-        private void buttonCopyIP_Click(object sender, RoutedEventArgs e)
+        private void txtIPAddress_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            Clipboard.SetText(txtIPAddress.Text);
+            if (e.Key == Key.C && Keyboard.Modifiers == ModifierKeys.Control)
+            {
+                Clipboard.SetText(txtIPAddress.SelectedItem.ToString());
+            }
         }
     }
 

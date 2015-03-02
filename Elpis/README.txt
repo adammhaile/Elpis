@@ -1,4 +1,4 @@
-Elpis (Pandora Radio Client) - (C) 2015 - Adam Haile
+Elpis (Pandora Radio Client) - (C) 2015 - Adam Haile & Alexey Seliverstov
 
 This is not a license. Elpis itself and it's source code (unless otherwise stated) are licensed under the GNU Public License (GPL) v3, available from http://www.gnu.org/licenses/ and in the install directory of this application.
 
@@ -13,7 +13,7 @@ By installing Elpis, you agree to a small amount of data being collected and tra
 How small, you ask? This small:
 2011-12-13 06:25:51,068c23a6-9f48-4c2b-9237-f41077c2ab5f,0.8.0.0,0.8.1.991,Windows 7 Service Pack 1 32-bit
 
-Thes values are:
+These values are:
 2011-12-13 06:25:51 - Date and Time of install
 068c23a6-9f48-4c2b-9237-f41077c2ab5f - Install GUID (random and helps determine number of unique users)
 0.8.0.0 - Previous version of the application
