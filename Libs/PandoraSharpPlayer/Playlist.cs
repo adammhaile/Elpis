@@ -124,9 +124,9 @@ namespace PandoraSharpPlayer
             Log.O("Waiting for playlist to reload.");
             while (_nextSongs.IsEmpty && !_emptyPlaylist)
             {
-                if ((DateTime.Now - start).TotalSeconds >= 20)
+                if ((DateTime.Now - start).TotalSeconds >= 60)
                 {
-                    Log.O("Playlist did not reload within 20 seconds, ");
+                    Log.O("Playlist did not reload within 60 seconds, ");
                     throw new PandoraException(ErrorCodes._END_OF_PLAYLIST);
                 }
 
