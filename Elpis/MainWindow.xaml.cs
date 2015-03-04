@@ -954,17 +954,13 @@ namespace Elpis
             }
             if(new List<HotKey>(_config.Fields.Elpis_HotKeys.Values).Count==0)
             {
-                _keyHost.AddHotKey(new HotKey(PlayerCommands.PlayPause, Key.Space, ModifierKeys.None, false, true));
-
                 _keyHost.AddHotKey(new HotKey(PlayerCommands.PlayPause, Key.MediaPlayPause, ModifierKeys.None, true, true));
-
-                _keyHost.AddHotKey(new HotKey(PlayerCommands.Next, Key.Right, ModifierKeys.None, false, true));
 
                 _keyHost.AddHotKey(new HotKey(PlayerCommands.Next, Key.MediaNextTrack, ModifierKeys.None, true, true));
 
-                _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsUp, Key.Up, ModifierKeys.None, false, true));
+                _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsUp, Key.MediaPlayPause, ModifierKeys.Control, true, true));
 
-                _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsDown, Key.Down, ModifierKeys.None, false, true));
+                _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsDown, Key.MediaStop, ModifierKeys.Control, true, true));
             }
 
             Dictionary<int, HotkeyConfig> keys = new Dictionary<int, HotkeyConfig>();
