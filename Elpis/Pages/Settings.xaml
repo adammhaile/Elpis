@@ -163,8 +163,35 @@
                                         <config:HotKeyBox Grid.Column="1" IsReadOnly="True" 
                                                           Text="{Binding Path=Value.KeysString, Mode=OneWay}" 
                                                           Margin="0 0 5 0"  >
+                                            <config:HotKeyBox.ToolTip>
+                                                <TextBlock>
+                                                    Only set Alphanumeric or Space keys as Global 
+                                                    <LineBreak /> 
+                                                    if you know what you're doing. 
+                                                    <LineBreak /> 
+                                                    Otherwise, these keys won't work on programs 
+                                                    <LineBreak /> 
+                                                    other than Elpis until you either remove the 
+                                                    <LineBreak /> 
+                                                    hotkey or close Elpis.
+                                                </TextBlock>
+                                            </config:HotKeyBox.ToolTip>
                                         </config:HotKeyBox>
-                                        <CheckBox Grid.Column="2" IsChecked="{Binding Path=Value.Global}" HorizontalAlignment="Center"/>
+                                        <CheckBox Grid.Column="2" IsChecked="{Binding Path=Value.Global}" HorizontalAlignment="Center">
+                                            <CheckBox.ToolTip>
+                                                <TextBlock>
+                                                    Only set Alphanumeric or Space keys as Global 
+                                                    <LineBreak /> 
+                                                    if you know what you're doing. 
+                                                    <LineBreak /> 
+                                                    Otherwise, these keys won't work on programs 
+                                                    <LineBreak /> 
+                                                    other than Elpis until you either remove the 
+                                                    <LineBreak /> 
+                                                    hotkey or close Elpis.
+                                                </TextBlock>
+                                            </CheckBox.ToolTip>
+                                        </CheckBox>
                                         <CheckBox Grid.Column="3" IsChecked="{Binding Path=Value.Enabled}" HorizontalAlignment="Center"/>
                                         <TextBlock Grid.Column="4" Text="r" FontFamily="Webdings" FontSize="16"
                                                    Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"
