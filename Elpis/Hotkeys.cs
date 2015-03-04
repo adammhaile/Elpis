@@ -44,12 +44,14 @@ namespace Elpis.Hotkeys
     {
         public HotKey HotKey { get; private set; }
 
-        public HotKeyAlreadyRegisteredException(string message, HotKey hotKey) : base(message)
+        public HotKeyAlreadyRegisteredException(string message, HotKey hotKey)
+            : base(message)
         {
             HotKey = hotKey;
         }
 
-        public HotKeyAlreadyRegisteredException(string message, HotKey hotKey, Exception inner) : base(message, inner)
+        public HotKeyAlreadyRegisteredException(string message, HotKey hotKey, Exception inner)
+            : base(message, inner)
         {
             HotKey = hotKey;
         }
@@ -210,19 +212,21 @@ namespace Elpis.Hotkeys
 
         public override int GetHashCode()
         {
-            return (int) Modifiers + 10*(int) Key;
+            return (int)Modifiers + 10 * (int)Key;
         }
 
-        public string KeysString {get {return (Modifiers == ModifierKeys.None ? "" : (Modifiers.ToString() + " + ")) + Key.ToString();}
+        public string KeysString
+        {
+            get { return (Modifiers == ModifierKeys.None ? "" : (Modifiers.ToString() + " + ")) + Key.ToString(); }
         }
 
-    public override string ToString()
+        public override string ToString()
         {
             return string.Format("{0} + {1} ({2}Enabled), {3}",
                                  Key, Modifiers,
                                  Enabled ? "" : "Not ",
                                  Global ? "Global" : "");
-        }    
+        }
     }
 
     public static class PlayerCommands
@@ -239,10 +243,10 @@ namespace Elpis.Hotkeys
         public static List<RoutedUICommand> AllCommands
         {
             get { return new List<RoutedUICommand>() { PlayPause, Next, ThumbsUp, ThumbsDown }; }
-                
+
         }
 
-        public static RoutedUICommand PlayPause = new RoutedUICommand("Pause currently playing track or Play if paused", "Play/Pause",typeof(PlayerCommands));
+        public static RoutedUICommand PlayPause = new RoutedUICommand("Pause currently playing track or Play if paused", "Play/Pause", typeof(PlayerCommands));
         public static RoutedUICommand Next = new RoutedUICommand("Skips currently playing track", "Skip Song", typeof(PlayerCommands));
         public static RoutedUICommand ThumbsUp = new RoutedUICommand("Marks this as a liked track that suits this station", "Thumbs Up", typeof(PlayerCommands));
         public static RoutedUICommand ThumbsDown = new RoutedUICommand("Marks this as a disliked track or one that doesn't suit this station", "Thumbs Down", typeof(PlayerCommands));
@@ -257,7 +261,7 @@ namespace Elpis.Hotkeys
         public HotKeyHost(Window window)
         {
             _window = window;
-            var hwnd = (HwndSource) HwndSource.FromVisual(window);
+            var hwnd = (HwndSource)HwndSource.FromVisual(window);
             Init(hwnd);
         }
 
@@ -321,9 +325,9 @@ namespace Elpis.Hotkeys
 
         private void RegisterGlobalHotKey(int id, HotKey hotKey)
         {
-            if ((int) hwndSource.Handle != 0)
+            if ((int)hwndSource.Handle != 0)
             {
-                RegisterHotKey(hwndSource.Handle, id, (int) hotKey.Modifiers, KeyInterop.VirtualKeyFromKey(hotKey.Key));
+                RegisterHotKey(hwndSource.Handle, id, (int)hotKey.Modifiers, KeyInterop.VirtualKeyFromKey(hotKey.Key));
                 int error = Marshal.GetLastWin32Error();
                 if (error != 0)
                 {
@@ -341,7 +345,7 @@ namespace Elpis.Hotkeys
 
         private void UnregisterGlobalHotKey(int id)
         {
-            if ((int) hwndSource.Handle != 0)
+            if ((int)hwndSource.Handle != 0)
             {
                 UnregisterHotKey(hwndSource.Handle, id);
                 int error = Marshal.GetLastWin32Error();
@@ -357,9 +361,9 @@ namespace Elpis.Hotkeys
             if (msg == WM_HotKey)
             {
                 Log.O("HotKeys WndProc: IsEnabled - {0}", IsEnabled.ToString());
-                if (IsEnabled && hotKeys.ContainsKey((int) wParam))
+                if (IsEnabled && hotKeys.ContainsKey((int)wParam))
                 {
-                    HotKey h = hotKeys[(int) wParam];
+                    HotKey h = hotKeys[(int)wParam];
                     Log.O("HotKeys WndProc: HotKey - {0}", h.KeysString);
                     if (h.Global)
                     {
@@ -409,8 +413,8 @@ namespace Elpis.Hotkeys
                 case "Global":
                 case "Modifiers":
                 case "Key":
-                        var kvPair = hotKeys.FirstOrDefault(h => h.Value == sender); 
-                        if(kvPair.Value != null){ UnregisterHotKey(kvPair.Key); }
+                    var kvPair = hotKeys.FirstOrDefault(h => h.Value == sender);
+                    if (kvPair.Value != null) { UnregisterHotKey(kvPair.Key); }
                     break;
             }
         }
@@ -420,8 +424,10 @@ namespace Elpis.Hotkeys
             var kvPair = hotKeys.FirstOrDefault(h => h.Value == sender);
             if (kvPair.Value != null)
             {
+
                 switch (e.PropertyName)
                 {
+
                     case "Enabled":
                         if (kvPair.Value.Enabled)
                             RegisterHotKey(kvPair.Key, kvPair.Value);
@@ -439,7 +445,7 @@ namespace Elpis.Hotkeys
                 }
             }
         }
-        
+
         public class SerialCounter
         {
             public SerialCounter(int start)
@@ -455,7 +461,7 @@ namespace Elpis.Hotkeys
             }
         }
 
-        public ObservableDictionary<int,HotKey> HotKeys
+        public ObservableDictionary<int, HotKey> HotKeys
         {
             get { return hotKeys; }
         }
@@ -466,30 +472,33 @@ namespace Elpis.Hotkeys
         public HotKey AddHotKey(HotKey hotKey)
         {
             try
+            {
+                if (hotKey == null)
+                    throw new ArgumentNullException("value");
+                /* We let em add as many null keys to the list as they want, but never register them*/
+                if (hotKey.Key != Key.None && hotKeys.ContainsValue(hotKey))
                 {
-                    if (hotKey == null)
-                        throw new ArgumentNullException("value");
-                    /* We let em add as many null keys to the list as they want, but never register them*/
-                    if (hotKey.Key != Key.None && hotKeys.ContainsValue(hotKey))
-                    {
-                        throw new HotKeyAlreadyRegisteredException("HotKey already registered!", hotKey);
-                        //Log.O("HotKey already registered!");
-                    }
-                
+                    throw new HotKeyAlreadyRegisteredException("HotKey already registered!", hotKey);
+                    //Log.O("HotKey already registered!");
+                }
 
+                try
+                {
                     int id = idGen.Next();
                     if (hotKey.Enabled && hotKey.Key != Key.None)
                     {
-                
-                            RegisterHotKey(id, hotKey);
-                
-                
+                        RegisterHotKey(id, hotKey);
                     }
                     hotKey.PropertyChanging += hotKey_PropertyChanging;
                     hotKey.PropertyChanged += hotKey_PropertyChanged;
                     hotKeys[id] = hotKey;
                     return hotKey;
                 }
+                catch (HotKeyNotSupportedException e)
+                {
+                    return null;
+                }
+            }
             catch (HotKeyAlreadyRegisteredException e)
             {
                 Log.O("HotKey already registered!");
@@ -530,7 +539,7 @@ namespace Elpis.Hotkeys
             {
                 UnregisterGlobalHotKey(i);
             }
-            
+
             disposed = true;
         }
 

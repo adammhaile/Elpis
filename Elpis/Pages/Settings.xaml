@@ -121,7 +121,7 @@
                                   IsChecked="False" Content="Check for Beta Updates"
                                   ToolTip="These updates are experimental and are prone to break. Use it only if you want to test unstable code." />
                         <Label Content="Your local IP Address: " HorizontalAlignment="Left" Margin="30,1,0,-1" Grid.Row="3"/>
-                        <ListBox PreviewKeyDown="txtIPAddress_PreviewKeyDown" Name="txtIPAddress" HorizontalAlignment="Center" Margin="207,3,23,-27" Width="174"
+                        <ListBox PreviewKeyDown="txtIPAddress_PreviewKeyDown" Name="txtIPAddress" HorizontalAlignment="Center" Margin="207,1,23,-27" Width="174" Height="45"
                                  Grid.Row="3" Grid.ColumnSpan="2" IsEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
                         <!--TextBox Name="txtIPAddress" HorizontalAlignment="Center" Height="23" Margin="220,3,10,3" TextWrapping="Wrap" Text="TextBox" Width="174"
                                  Grid.Row="3" Grid.ColumnSpan="2" IsEnabled="False"/-->

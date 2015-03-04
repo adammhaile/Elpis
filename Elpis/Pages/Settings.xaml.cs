@@ -324,12 +324,19 @@ namespace Elpis
                 case Key.RightShift:
                     break;
                 default:
-                    h.SetKeyCombo(e.Key, Keyboard.Modifiers);
-                    e.Handled = true;
-                    GetBindingExpression(TextBox.TextProperty).UpdateTarget();
-                    //HACK: This is a cheap-and-nasty way to shift focus from the textbox
-                    IsEnabled = false;
-                    IsEnabled = true;
+                    try
+                    {
+                        h.SetKeyCombo(e.Key, Keyboard.Modifiers);
+                        e.Handled = true;
+                        GetBindingExpression(TextBox.TextProperty).UpdateTarget();
+                        //HACK: This is a cheap-and-nasty way to shift focus from the textbox
+                        IsEnabled = false;
+                        IsEnabled = true;
+                    }
+                    catch (HotKeyNotSupportedException es)
+                    {
+                        //Log.O(es.Message);
+                    }
                     break;
             }
         }
