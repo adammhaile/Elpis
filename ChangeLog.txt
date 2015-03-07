@@ -6,7 +6,8 @@ v1.4.7
 Created Web Remote Interface
 Created Android remote control client called ElpisRemote, check it out here: https://github.com/seliver/ElpisRemote/releases
 Globay Media Key Funcionality brought back with the possibility of setting a custom command
-Added beta testing option - now you will be able to test the latest commit on Elpis without the need to git clone and compile everything. Just select the option "Search for beta updates" on the Settings page and you will be notified of any new beta updates. Attention: these releases might be unstable and can (who knows) blow your pc!
+Corrected the functioning of global keys and added a tooltip warning
+Added beta testing option - now you will be able to test the latest commit on Elpis without the need to compile everything.
 Resolved issue #23 where the program wouldn't start if the proxy ip or port had not the spaces trimmed.
 Elpis icon has now got a white background so it can be seen on black themed desktops.
 Resolved issue #31, now Elpis restart function works on Windows 8 and 7. 
