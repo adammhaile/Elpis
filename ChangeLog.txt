@@ -1,6 +1,6 @@
-*IMPORTANT NOTE!* Those updating from v1.0.3;
-Due to a bug, possible that Elpis may crash after launching the download page.
-After downloading and installing the update, the bug will be fixed.
+**IMPORTANT FOR INSTALLS FROM 1.4.7**
+Before configuring your custom hotkeys on Elpis, do first kill all of the possible programs 
+that came with your keyboard drivers, like "Mouse and Keyboard Center" or "IType" from Microsoft keyboards.
 
 v1.4.7
 Created Web Remote Interface
