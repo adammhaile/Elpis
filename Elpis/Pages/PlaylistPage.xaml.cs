@@ -254,6 +254,15 @@ namespace Elpis
             CurrentSong.Content = song;
             CurrentSong.Visibility = Visibility.Visible;
             WaitScreen.Visibility = Visibility.Collapsed;
+
+            this.BeginDispatch(() =>
+            {
+                String[] stat = txtStationName.Text.Split('-');
+                if (stat[0].Equals("Quick Mix"))
+                {
+                    txtStationName.Text = stat[0]+"-"+song.Station.Name;
+                }
+            });
         }
 
         private void _player_SongStarted(object sender, Song song)
