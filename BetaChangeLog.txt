@@ -1,6 +1,5 @@
-*IMPORTANT NOTE!* Those updating from v1.0.3;
-Due to a bug, possible that Elpis may crash after launching the download page.
-After downloading and installing the update, the bug will be fixed.
+v1.4.8
+Added name of station in quickmix
 
 v1.4.7
 Created Web Remote Interface
