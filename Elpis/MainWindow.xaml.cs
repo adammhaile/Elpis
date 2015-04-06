@@ -1419,12 +1419,40 @@ namespace Elpis
 
         public void PlayPauseToggled(object sender, ExecutedRoutedEventArgs e)
         {
+            if (_config.Fields.Elpis_ShowTrayNotifications)
+            {
+                if (WindowState == System.Windows.WindowState.Minimized)
+                {
+                    //this is inverse because of being applied before action is taken
+                    if (!_player.Paused)
+                    {
+                        _notify.BalloonTipTitle = "Paused";
+                        _notify.BalloonTipText = " ";
+                    }
+                    else
+                    {
+                        string tipText = _player.CurrentSong.SongTitle;
+                        _notify.BalloonTipTitle = "Playing: " + tipText;
+                        _notify.BalloonTipText = " by " + _player.CurrentSong.Artist;
+                    }
+                    _notify.ShowBalloonTip(3000);
+                }
+            }
             _player.PlayPause();
         }
 
         public void SkipTrack(object sender, ExecutedRoutedEventArgs e)
         {
             _player.Next();
+            if (_config.Fields.Elpis_ShowTrayNotifications)
+            {
+                if (WindowState == System.Windows.WindowState.Minimized)
+                {
+                    _notify.BalloonTipTitle = "Song Skipped";
+                    _notify.BalloonTipText = " ";
+                    _notify.ShowBalloonTip(3000);
+                }
+            }
         }
 
         private void CanExecutePlayPauseSkip(object sender, CanExecuteRoutedEventArgs e)
@@ -1448,6 +1476,19 @@ namespace Elpis
 
         public void ExecuteThumbsUp(object sender, ExecutedRoutedEventArgs e)
         {
+            if (_config.Fields.Elpis_ShowTrayNotifications)
+            {
+                if (WindowState == System.Windows.WindowState.Minimized)
+                {
+                    //this is inverse because of being applied before action is taken
+                    if (!GetCurrentSong().Loved)
+                        _notify.BalloonTipTitle = "Song Liked";
+                    else
+                        _notify.BalloonTipTitle = "Song Unliked";
+                    _notify.BalloonTipText = " ";
+                    _notify.ShowBalloonTip(3000);
+                }
+            }
             _playlistPage.ThumbUpCurrent();
         }
 
@@ -1455,6 +1496,15 @@ namespace Elpis
         public void ExecuteThumbsDown(object sender, ExecutedRoutedEventArgs e)
         {
             _playlistPage.ThumbDownCurrent();
+            if (_config.Fields.Elpis_ShowTrayNotifications)
+            {
+                if (WindowState == System.Windows.WindowState.Minimized)
+                {
+                    _notify.BalloonTipTitle = "Song Disliked";
+                    _notify.BalloonTipText = " ";
+                    _notify.ShowBalloonTip(3000);
+                }
+            }
         }
 
         private void CanExecuteThumbsUpDown(object sender, CanExecuteRoutedEventArgs e)

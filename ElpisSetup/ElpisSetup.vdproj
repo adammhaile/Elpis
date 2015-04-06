@@ -435,7 +435,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Lpfm.LastFmScrobbler, Version=1.1.5539.36442, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Lpfm.LastFmScrobbler, Version=1.1.5549.34319, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_010E6E01E6F5B6AADC295523D4ECA4D6"
@@ -466,7 +466,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PlayerControlQuery, Version=1.4.5539.36443, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PlayerControlQuery, Version=1.4.5553.28960, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_28035C075265B0593085A2866E700674"
@@ -497,7 +497,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=1.1.5539.36443, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:BassPlayer, Version=1.1.5553.28117, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_400B827A0F0AD2219A9A7D5665DAECB3"
@@ -579,7 +579,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=1.1.5539.36443, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharpPlayer, Version=1.1.5553.28961, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_7AB720A5D8D651D9FB48BF4B06BEE4AD"
@@ -670,7 +670,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharpScrobbler, Version=1.4.5539.36443, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharpScrobbler, Version=1.4.5553.28960, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_ABD5A4E57FD842C5AFA8FFBF5B55064E"
@@ -763,7 +763,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Util, Version=1.1.5539.36442, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:Util, Version=1.1.5549.34319, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_C3FC75DE0D4394CCCC02FDC3089DF8C0"
@@ -865,7 +865,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=1.1.5539.36443, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:PandoraSharp, Version=1.1.5553.28960, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_E91B36C8829F1D3F85101A8682DD0A4E"
@@ -959,15 +959,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Elpis"
-        "ProductCode" = "8:{B2182CB3-6C6C-406D-8FB6-6DF70F46CAA4}"
-        "PackageCode" = "8:{FF1569DA-4EC6-4BDF-B26A-4ED4C19DE649}"
+        "ProductCode" = "8:{0AE24B53-7880-43B6-B315-1FCA6B71400F}"
+        "PackageCode" = "8:{A9F969AC-FCB5-4B87-AA6F-B60F28F1322E}"
         "UpgradeCode" = "8:{F0962B86-5C6F-4A2C-98F4-2FF9D0AC46AD}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.4.7"
+        "ProductVersion" = "8:1.4.9"
         "Manufacturer" = "8:Adam Haile, Alexey Seliverstov"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/adammhaile/Elpis/"
