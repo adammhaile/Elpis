@@ -90,6 +90,7 @@ namespace Elpis
         private ToolStripMenuItem _notifyMenu_Exit;
         public static Player _player;
         public static PlaylistPage _playlistPage;
+        public static MainWindow _mainWindow;
         private UserControl _prevPage;
         private Search _searchPage;
         private Settings _settingsPage;
@@ -122,6 +123,12 @@ namespace Elpis
         private WebInterface webInterfaceObject;
 
         private bool restarting = false;
+
+        private const int PLAY = 1;
+        private const int PAUSE = 2;
+        private const int LIKE = 3;
+        private const int DISLIKE = 4;
+        private const int SKIP = 5;
 
 #endregion
 
@@ -210,7 +217,7 @@ namespace Elpis
                 }
             }
 
-
+            _mainWindow = this;
         }
 
         public static CommandLineOptions _clo;
@@ -792,7 +799,11 @@ namespace Elpis
         {
             if ((DateTime.Now - lastTimeSkipped).Seconds > 20)
             {
-                _player.Next();
+                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    _mainWindow.showBalloon(SKIP);
+                    _player.Next();
+                }));
                 lastTimeSkipped = DateTime.Now;
                 return true;
             }
@@ -800,16 +811,25 @@ namespace Elpis
         }
         public static void Pause()
         {
-            _player.Pause();
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                _mainWindow.showBalloon(PAUSE);
+                _player.Pause();
+            }));
         }
         public static void Play()
         {
-            _player.Play();
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                _mainWindow.showBalloon(PLAY);
+                _player.Play();
+            }));
         }
         public static void Like()
         {
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
             {
+                _mainWindow.showBalloon(LIKE);
                 _playlistPage.ThumbUpCurrent();
             }));
             
@@ -818,6 +838,7 @@ namespace Elpis
         {
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
             {
+                _mainWindow.showBalloon(DISLIKE);
                 _playlistPage.ThumbDownCurrent();
             }));
         }
@@ -1419,40 +1440,75 @@ namespace Elpis
 
         public void PlayPauseToggled(object sender, ExecutedRoutedEventArgs e)
         {
-            if (_config.Fields.Elpis_ShowTrayNotifications)
+            //this is inverse because of being applied before action is taken
+            if (!_player.Paused)
             {
-                if (WindowState == System.Windows.WindowState.Minimized)
-                {
-                    //this is inverse because of being applied before action is taken
-                    if (!_player.Paused)
-                    {
-                        _notify.BalloonTipTitle = "Paused";
-                        _notify.BalloonTipText = " ";
-                    }
-                    else
-                    {
-                        string tipText = _player.CurrentSong.SongTitle;
-                        _notify.BalloonTipTitle = "Playing: " + tipText;
-                        _notify.BalloonTipText = " by " + _player.CurrentSong.Artist;
-                    }
-                    _notify.ShowBalloonTip(3000);
-                }
+                showBalloon(PAUSE);
+            }
+            else
+            {
+                showBalloon(PLAY);
             }
             _player.PlayPause();
         }
 
         public void SkipTrack(object sender, ExecutedRoutedEventArgs e)
         {
+            showBalloon(SKIP);
             _player.Next();
+        }
+         
+        private void showBalloon(int option)
+        {
             if (_config.Fields.Elpis_ShowTrayNotifications)
             {
                 if (WindowState == System.Windows.WindowState.Minimized)
                 {
-                    _notify.BalloonTipTitle = "Song Skipped";
-                    _notify.BalloonTipText = " ";
+                    switch (option)
+                    {
+                        case PLAY:
+                            {
+                                string tipText = _player.CurrentSong.SongTitle;
+                                _notify.BalloonTipTitle = "Playing: " + tipText;
+                                _notify.BalloonTipText = " by " + _player.CurrentSong.Artist;
+                                break;
+                            }
+                        case PAUSE:
+                            {
+                                _notify.BalloonTipTitle = "Paused";
+                                _notify.BalloonTipText = " ";
+                                break;
+                            }
+                        case LIKE:
+                            {
+                                //this is inverse because of being applied before action is taken
+                                if (!GetCurrentSong().Loved)
+                                    _notify.BalloonTipTitle = "Song Liked";
+                                else
+                                    _notify.BalloonTipTitle = "Song Unliked";
+                                _notify.BalloonTipText = " ";
+                                break;
+                            }
+                        case DISLIKE:
+                            {
+                                _notify.BalloonTipTitle = "Song Disliked";
+                                _notify.BalloonTipText = " ";
+                                break;
+                            }
+                        case SKIP:
+                            {
+                                _notify.BalloonTipTitle = "Song Skipped";
+                                _notify.BalloonTipText = " ";
+                                break;
+                            }
+                        default:
+                            {
+                                return;
+                            }
+                    }
                     _notify.ShowBalloonTip(3000);
                 }
-            }
+            }   
         }
 
         private void CanExecutePlayPauseSkip(object sender, CanExecuteRoutedEventArgs e)
@@ -1476,35 +1532,15 @@ namespace Elpis
 
         public void ExecuteThumbsUp(object sender, ExecutedRoutedEventArgs e)
         {
-            if (_config.Fields.Elpis_ShowTrayNotifications)
-            {
-                if (WindowState == System.Windows.WindowState.Minimized)
-                {
-                    //this is inverse because of being applied before action is taken
-                    if (!GetCurrentSong().Loved)
-                        _notify.BalloonTipTitle = "Song Liked";
-                    else
-                        _notify.BalloonTipTitle = "Song Unliked";
-                    _notify.BalloonTipText = " ";
-                    _notify.ShowBalloonTip(3000);
-                }
-            }
+            showBalloon(LIKE);
             _playlistPage.ThumbUpCurrent();
         }
 
 
         public void ExecuteThumbsDown(object sender, ExecutedRoutedEventArgs e)
         {
+            showBalloon(DISLIKE);
             _playlistPage.ThumbDownCurrent();
-            if (_config.Fields.Elpis_ShowTrayNotifications)
-            {
-                if (WindowState == System.Windows.WindowState.Minimized)
-                {
-                    _notify.BalloonTipTitle = "Song Disliked";
-                    _notify.BalloonTipText = " ";
-                    _notify.ShowBalloonTip(3000);
-                }
-            }
         }
 
         private void CanExecuteThumbsUpDown(object sender, CanExecuteRoutedEventArgs e)
