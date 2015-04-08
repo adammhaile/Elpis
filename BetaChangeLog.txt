@@ -1,3 +1,7 @@
+v1.4.9
+Added Balloon tooltips about song like/dislike, play/pause and skip, when Elpis is minimized and when notifications are active.
+This works with both Hotkeys and ElpisRemote.
+
 v1.4.8
 Added name of station in quickmix
 
