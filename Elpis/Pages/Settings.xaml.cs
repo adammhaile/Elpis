@@ -31,6 +31,7 @@ using UserControl = System.Windows.Controls.UserControl;
 using System.Net.Sockets;
 using System.Net;
 using System.Linq;
+using System.ComponentModel;
 
 namespace Elpis
 {
@@ -104,6 +105,14 @@ namespace Elpis
 
             txtIPAddress.ItemsSource = getLocalIPAddresses();
 
+            // Build list of all output devices
+            cmbOutputDevice.Items.Clear();
+            foreach (string device in _player.GetOutputDevices())
+                cmbOutputDevice.Items.Add(device);
+            
+            // Get current output device
+            cmbOutputDevice.SelectedValue = _player.OutputDevice;
+
             _config.SaveConfig();
 
             UpdateLastFMControlState();
@@ -160,6 +169,12 @@ namespace Elpis
                 keys.Add(pair.Key,new HotkeyConfig(pair.Value));
             }
             _config.Fields.Elpis_HotKeys = keys;
+
+            if (!_config.Fields.System_OutputDevice.Equals((string)cmbOutputDevice.SelectedValue))
+            {
+                _config.Fields.System_OutputDevice = (string)cmbOutputDevice.SelectedValue;
+                _player.OutputDevice = (string)cmbOutputDevice.SelectedValue;
+            }
 
             _config.SaveConfig();
         }

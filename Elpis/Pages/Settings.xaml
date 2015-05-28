@@ -70,6 +70,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Content="Audio Format" FontSize="16" />
                         <ComboBox Name="cmbAudioFormat" Grid.Row="0" Grid.Column="1" Margin="3"
@@ -87,7 +88,9 @@
                         <Label Grid.Row="1" Grid.Column="0" Content="Station Sort Order" FontSize="16" />
                         <ComboBox Name="cmbStationSort" Grid.Row="1" Grid.Column="1" Margin="3"
                       ItemsSource="{StaticResource StationSortOrder}" DisplayMemberPath="Display" SelectedValuePath="Value" />
-                        <CheckBox Name="chkAutoPlay" Grid.Row="2" Grid.ColumnSpan="2" Margin="4"
+                        <Label Grid.Row="2" Grid.Column="0" Content="Output Device" FontSize="16" />
+                        <ComboBox Name="cmbOutputDevice" Grid.Row="2" Grid.Column="1" Margin="3" />
+                        <CheckBox Name="chkAutoPlay" Grid.Row="3" Grid.ColumnSpan="2" Margin="4"
                       IsChecked="True"
                       Content="Automatically Play Last Station" />
                     </Grid>

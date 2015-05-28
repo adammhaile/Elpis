@@ -121,6 +121,7 @@ namespace Elpis
         public static MapConfigEntry HotKeysList = new MapConfigEntry("HotKeysList",new Dictionary<int,string>());
 
         //public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
+        public static MapConfigEntry System_OutputDevice = new MapConfigEntry("System_OutputDevice", "");
     }
 
     public struct ConfigDropDownItem
@@ -170,6 +171,7 @@ namespace Elpis
 
         public Dictionary<int,HotkeyConfig> Elpis_HotKeys { get; set; }
 
+        public string System_OutputDevice { get; set; }
     }
 
     public class Config
@@ -283,7 +285,8 @@ namespace Elpis
                 Fields.Elpis_HotKeys.Add(pair.Key,new HotkeyConfig(pair.Value, HotkeyConfig.Default));
                 }
             }
-            
+
+            Fields.System_OutputDevice = (string)_c.GetValue(ConfigItems.System_OutputDevice);
 
         Log.O("Config File Contents:");
             Log.O(_c.LastConfig);
@@ -344,8 +347,8 @@ namespace Elpis
                     hotkeysFlattened.Add(pair.Key,pair.Value.ToString());
                 }
                 _c.SetValue(ConfigItems.HotKeysList,hotkeysFlattened);
-                
 
+                _c.SetValue(ConfigItems.System_OutputDevice, Fields.System_OutputDevice);
             }
             catch (Exception ex)
             {
