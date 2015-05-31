@@ -722,6 +722,8 @@ namespace Elpis
                 if(_config.Fields.Proxy_Address != string.Empty)
                     _player.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
                         _config.Fields.Proxy_User, _config.Fields.Proxy_Password);
+                if (!_config.Fields.System_OutputDevice.IsNullOrEmpty())
+                    _player.OutputDevice = _config.Fields.System_OutputDevice;
             }
             catch(Exception ex)
             {

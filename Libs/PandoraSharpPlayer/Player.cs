@@ -30,6 +30,7 @@ using PandoraSharp.Exceptions;
 using PandoraSharp.ControlQuery;
 using Log = Util.Log;
 using Util;
+using System.Linq;
 
 namespace PandoraSharpPlayer
 {
@@ -174,6 +175,17 @@ namespace PandoraSharpPlayer
 
             LoggedIn = false;
             return true;
+        }
+
+        public string OutputDevice
+        {
+            get { return _bass.SoundDevice; }
+            set { _bass.SoundDevice = value; }
+        }
+
+        public IList<string> GetOutputDevices()
+        {
+            return _bass.GetOutputDevices().Where(x => x != "No sound").ToList();
         }
 
         void _cqman_SetSongMetaRequest(object sender, object meta)

@@ -34,6 +34,7 @@ using Un4seen.Bass.AddOn.Tags;
 using Un4seen.Bass.AddOn.WaDsp;
 using Un4seen.Bass.Misc;
 using System.Text;
+using System.Linq;
 
 namespace BassPlayer
 {
@@ -310,6 +311,7 @@ namespace BassPlayer
         private bool _Mixing;
         private bool _SoftStop = true;
         private string _SoundDevice = "";
+
         private PlayState _State = PlayState.Init;
         private int _StreamVolume = 100;
 
@@ -333,6 +335,12 @@ namespace BassPlayer
         #endregion
 
         #region Properties
+
+        public string SoundDevice
+        {
+            get { return _SoundDevice; }
+            set { ChangeOutputDevice(value); }
+        }
 
         /// <summary>
         /// Returns, if the player is in initialising stage
@@ -789,7 +797,7 @@ namespace BassPlayer
         {
             int sounddevice = -1;
             // Check if the specified Sounddevice still exists
-            if (_SoundDevice == "Default Sound Device")
+            if (_SoundDevice == "Default")
             {
                 Log.Info("BASS: Using default Sound Device");
                 sounddevice = -1;
@@ -829,7 +837,7 @@ namespace BassPlayer
 
             //using (Profile.Settings xmlreader = new Profile.MPSettings())
             //{
-            _SoundDevice = "Default Sound Device";
+            _SoundDevice = "Default";
             //xmlreader.GetValueAsString("audioplayer", "sounddevice", "Default Sound Device");
 
             _StreamVolume = 100; // xmlreader.GetValueAsInt("audioplayer", "streamOutputLevel", 85);
@@ -2363,6 +2371,76 @@ namespace BassPlayer
 
             dbLevelL = dbLeft;
             dbLevelR = dbRight;
+        }
+
+        public IList<string> GetOutputDevices()
+        {
+            BASS_DEVICEINFO[] soundDeviceDescriptions = Bass.BASS_GetDeviceInfos();
+
+            var deviceList = (from a in soundDeviceDescriptions select a.name).ToList();
+
+            return deviceList;
+        }
+
+        private void ChangeOutputDevice(string newOutputDevice)
+        {
+            if (newOutputDevice == null)
+                throw new BassException("Null value provided to ChangeOutputDevice(string)");
+
+            // Attempt to find the device number for the given string
+            int oldDeviceId = Bass.BASS_GetDevice();
+            int newDeviceId = -1;
+            BASS_DEVICEINFO[] soundDeviceDescriptions = Bass.BASS_GetDeviceInfos();
+            for (int i = 0; i < soundDeviceDescriptions.Length; i++)
+            {
+                if (newOutputDevice.Equals(soundDeviceDescriptions[i].name))
+                    newDeviceId = i;
+            }
+            if (newDeviceId == -1)
+                throw new BassException("Cannot find an output device matching description [" + newOutputDevice + "]");
+
+            Log.Info("BASS: Old device ID " + oldDeviceId);
+            Log.Info("BASS: New device ID " + newDeviceId);
+
+            // Make sure we're actually changing devices
+            if (oldDeviceId == newDeviceId) return;
+
+            // Initialize the new device
+            bool initOK = false;
+            BASS_DEVICEINFO info = Bass.BASS_GetDeviceInfo(newDeviceId);
+            if (!info.IsInitialized)
+            {
+                Log.Info("BASS: Initializing new device ID " + newDeviceId);
+                initOK = (Bass.BASS_Init(newDeviceId, 44100, BASSInit.BASS_DEVICE_DEFAULT | BASSInit.BASS_DEVICE_LATENCY, IntPtr.Zero));
+                if (!initOK)
+                {
+                    BASSError error = Bass.BASS_ErrorGetCode();
+                    throw new BassException("Cannot initialize output device [" + newOutputDevice + "], error is [" + Enum.GetName(typeof(BASSError), error) + "]");
+                }
+            }
+
+            // If anything is playing, move the stream to the new output device
+            if (State == PlayState.Playing)
+            {
+                Log.Info("BASS: Moving current stream to new device ID " + newDeviceId);
+                int stream = GetCurrentStream();
+                Bass.BASS_ChannelSetDevice(stream, newDeviceId);
+            }
+
+            // If the previous device was init'd, free it
+            if (oldDeviceId >= 0)
+            {
+                info = Bass.BASS_GetDeviceInfo(oldDeviceId);
+                if (info.IsInitialized)
+                {
+                    Log.Info("BASS: Freeing device " + oldDeviceId);
+                    Bass.BASS_SetDevice(oldDeviceId);
+                    Bass.BASS_Free();
+                    Bass.BASS_SetDevice(newDeviceId);
+                }
+            }
+
+            _SoundDevice = newOutputDevice; 
         }
 
         #endregion
