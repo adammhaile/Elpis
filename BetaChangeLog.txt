@@ -1,3 +1,6 @@
+v1.4.10
+Added support for switching audio output devices. (Thanks to joecoolio)
+
 v1.4.9
 Added Balloon tooltips about song like/dislike, play/pause and skip, when Elpis is minimized and when notifications are active.
 This works with both Hotkeys and ElpisRemote.
