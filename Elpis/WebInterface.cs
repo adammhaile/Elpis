@@ -129,6 +129,30 @@ namespace Elpis
                     };
                     response.OnResponse(headers, new BufferedProducer(body));
                 }
+                else if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/toggleplaypause"))
+                {
+                    var body = "";
+                    if (MainWindow._player.Playing)
+                    {
+                        body = "Paused.";
+                    }
+                    else
+                    {
+                        body = "Playing.";
+                    }
+                    MainWindow.PlayPauseToggle();
+
+                    var headers = new HttpResponseHead()
+                    {
+                        Status = "200 OK",
+                        Headers = new Dictionary<string, string>() 
+                    {
+                        { "Content-Type", "text/plain" },
+                        { "Content-Length", body.Length.ToString() },
+                    }
+                    };
+                    response.OnResponse(headers, new BufferedProducer(body));
+                }
                 else if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/like"))
                 {
                     MainWindow.Like();

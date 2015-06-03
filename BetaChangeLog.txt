@@ -1,3 +1,6 @@
+v1.4.11
+Added http api command "toggleplaypause".
+
 v1.4.10
 Added support for switching audio output devices. (Thanks to joecoolio)
 

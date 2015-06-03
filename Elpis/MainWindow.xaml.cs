@@ -827,6 +827,21 @@ namespace Elpis
                 _player.Play();
             }));
         }
+        public static void PlayPauseToggle()
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                if (_player.Paused)
+                {
+                    _mainWindow.showBalloon(PLAY);
+                }
+                if (_player.Playing)
+                {
+                    _mainWindow.showBalloon(PAUSE);
+                }
+                _player.PlayPause();                
+            }));
+        }
         public static void Like()
         {
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
