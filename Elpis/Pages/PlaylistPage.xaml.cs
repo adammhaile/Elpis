@@ -377,6 +377,12 @@ namespace Elpis
             }
         }
 
+        public void TiredOfCurrentSongFromSystemTray()
+        {
+            _player.SongTired(_player.CurrentSong);
+            _player.Next();
+        }
+
         private void mnuBookArtist_Click(object sender, RoutedEventArgs e)
         {
             if (_currMenuSong != null)

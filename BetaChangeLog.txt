@@ -1,3 +1,6 @@
+v1.4.12
+Added the actioon to ignore the current playing song for a month (a.k.a. "Tired of this song") from system tray right-click menu.
+
 v1.4.11
 Added http api command "toggleplaypause".
 

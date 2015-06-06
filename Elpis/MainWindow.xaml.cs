@@ -87,6 +87,7 @@ namespace Elpis
         private ToolStripMenuItem _notifyMenu_Title;
         private ToolStripMenuItem _notifyMenu_UpVote;
         private ToolStripMenuItem _notifyMenu_DownVote;
+        private ToolStripMenuItem _notifyMenu_Tired;
         private ToolStripMenuItem _notifyMenu_Exit;
         public static Player _player;
         public static PlaylistPage _playlistPage;
@@ -562,6 +563,7 @@ namespace Elpis
                 _notifyMenu_BreakSong.Visible = 
                 _notifyMenu_DownVote.Visible =
                 _notifyMenu_UpVote.Visible =
+                _notifyMenu_Tired.Visible = 
                 _notifyMenu_BreakVote.Visible = showSongInfo;
 
             _notifyMenu_PlayPause.Enabled =
@@ -615,10 +617,12 @@ namespace Elpis
             _notifyMenu_DownVote = new ToolStripMenuItem("Dislike Song");
             _notifyMenu_DownVote.Click += ((o, e) => _playlistPage.ThumbDownCurrent() );
 
+            _notifyMenu_Tired = new ToolStripMenuItem("Tired of This Song");
+            _notifyMenu_Tired.Click += ((o, e) => _playlistPage.TiredOfCurrentSongFromSystemTray());
+
             _notifyMenu_UpVote = new ToolStripMenuItem("Like Song");
             _notifyMenu_UpVote.Click += ((o, e) => _playlistPage.ThumbUpCurrent() );
-
-
+            
             _notifyMenu_Exit = new ToolStripMenuItem("Exit Elpis");
             _notifyMenu_Exit.Click += ((o, e) => { _forceClose = true; Close(); });
 
@@ -633,6 +637,7 @@ namespace Elpis
                                 _notifyMenu_BreakVote,
                                 _notifyMenu_UpVote,
                                 _notifyMenu_DownVote,
+                                _notifyMenu_Tired,
                                 _notifyMenu_BreakStation,
                                 _notifyMenu_Stations,
                                 _notifyMenu_BreakExit,
