@@ -3,8 +3,6 @@ Elpis is native Windows client for the Pandora Radio music service, implemented 
 
 It includes a C# implementation of the Pandora web API, PandoraSharp, which is roughly a port of the API library used in [Pithos](http://kevinmehall.net/p/pithos/), a Linux Pandora Client.
 
-Check out the main client page here: http://elpis.adamhaile.net
-
 ## Features
  * View, Sort and Select Stations
  * Play, Pause, Skip Song
