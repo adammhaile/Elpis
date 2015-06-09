@@ -26,9 +26,9 @@ It includes a C# implementation of the Pandora web API, PandoraSharp, which is r
 
 ## Requirements
 
-Elpis will run anywhere that the Microsoft .NET 4.0 Framework will run. In other words, Windows XP SP3, Vista, and Windows 7. The actual hardware requirements are practically negligible, it actually uses less memory than the HTML5 web version running in a modern browser like Chrome.
+Elpis will run anywhere that the Microsoft .NET 4.0 Framework will run. In other words, Windows XP SP3, Vista, Windows 7, Windows 8 and some users mentioned that it works on Windows 10. The actual hardware requirements are practically negligible, it actually uses less memory than the HTML5 web version running in a modern browser like Chrome.
 
-Afraid you might not have .NET 4.0 or don’t know what it is? No worries, if you are running the Windows 7 SP1 and have Windows Update enabled, you’ve already got it. If not and the installer finds that it’s not installed, it will automatically download and install it for you. It only takes a few minutes.
+Afraid you might not have .NET 4.0 or don’t know what it is? No worries, if you are running the Windows 7 SP1 or above and have Windows Update enabled, you’ve already got it. If not and the installer finds that it’s not installed, it will automatically download and install it for you. It only takes a few minutes.
 
 ## Download
 
