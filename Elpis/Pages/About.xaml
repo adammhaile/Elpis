@@ -18,32 +18,16 @@
     </UserControl.Resources>
     <Grid Background="{StaticResource MainBGBrush}">
         <TextBlock Foreground="{StaticResource MainFontBrush}" FontSize="22" HorizontalAlignment="Center"
-               VerticalAlignment="Center" TextAlignment="Center">
-      Elpis <TextBlock Text="{Binding ., Converter={StaticResource assemblyVersion}}" />
-      <LineBreak />
-      © Adam Haile       
-      <LineBreak />
-      Alexey Seliverstov 
-      <LineBreak />
-      2015
-      <LineBreak />
-      <LineBreak />
-      <TextBlock FontWeight="DemiBold">Links:</TextBlock>
-      <LineBreak />
-      <Hyperlink Name="Project" Style="{StaticResource LinkStyle}"
-                         NavigateUri="http://elpis.adamhaile.net/"
-                  RequestNavigate="RequestNavigate">
-                <TextBlock Text="Project Website" FontStyle="Italic" Foreground="{StaticResource MainFontBrush}"
-                           ToolTip="http://elpis.adamhaile.net/"/>
-              </Hyperlink> 
-      <LineBreak />
-      <Hyperlink Name="TitleLink" Style="{StaticResource LinkStyle}"
-                         NavigateUri="https://github.com/adammhaile/Elpis"
-                  RequestNavigate="RequestNavigate">
-                <TextBlock Text="Elpis Source Repository" FontStyle="Italic" Foreground="{StaticResource MainFontBrush}" 
-                           ToolTip="https://github.com/adammhaile/Elpis" />
-              </Hyperlink> 
-    </TextBlock>
+    		VerticalAlignment="Center" TextAlignment="Center"><Run Text="Elpis "/><InlineUIContainer>
+    			<TextBlock Text="{Binding ., Converter={StaticResource assemblyVersion}}" />
+    		</InlineUIContainer><LineBreak /><Run Text="© Adam Haile"/><LineBreak /><Run Text="Alexey Seliverstov"/><LineBreak /><Run Text="2015"/><LineBreak /><LineBreak /><InlineUIContainer>
+    			<TextBlock FontWeight="DemiBold"><Run Text="Links:"/></TextBlock>
+    		</InlineUIContainer><LineBreak /><InlineUIContainer>
+    			<TextBlock 
+    ToolTip="https://github.com/adammhaile/Elpis" Text="Elpis Source Repository" FontStyle="Italic" Foreground="{StaticResource MainFontBrush}"/> 
+    		</InlineUIContainer><LineBreak /><Hyperlink x:Name="TitleLink" Style="{StaticResource LinkStyle}"
+    			NavigateUri="https://github.com/adammhaile/Elpis"
+    			RequestNavigate="RequestNavigate"/></TextBlock>
 
         <Button Content="Close" Name="btnClose" Click="btnClose_Click" Width="100" Height="30"
             HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="5" />
