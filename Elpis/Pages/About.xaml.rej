@@ -1,0 +1,9 @@
+diff a/Elpis/Pages/About.xaml b/Elpis/Pages/About.xaml	(rejected hunks)
+@@ -18,7 +18,6 @@
+     </UserControl.Resources>
+     <Grid Background="{StaticResource MainBGBrush}">
+         <TextBlock Foreground="{StaticResource MainFontBrush}" FontSize="22" HorizontalAlignment="Center"
+-      © Adam Haile       
+     		VerticalAlignment="Center" TextAlignment="Center"><Run Text="Elpis "/><InlineUIContainer>
+     			<TextBlock Text="{Binding ., Converter={StaticResource assemblyVersion}}" />
+     		</InlineUIContainer><LineBreak /><Run Text="© Adam Haile"/><LineBreak /><Run Text="Alexey Seliverstov"/><LineBreak /><Run Text="2015"/><LineBreak /><LineBreak /><InlineUIContainer>
