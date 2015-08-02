@@ -3,29 +3,25 @@
  * email: alexey.seliverstov.dev@gmail.com
  *
  * This file is part of Elpis.
- * Elpis is free software: you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or 
+ * Elpis is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * Elpis is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ *
+ * Elpis is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with Elpis. If not, see http://www.gnu.org/licenses/.
 */
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
-using System.Text;
 using Kayak;
 using Kayak.Http;
 using PandoraSharp;
@@ -35,28 +31,28 @@ namespace Elpis
 {
     class WebInterface
     {
-        IScheduler scheduler;
-        public void startInterface()
+        private IScheduler _scheduler;
+        public void StartInterface()
         {
 #if DEBUG
             Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
             Debug.AutoFlush = true;
 #endif
 
-            scheduler = KayakScheduler.Factory.Create(new SchedulerDelegate());
-            var server = KayakServer.Factory.CreateHttp(new RequestDelegate(), scheduler);
+            _scheduler = KayakScheduler.Factory.Create(new SchedulerDelegate());
+            var server = KayakServer.Factory.CreateHttp(new RequestDelegate(), _scheduler);
 
             using (server.Listen(new IPEndPoint(IPAddress.Any, 35747)))
             {
                 // runs scheduler on calling thread. this method will block until
                 // someone calls Stop() on the scheduler.
-                scheduler.Start();
+                _scheduler.Start();
             }
         }
 
-        public void stopInterface()
+        public void StopInterface()
         {
-            scheduler.Stop();
+            _scheduler.Stop();
         }
         class SchedulerDelegate : ISchedulerDelegate
         {
@@ -74,22 +70,21 @@ namespace Elpis
 
         class RequestDelegate : IHttpRequestDelegate
         {
-            public void OnRequest(HttpRequestHead request, IDataProducer requestBody,
-                IHttpResponseDelegate response)
+            public void OnRequest(HttpRequestHead request, IDataProducer requestBody, IHttpResponseDelegate response)
             {
                 if (request.Method.ToUpperInvariant() == "GET" && request.Uri.StartsWith("/next"))
                 {
-                    // when you subecribe to the request body before calling OnResponse,
-                    // the server will automatically send 100-continue if the client is 
+                    // when you subscribe to the request body before calling OnResponse,
+                    // the server will automatically send 100-continue if the client is
                     // expecting it.
-                    bool ret = MainWindow.Next();                   
+                    bool ret = MainWindow.Next();
 
-                    var body = ret?"Successfully skipped.":"You have to wait for 20 seconds to skip again.";
+                    var body = ret ? "Successfully skipped." : "You have to wait for 20 seconds to skip again.";
 
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
-                        Headers = new Dictionary<string, string>() 
+                        Headers = new Dictionary<string, string>()
                     {
                         { "Content-Type", "text/plain" },
                         { "Content-Length", body.Length.ToString() },
@@ -105,7 +100,7 @@ namespace Elpis
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
-                        Headers = new Dictionary<string, string>() 
+                        Headers = new Dictionary<string, string>()
                     {
                         { "Content-Type", "text/plain" },
                         { "Content-Length", body.Length.ToString() },
@@ -121,7 +116,7 @@ namespace Elpis
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
-                        Headers = new Dictionary<string, string>() 
+                        Headers = new Dictionary<string, string>()
                     {
                         { "Content-Type", "text/plain" },
                         { "Content-Length", body.Length.ToString() },
@@ -145,7 +140,7 @@ namespace Elpis
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
-                        Headers = new Dictionary<string, string>() 
+                        Headers = new Dictionary<string, string>()
                     {
                         { "Content-Type", "text/plain" },
                         { "Content-Length", body.Length.ToString() },
@@ -163,7 +158,7 @@ namespace Elpis
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
-                        Headers = new Dictionary<string, string>() 
+                        Headers = new Dictionary<string, string>()
                     {
                         { "Content-Type", "text/plain" },
                         { "Content-Length", body.Length.ToString() },
@@ -179,7 +174,7 @@ namespace Elpis
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
-                        Headers = new Dictionary<string, string>() 
+                        Headers = new Dictionary<string, string>()
                     {
                         { "Content-Type", "text/plain" },
                         { "Content-Length", body.Length.ToString() },
@@ -195,7 +190,7 @@ namespace Elpis
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
-                        Headers = new Dictionary<string, string>() 
+                        Headers = new Dictionary<string, string>()
                     {
                         { "Content-Type", "text/plain" },
                         { "Content-Length", body.Length.ToString() },
@@ -210,7 +205,7 @@ namespace Elpis
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
-                        Headers = new Dictionary<string, string>() 
+                        Headers = new Dictionary<string, string>()
                     {
                         { "Content-Type", "text/plain" },
                         { "Content-Length", body.Length.ToString() },
@@ -230,7 +225,7 @@ namespace Elpis
                     var headers = new HttpResponseHead()
                     {
                         Status = "200 OK",
-                        Headers = new Dictionary<string, string>() 
+                        Headers = new Dictionary<string, string>()
                     {
                         { "Content-Type", "text/plain" },
                         { "Content-Length", body.Length.ToString() },
@@ -292,9 +287,9 @@ namespace Elpis
             }
             public bool OnData(ArraySegment<byte> data, Action continuation)
             {
-                // since we're just buffering, ignore the continuation. 
-                // TODO: place an upper limit on the size of the buffer. 
-                // don't want a client to take up all the RAM on our server! 
+                // since we're just buffering, ignore the continuation.
+                // TODO: place an upper limit on the size of the buffer.
+                // don't want a client to take up all the RAM on our server!
                 buffer.Add(data);
                 return false;
             }
@@ -305,12 +300,12 @@ namespace Elpis
 
             public void OnEnd()
             {
-                // turn the buffer into a string. 
-                // 
-                // (if this isn't what you want, you could skip 
-                // this step and make the result callback accept 
-                // List<ArraySegment<byte>> or whatever) 
-                // 
+                // turn the buffer into a string.
+                //
+                // (if this isn't what you want, you could skip
+                // this step and make the result callback accept
+                // List<ArraySegment<byte>> or whatever)
+                //
                 var str = "";
                 if (buffer.Count > 0)
                 {
@@ -318,10 +313,10 @@ namespace Elpis
                     .Select(b => Encoding.UTF8.GetString(b.Array, b.Offset, b.Count))
                     .Aggregate((result, next) => result + next);
                 }
-                
+
 
                 resultCallback(str);
             }
-        } 
+        }
     }
 }

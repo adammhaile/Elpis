@@ -3,17 +3,17 @@
  * http://adamhaile.net
  *
  * This file is part of Elpis.
- * Elpis is free software: you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or 
+ * Elpis is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * Elpis is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ *
+ * Elpis is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with Elpis. If not, see http://www.gnu.org/licenses/.
 */
 
@@ -107,6 +107,7 @@ namespace Elpis
         public static MapConfigEntry Elpis_InstallID = new MapConfigEntry("Elpis_InstallID", Guid.NewGuid().ToString());
         public static MapConfigEntry Elpis_CheckUpdates = new MapConfigEntry("Elpis_CheckUpdates", true);
         public static MapConfigEntry Elpis_CheckBetaUpdates = new MapConfigEntry("Elpis_CheckBetaUpdates", false);
+        public static MapConfigEntry Elpis_RemoteControlEnabled = new MapConfigEntry("Elpis_RemoteControlEnabled", true);
         public static MapConfigEntry Elpis_MinimizeToTray = new MapConfigEntry("Elpis_MinimizeToTray", false);
         public static MapConfigEntry Elpis_ShowTrayNotifications = new MapConfigEntry("Elpis_ShowTrayNotifications", true);
         public static MapConfigEntry Elpis_StartupLocation = new MapConfigEntry("Elpis_StartupLocation", "");
@@ -154,6 +155,7 @@ namespace Elpis
         public string Elpis_InstallID { get; internal set; }
         public bool Elpis_CheckUpdates { get; set; }
         public bool Elpis_CheckBetaUpdates { get; set; }
+        public bool Elpis_RemoteControlEnabled { get; set; }
 
         public bool Elpis_MinimizeToTray { get; set; }
         public bool Elpis_ShowTrayNotifications { get; set; }
@@ -182,7 +184,7 @@ namespace Elpis
         private readonly MapConfig _c;
 
         public ConfigFields Fields;
-        private string _configFile = "elpis.config";
+        private readonly string _configFile = "elpis.config";
 
         public Config(string configSuffix = "")
         {
@@ -248,6 +250,7 @@ namespace Elpis
             Fields.Elpis_InstallID = (string) _c.GetValue(ConfigItems.Elpis_InstallID);
             Fields.Elpis_CheckUpdates = (bool) _c.GetValue(ConfigItems.Elpis_CheckUpdates);
             Fields.Elpis_CheckBetaUpdates = (bool)_c.GetValue(ConfigItems.Elpis_CheckBetaUpdates);
+            Fields.Elpis_RemoteControlEnabled = (bool)_c.GetValue(ConfigItems.Elpis_RemoteControlEnabled);
             Fields.Elpis_MinimizeToTray = (bool) _c.GetValue(ConfigItems.Elpis_MinimizeToTray);
             Fields.Elpis_ShowTrayNotifications = (bool) _c.GetValue(ConfigItems.Elpis_ShowTrayNotifications);
             Fields.Elpis_Volume = (int) _c.GetValue(ConfigItems.Elpis_Volume);
@@ -278,7 +281,7 @@ namespace Elpis
             }
 
             var list = _c.GetValue(ConfigItems.HotKeysList) as Dictionary<int,string>;
-            
+
             if (list != null){
                 foreach (KeyValuePair<int,string> pair in list)
                 {
@@ -327,6 +330,7 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Elpis_Version, Fields.Elpis_Version.ToString());
                 _c.SetValue(ConfigItems.Elpis_CheckUpdates, Fields.Elpis_CheckUpdates);
                 _c.SetValue(ConfigItems.Elpis_CheckBetaUpdates, Fields.Elpis_CheckBetaUpdates);
+                _c.SetValue(ConfigItems.Elpis_RemoteControlEnabled, Fields.Elpis_RemoteControlEnabled);
                 _c.SetValue(ConfigItems.Elpis_MinimizeToTray, Fields.Elpis_MinimizeToTray);
                 _c.SetValue(ConfigItems.Elpis_ShowTrayNotifications, Fields.Elpis_ShowTrayNotifications);
                 _c.SetValue(ConfigItems.Elpis_PauseOnLock, Fields.Elpis_PauseOnLock);
@@ -334,13 +338,13 @@ namespace Elpis
 
                 _c.SetValue(ConfigItems.LastFM_Scrobble, Fields.LastFM_Scrobble);
                 _c.SetEncryptedString(ConfigItems.LastFM_SessionKey, Fields.LastFM_SessionKey);
-                
+
 
                 _c.SetValue(ConfigItems.Elpis_StartupLocation, Fields.Elpis_StartupLocation.ToString());
                 _c.SetValue(ConfigItems.Elpis_StartupSize, Fields.Elpis_StartupSize.ToString());
                 _c.SetValue(ConfigItems.Elpis_Volume, Fields.Elpis_Volume);
 
-                
+
                 Dictionary<int, string> hotkeysFlattened = new Dictionary<int, string>();
                 foreach(KeyValuePair<int,HotkeyConfig> pair in Fields.Elpis_HotKeys)
                 {

@@ -114,9 +114,13 @@
                       IsChecked="True" ToolTip="Exit option in tray menu must be used to fully close."
                       Content="Minimize / Close to Tray" />
                         <CheckBox Name="chkShowNotify" Grid.Row="1" Grid.Column="1" Margin="4"
-                      IsChecked="True"
-                      Content="Show Notifications"
-                      ToolTip="Display notificationsin toolbar on each new song"/>
+                                IsChecked="True"
+                                Content="Show Notifications"
+                                ToolTip="Display notificationsin toolbar on each new song"/>
+                        <CheckBox Name="chkRemoteControlEnabled" Grid.Row="2" Grid.Column="1" Margin="4"
+                                IsChecked="True"
+                                Content="Remote Control"
+                                ToolTip="Open TCP port to listen for commands from ElpisRemote app"/>
                         <CheckBox Name="chkPauseOnLock" Grid.Row="0" Grid.Column="2" Margin="4"
                                   IsChecked="False" Content="Pause on SystemLock"
                                   ToolTip="Elpis will pause when the system is locked and resume when unlocked." />
@@ -161,21 +165,21 @@
                                             <ColumnDefinition Width="1*"  />
                                             <ColumnDefinition Width="3*"  />
                                         </Grid.ColumnDefinitions>
-                                        <ComboBox Grid.Column="0" ItemsSource="{Binding Source={x:Static Hotkeys:PlayerCommands.AllCommands}}" 
+                                        <ComboBox Grid.Column="0" ItemsSource="{Binding Source={x:Static Hotkeys:PlayerCommands.AllCommands}}"
                                                   DisplayMemberPath="Name" SelectedItem="{Binding Path=Value.Command}" Margin="0 0 5 0" />
-                                        <config:HotKeyBox Grid.Column="1" IsReadOnly="True" 
-                                                          Text="{Binding Path=Value.KeysString, Mode=OneWay}" 
+                                        <config:HotKeyBox Grid.Column="1" IsReadOnly="True"
+                                                          Text="{Binding Path=Value.KeysString, Mode=OneWay}"
                                                           Margin="0 0 5 0"  >
                                             <config:HotKeyBox.ToolTip>
                                                 <TextBlock>
-                                                    Only set Alphanumeric or Space keys as Global 
-                                                    <LineBreak /> 
-                                                    if you know what you're doing. 
-                                                    <LineBreak /> 
-                                                    Otherwise, these keys won't work on programs 
-                                                    <LineBreak /> 
-                                                    other than Elpis until you either remove the 
-                                                    <LineBreak /> 
+                                                    Only set Alphanumeric or Space keys as Global
+                                                    <LineBreak />
+                                                    if you know what you're doing.
+                                                    <LineBreak />
+                                                    Otherwise, these keys won't work on programs
+                                                    <LineBreak />
+                                                    other than Elpis until you either remove the
+                                                    <LineBreak />
                                                     hotkey or close Elpis.
                                                 </TextBlock>
                                             </config:HotKeyBox.ToolTip>
@@ -183,14 +187,14 @@
                                         <CheckBox Grid.Column="2" IsChecked="{Binding Path=Value.Global}" HorizontalAlignment="Center">
                                             <CheckBox.ToolTip>
                                                 <TextBlock>
-                                                    Only set Alphanumeric or Space keys as Global 
-                                                    <LineBreak /> 
-                                                    if you know what you're doing. 
-                                                    <LineBreak /> 
-                                                    Otherwise, these keys won't work on programs 
-                                                    <LineBreak /> 
-                                                    other than Elpis until you either remove the 
-                                                    <LineBreak /> 
+                                                    Only set Alphanumeric or Space keys as Global
+                                                    <LineBreak />
+                                                    if you know what you're doing.
+                                                    <LineBreak />
+                                                    Otherwise, these keys won't work on programs
+                                                    <LineBreak />
+                                                    other than Elpis until you either remove the
+                                                    <LineBreak />
                                                     hotkey or close Elpis.
                                                 </TextBlock>
                                             </CheckBox.ToolTip>
@@ -216,7 +220,7 @@
                         <Button Name="btnAddHotKey" Click="btnAddHotKey_Click" HorizontalAlignment="Right" Width="80" Height="30" Padding="2 2 2 2" Margin="0 4 4 5">Add New</Button>
                     </StackPanel>
                 </Expander>
-                <Expander Header="Proxy - Changes Require Restarting Elpis" 
+                <Expander Header="Proxy - Changes Require Restarting Elpis"
                           IsExpanded="False"
                           Margin="5">
                     <Grid>
@@ -238,7 +242,7 @@
                                     Name="txtProxyAddress"/>
 
                         <Label Grid.Row="0" Grid.Column="2" Content="Port" FontSize="16" />
-                        <TextBox Grid.Row="0" Grid.Column="3" Text="" Width="55" 
+                        <TextBox Grid.Row="0" Grid.Column="3" Text="" Width="55"
                                  FontSize="16"
                                  HorizontalAlignment="Left" Margin="3" TextAlignment="Center"
                                  PreviewTextInput="txtProxyPort_PreviewTextInput"
@@ -246,8 +250,8 @@
 
 
                         <Label Grid.Row="2" Grid.Column="0" Content="Username" FontSize="16" />
-                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" 
-                                 Text="" 
+                        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
+                                 Text=""
                             FontSize="16"
                             TextAlignment="Center" Margin="3"
                             Name="txtProxyUser"/>
@@ -265,7 +269,7 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Name="chkEnableScrobbler" Grid.Column="0" 
+                        <CheckBox Name="chkEnableScrobbler" Grid.Column="0"
                                   Content="Enable Scrobbler" Margin="4"
                                   ToolTip="Enable Elpis to Scrobble to Last.FM - Must authenticate after enabling"
                                   Click="chkEnableScrobbler_Click"/>
