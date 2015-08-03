@@ -91,7 +91,7 @@ namespace Elpis
         private ToolStripMenuItem _notifyMenu_Tired;
         private ToolStripMenuItem _notifyMenu_Exit;
         private System.Threading.Timer _notifyDoubleClickTimer;
-        private static Boolean _notifyDoubleClick = false;
+        private static Boolean _notifyDoubleClicked = false;
         public static Player _player;
         public static PlaylistPage _playlistPage;
         public static MainWindow _mainWindow;
@@ -653,20 +653,26 @@ namespace Elpis
             _notifyDoubleClickTimer = new System.Threading.Timer(o =>
                                         {
                                             Thread.Sleep(SystemInformation.DoubleClickTime);
-                                            if (!_notifyDoubleClick)
+                                            if (!_notifyDoubleClicked)
                                             {
                                                 _player.PlayPause();
                                             }
-                                            _notifyDoubleClick = false;
+                                            _notifyDoubleClicked = false;
                                         });
 
             _notify.MouseDoubleClick += ((o, e) =>
                                         {
-                                            _notifyDoubleClick = true;
+                                            // Only process left mouse button double clicks
+                                            if (e.Button != MouseButtons.Left)
+                                            {
+                                                return;
+                                            }
+
+                                            _notifyDoubleClicked = true;
+                                            
                                             // Hide window if it is shown; show if it is hidden
                                             if (WindowState == WindowState.Normal)
                                             {
-                                                Microsoft.Shell.NativeMethods.ShowToFront((new WindowInteropHelper(this)).Handle);
                                                 WindowState = WindowState.Minimized;
                                                 this.Hide();
                                                 ShowInTaskbar = false; 
