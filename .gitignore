@@ -156,3 +156,4 @@ $RECYCLE.BIN/
 .DS_Store
 Elpis/ReleaseData/ReleaseData.cs
 ElpisDroid/*
+packages/
