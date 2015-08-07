@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Shell;
 using BassPlayer;
 using Elpis.Hotkeys;
@@ -89,6 +90,8 @@ namespace Elpis
         private ToolStripMenuItem _notifyMenu_DownVote;
         private ToolStripMenuItem _notifyMenu_Tired;
         private ToolStripMenuItem _notifyMenu_Exit;
+        private System.Threading.Timer _notifyDoubleClickTimer;
+        private static Boolean _notifyDoubleClicked = false;
         public static Player _player;
         public static PlaylistPage _playlistPage;
         public static MainWindow _mainWindow;
@@ -253,14 +256,6 @@ namespace Elpis
             {
                 LoadStation(_clo.StationToLoad);
             }
-        }
-
-        public void ShowWindow()
-        {
-            if (WindowState == WindowState.Minimized)
-                WindowState = WindowState.Normal;
-
-            Microsoft.Shell.NativeMethods.ShowToFront((new System.Windows.Interop.WindowInteropHelper(this)).Handle);
         }
 
         static void ShowHelp(OptionSet p)
@@ -654,10 +649,54 @@ namespace Elpis
                               ContextMenuStrip = _notifyMenu,
                           };
 
-            _notify.DoubleClick += ((o, e) =>
+            // Timer is used to distinguish between mouse single and double clicks
+            _notifyDoubleClickTimer = new System.Threading.Timer(o =>
                                         {
-                                            ShowWindow();
+                                            Thread.Sleep(SystemInformation.DoubleClickTime);
+                                            if (!_notifyDoubleClicked)
+                                            {
+                                                _player.PlayPause();
+                                            }
+                                            _notifyDoubleClicked = false;
                                         });
+
+            _notify.MouseDoubleClick += ((o, e) =>
+                                        {
+                                            // Only process left mouse button double clicks
+                                            if (e.Button != MouseButtons.Left)
+                                            {
+                                                return;
+                                            }
+
+                                            _notifyDoubleClicked = true;
+                                            
+                                            // Hide window if it is shown; show if it is hidden
+                                            if (WindowState == WindowState.Normal)
+                                            {
+                                                WindowState = WindowState.Minimized;
+                                                this.Hide();
+                                                ShowInTaskbar = false; 
+                                            }
+                                            else
+                                            {
+                                                Microsoft.Shell.NativeMethods.ShowToFront((new WindowInteropHelper(this)).Handle);
+                                            }
+                                        });
+
+
+            _notify.MouseClick += ((o, e) =>
+                                        {
+                                            if (e.Button == MouseButtons.Left)
+                                            {
+                                                // Play or pause only in the event of single click
+                                                _notifyDoubleClickTimer.Change(0, 0);
+                                            }
+                                            else if (e.Button == MouseButtons.Middle)
+                                            {
+                                                _player.Next();
+                                            }
+                                        });
+
             _notify.ContextMenuStrip.Opening += ((o, e) => LoadNotifyMenu());
 
             _notify.Visible = true;
