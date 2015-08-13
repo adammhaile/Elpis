@@ -210,8 +210,12 @@ namespace Elpis
 
                 if (loc.X != -1 && loc.Y != -1)
                 {
-                    this.Left = loc.X;
-                    this.Top = loc.Y;
+                    // Bug Fix: Issue #54, make sure that the initial window location is
+                    // always fully within the monitor bounds.
+                    this.Left = Math.Max(0, Math.Min(loc.X, 
+                        SystemParameters.VirtualScreenWidth - this.ActualWidth));
+                    this.Top = Math.Max(0, Math.Min(loc.Y,
+                        SystemParameters.VirtualScreenHeight - this.ActualHeight));
                 }
 
                 if (size.Width != 0 && size.Height != 0)
