@@ -211,7 +211,9 @@ namespace Elpis
                 if (loc.X != -1 && loc.Y != -1)
                 {
                     // Bug Fix: Issue #54, make sure that the initial window location is
-                    // always fully within the monitor bounds.
+                    // always fully within the virtual screen bounds.
+                    // Unfortunately may not preserve window location when primary display is not left most
+                    // but it eliminates the missing window problem in most situations.
                     this.Left = Math.Max(0, Math.Min(loc.X, 
                         SystemParameters.VirtualScreenWidth - this.ActualWidth));
                     this.Top = Math.Max(0, Math.Min(loc.Y,
