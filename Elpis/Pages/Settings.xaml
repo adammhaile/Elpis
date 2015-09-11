@@ -23,6 +23,8 @@
                 <config:ConfigDropDownItem Display="Date Descending" Value="DateDesc" />
                 <config:ConfigDropDownItem Display="Alphabetical Ascending" Value="AlphaAsc" />
                 <config:ConfigDropDownItem Display="Alphabetical Descending" Value="AlphaDesc" />
+                <config:ConfigDropDownItem Display="Rating Ascending" Value="RatingAsc" />
+                <config:ConfigDropDownItem Display="Rating Descending" Value="RatingDesc" />
             </x:Array>
         </ResourceDictionary>
     </UserControl.Resources>
