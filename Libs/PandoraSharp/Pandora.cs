@@ -677,20 +677,6 @@ namespace PandoraSharp
                 station.ThumbsUp = Convert.ToInt32(feedback["totalThumbsUp"].ToString());
                 station.ThumbsDown = Convert.ToInt32(feedback["totalThumbsDown"].ToString());
             });
-
-            //foreach (var station in Stations)
-            //{
-            //    JObject req = new JObject();
-
-            //    req["stationToken"] = station.IdToken;
-            //    req["includeExtendedAttributes"] = true;
-            //    var stationInfo = CallRPC("station.getStation", req);
-
-            //    var feedback = stationInfo.Result["feedback"];
-
-            //    station.ThumbsUp = Convert.ToInt32(feedback["totalThumbsUp"].ToString());
-            //    station.ThumbsDown = Convert.ToInt32(feedback["totalThumbsDown"].ToString());
-            //}
         } 
 
         public Station CreateStationFromSong(Song song)
