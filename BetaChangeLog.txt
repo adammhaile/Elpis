@@ -1,3 +1,10 @@
+v1.5.1
+Fixed but that did not allowed Elpis to start because of dual screen
+Added option to disable remote control
+Fixed issue #13 - High DPI resolutions
+Actions hooked to system tray icon #73 
+Icons now look smoother
+
 v1.4.12
 Added the action to ignore the current playing song for a month (a.k.a. "Tired of this song") from system tray right-click menu.
 

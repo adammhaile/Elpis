@@ -99,7 +99,7 @@ namespace Elpis
 
         private StationList _stationPage;
         private QuickMixPage _quickMixPage;
-        private readonly UpdateCheck _update;
+        private UpdateCheck _update;
         private UpdatePage _updatePage;
         private RestartPage _restartPage;
         private LastFMAuthPage _lastFMPage;
