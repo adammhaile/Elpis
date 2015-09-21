@@ -3,17 +3,17 @@
  * http://adamhaile.net
  *
  * This file is part of Elpis.
- * Elpis is free software: you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or 
+ * Elpis is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * Elpis is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ *
+ * Elpis is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with Elpis. If not, see http://www.gnu.org/licenses/.
 */
 
@@ -57,7 +57,7 @@ namespace Elpis
         private readonly Config _config;
 
         private readonly Player _player;
-        private HotKeyHost _keyHost;
+        private readonly HotKeyHost _keyHost;
 
         public Settings(Player player, Config config, HotKeyHost keyHost)
         {
@@ -77,7 +77,7 @@ namespace Elpis
 
         public event LastFMAuthRequestEvent LastFMAuthRequest;
 
-        public event LasFMDeAuthRequestEvent LasFMDeAuthRequest; 
+        public event LasFMDeAuthRequestEvent LasFMDeAuthRequest;
 
         private void LoadConfig()
         {
@@ -91,6 +91,7 @@ namespace Elpis
             chkShowNotify.IsChecked = _config.Fields.Elpis_ShowTrayNotifications;
             chkPauseOnLock.IsChecked = _config.Fields.Elpis_PauseOnLock;
             chkCheckBetaUpdates.IsChecked = _config.Fields.Elpis_CheckBetaUpdates;
+            chkRemoteControlEnabled.IsChecked = _config.Fields.Elpis_RemoteControlEnabled;
 
             _config.Fields.Pandora_AudioFormat = _player.AudioFormat;
 
@@ -109,7 +110,7 @@ namespace Elpis
             cmbOutputDevice.Items.Clear();
             foreach (string device in _player.GetOutputDevices())
                 cmbOutputDevice.Items.Add(device);
-            
+
             // Get current output device
             cmbOutputDevice.SelectedValue = _player.OutputDevice;
 
@@ -144,9 +145,10 @@ namespace Elpis
             _config.Fields.Pandora_AutoPlay = (bool) chkAutoPlay.IsChecked;
             _config.Fields.Elpis_CheckUpdates = (bool) chkCheckUpdates.IsChecked;
             _config.Fields.Elpis_CheckBetaUpdates = (bool)chkCheckBetaUpdates.IsChecked;
+            _config.Fields.Elpis_RemoteControlEnabled = (bool)chkRemoteControlEnabled.IsChecked;
             _config.Fields.Elpis_MinimizeToTray = (bool) chkTrayMinimize.IsChecked;
             _config.Fields.Elpis_ShowTrayNotifications = (bool) chkShowNotify.IsChecked;
-           _player.PauseOnLock = _config.Fields.Elpis_PauseOnLock = (bool)chkPauseOnLock.IsChecked;
+            _player.PauseOnLock = _config.Fields.Elpis_PauseOnLock = (bool)chkPauseOnLock.IsChecked;
 
             _player.AudioFormat = _config.Fields.Pandora_AudioFormat;
             //In case MP3-HiFi was rejected
@@ -181,11 +183,12 @@ namespace Elpis
 
         private bool NeedsRestart()
         {
-            bool restart = 
+            bool restart =
                 txtProxyAddress.Text != _config.Fields.Proxy_Address ||
                 txtProxyPort.Text != _config.Fields.Proxy_Port.ToString() ||
                 txtProxyUser.Text != _config.Fields.Proxy_User ||
-                txtProxyPassword.Password != _config.Fields.Proxy_Password;
+                txtProxyPassword.Password != _config.Fields.Proxy_Password ||
+                chkRemoteControlEnabled.IsChecked != _config.Fields.Elpis_RemoteControlEnabled;
 
             return restart;
         }
