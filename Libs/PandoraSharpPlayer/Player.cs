@@ -938,5 +938,10 @@ namespace PandoraSharpPlayer
         }
 
         #endregion
+        
+        public void SaveSong(string fileName)
+        {
+            _bass.SaveCacheFile(fileName);
+        }
     }
 }

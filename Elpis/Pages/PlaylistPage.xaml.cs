@@ -451,5 +451,10 @@ namespace Elpis
                 LaunchAmazonURL(_currMenuSong.AmazonTrackID);
             }
         }
+
+        public void SaveSong(string fileName)
+        {
+            _player.SaveSong(fileName);
+        }
     }
 }

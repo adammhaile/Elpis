@@ -1129,6 +1129,78 @@ namespace BassPlayer
             }
         }
 
+        private MemoryStream _cacheStream;
+        private string _cacheOriginalFilePath;
+        private string _cacheOnDownloadCompleteSaveLocation;
+        
+        private void FinalizeAndSaveCacheFile()
+        {
+            if ((_cacheStream != null) && _downloadFileComplete)
+            {
+                try
+                {
+                    if (!string.IsNullOrEmpty(_cacheOnDownloadCompleteSaveLocation))
+                    {
+                        SaveCacheFile(_cacheOnDownloadCompleteSaveLocation);
+                        _cacheOnDownloadCompleteSaveLocation = null;
+                    }
+                    //else
+                    //{
+                    //    Uri originalFileUri = new Uri(_cacheOriginalFilePath);
+                    //    string originalFileExtension = Path.GetExtension(originalFileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
+
+                    //    DateTime now = DateTime.Now;
+                    //    string outputFileName = string.Format("{0:0000}{1:00}{2:00}.{3:00}{4:00}{5:00}", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second) + originalFileExtension;
+                    //    string outputFilePath = Path.Combine(Environment.ExpandEnvironmentVariables("%TEMP%"), outputFileName);
+                        
+                    //    SaveCacheFile(outputFilePath);
+                    //}
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        public void SaveCacheFile(string outputFilePath)
+        {
+            try
+            {
+                if (_cacheStream != null)
+                {
+                    if (_downloadFileComplete)
+                    {
+                        using (FileStream fs = File.Open(outputFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read))
+                        {
+                            _cacheStream.Seek(0, SeekOrigin.Begin);
+                            _cacheStream.CopyTo(fs);
+                            fs.Flush(true);
+                        }
+                    }
+                    else
+                    {
+                        _cacheOnDownloadCompleteSaveLocation = outputFilePath;
+                        //FIX ME!!! Might be a timing issue if we save at the exact moment that the download completes
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        private void SetupCacheFile(string originalFilePath)
+        {
+            if (_cacheStream != null)
+            {
+                _cacheStream.Dispose();
+            }
+
+            _cacheStream = new MemoryStream();
+            _cacheOriginalFilePath = originalFilePath;
+            _cacheOnDownloadCompleteSaveLocation = null;
+        }
+
         private void SetupDownloadStream(string outputFile)
         {
             FinalizeDownloadStream();
@@ -1167,6 +1239,8 @@ namespace BassPlayer
             {
                 return false;
             }
+
+            SetupCacheFile(filePath);
 
             try
             {
@@ -1702,8 +1776,8 @@ namespace BassPlayer
 
         private void DownloadProc(IntPtr buffer, int length, IntPtr user)
         {
-            if (_downloadStream == null)
-                return;
+            //if (_downloadStream == null)
+            //    return;
 
             Log.Debug("DownloadProc: " + length.ToString());
             try
@@ -1712,8 +1786,17 @@ namespace BassPlayer
                 {
                     var managedBuffer = new byte[length];
                     Marshal.Copy(buffer, managedBuffer, 0, length);
-                    _downloadStream.Write(managedBuffer, 0, length);
-                    _downloadStream.Flush();
+
+                    if (_downloadStream != null)
+                    {
+                        _downloadStream.Write(managedBuffer, 0, length);
+                        _downloadStream.Flush();
+                    }
+
+                    if (_cacheStream != null)
+                    {
+                        _cacheStream.Write(managedBuffer, 0, managedBuffer.Length);
+                    }
                 }
                 else
                 {
@@ -1721,6 +1804,7 @@ namespace BassPlayer
                     string file = _downloadFile;
 
                     FinalizeDownloadStream();
+                    FinalizeAndSaveCacheFile();
 
                     if (DownloadComplete != null)
                         DownloadComplete(this, file);

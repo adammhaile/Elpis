@@ -1043,6 +1043,8 @@ namespace Elpis
                 _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsUp, Key.MediaPlayPause, ModifierKeys.Control, true, true));
 
                 _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsDown, Key.MediaStop, ModifierKeys.Control, true, true));
+
+                _keyHost.AddHotKey(new HotKey(PlayerCommands.SaveSong, Key.S, ModifierKeys.Control, true, true));
             }
 
             Dictionary<int, HotkeyConfig> keys = new Dictionary<int, HotkeyConfig>();
@@ -1607,6 +1609,47 @@ namespace Elpis
         private void CanExecuteThumbsUpDown(object sender, CanExecuteRoutedEventArgs e)
         {
             if (!_isActiveWindow&& _player.CurrentSong != null)
+            {
+                e.CanExecute = true;
+            }
+            else
+            {
+                if (IsOnPlaylist() && _player.CurrentSong != null)
+                {
+                    e.CanExecute = true;
+                }
+                else
+                {
+                    e.CanExecute = false;
+                }
+            }
+        }
+
+
+        public void ExecuteSaveSong(object sender, ExecutedRoutedEventArgs e)
+        {
+            Song song = _player.CurrentSong;
+            
+            Uri fileUri = new Uri(song.AudioUrl);
+            string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
+
+            string fileName = (song.Artist ?? string.Empty) + " - " + (song.Album ?? string.Empty) + " - " + (song.SongTitle ?? string.Empty) + fileExtension;
+
+            Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
+            sfd.FileName = fileName;
+            sfd.OverwritePrompt = true;
+            sfd.ValidateNames = true;
+
+            bool? result = sfd.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                _playlistPage.SaveSong(sfd.FileName);
+            }
+        }
+
+        private void CanExecuteSaveSong(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (!_isActiveWindow && _player.CurrentSong != null)
             {
                 e.CanExecute = true;
             }
