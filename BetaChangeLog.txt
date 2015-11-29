@@ -1,3 +1,7 @@
+v1.5.2
+station sorting by rating (or listening frequency)
+last.fm scrobbler - it should work now
+
 v1.5.1
 Fixed but that did not allowed Elpis to start because of dual screen
 Added option to disable remote control
