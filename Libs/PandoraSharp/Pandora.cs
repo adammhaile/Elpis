@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using PandoraSharp.Exceptions;
 using Util;
 using Newtonsoft.Json.Linq;
@@ -55,7 +56,9 @@ namespace PandoraSharp
             DateAsc,
             DateDesc,
             AlphaAsc,
-            AlphaDesc
+            AlphaDesc,
+            RatingAsc,
+            RatingDesc
         }
 
         #endregion
@@ -81,6 +84,7 @@ namespace PandoraSharp
         private int _rpcCount;
         private long _syncTime;
         private long _timeSynced;
+        private bool _metaDataUpToDate;
 
         private string _user = "";
         private string listenerId;
@@ -378,6 +382,15 @@ namespace PandoraSharp
                 case SortOrder.AlphaAsc:
                     Stations = Stations.OrderBy(x => x.Name).ToList();
                     break;
+                case SortOrder.RatingAsc:
+                    GetStationMetaData();
+                    Stations = Stations.OrderBy(x => x.ThumbsUp).ToList();
+                    break;
+                case SortOrder.RatingDesc:
+                    GetStationMetaData();
+                    Stations = Stations.OrderByDescending(x => x.ThumbsUp).ToList();
+                    break;
+
             }
 
             Stations.InsertRange(0, quickMixes);
@@ -646,6 +659,25 @@ namespace PandoraSharp
 
             return station;
         }
+
+        private void GetStationMetaData()
+        {
+            Log.O("RetrieveStationMetaData");
+
+            Parallel.ForEach(Stations, station =>
+            {
+                JObject req = new JObject();
+
+                req["stationToken"] = station.IdToken;
+                req["includeExtendedAttributes"] = true;
+                var stationInfo = CallRPC("station.getStation", req);
+
+                var feedback = stationInfo.Result["feedback"];
+
+                station.ThumbsUp = Convert.ToInt32(feedback["totalThumbsUp"].ToString());
+                station.ThumbsDown = Convert.ToInt32(feedback["totalThumbsDown"].ToString());
+            });
+        } 
 
         public Station CreateStationFromSong(Song song)
         {
