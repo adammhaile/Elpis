@@ -1547,9 +1547,9 @@ namespace Elpis
                     {
                         case PLAY:
                             {
-                                string tipText = _player.CurrentSong.SongTitle;
+                                string tipText = _player.CurrentSong.SongTitle.Replace("&", "&&");
                                 _notify.BalloonTipTitle = "Playing: " + tipText;
-                                _notify.BalloonTipText = " by " + _player.CurrentSong.Artist;
+                                _notify.BalloonTipText = " by " + _player.CurrentSong.Artist.Replace("&", "&&");
                                 break;
                             }
                         case PAUSE:
