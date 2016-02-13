@@ -266,10 +266,14 @@ namespace GUI.Interop
                     }
                     else
                     {
-                        mmi.ptMaxTrackSize.x = (int) _window.MaxWidth;
-                        mmi.ptMaxTrackSize.y = (int) _window.MaxHeight;
-                        mmi.ptMinTrackSize.x = (int) _window.MinWidth;
-                        mmi.ptMinTrackSize.y = (int) _window.MinHeight;
+                        // Bug Fix #13: Translate WPF scaled coordinates to screen coordinates.
+                        var windowMaxDimens = WpfToScreenPixels(new Point(_window.MaxWidth, _window.MaxHeight));
+                        var windowMinDimens = WpfToScreenPixels(new Point(_window.MinWidth, _window.MinHeight));
+
+                        mmi.ptMaxTrackSize.x = (int) windowMaxDimens.X;
+                        mmi.ptMaxTrackSize.y = (int) windowMaxDimens.Y;
+                        mmi.ptMinTrackSize.x = (int) windowMinDimens.X;
+                        mmi.ptMinTrackSize.y = (int) windowMinDimens.Y;
                     }
                 }
             }
@@ -281,6 +285,19 @@ namespace GUI.Interop
         {
             IntPtr handle = (new WindowInteropHelper(source)).Handle;
             HwndSource.FromHwnd(handle).AddHook(WindowProc);
+        }
+
+        /// <summary>
+        /// Transforms a WPF Point to screen point accounting for UI scaling.
+        /// See: http://stackoverflow.com/questions/6931333/wpf-converting-between-screen-coordinates-and-wpf-coordinates
+        /// </summary>
+        /// <param name="p">The point to transform.</param>
+        /// <returns>The transformed point.</returns>
+        private Point WpfToScreenPixels(Point p)
+        {
+            var t = PresentationSource.FromVisual(this._window).CompositionTarget.TransformFromDevice;
+            t.Invert();
+            return t.Transform(p);
         }
     }
 }

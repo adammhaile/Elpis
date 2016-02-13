@@ -1,21 +1,21 @@
 ﻿/*
 
- * 
+ *
  * * Copyright 2012 - Adam Haile
  * http://adamhaile.net
  *
  * This file is part of Elpis.
- * Elpis is free software: you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or 
+ * Elpis is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * Elpis is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ *
+ * Elpis is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with Elpis. If not, see http://www.gnu.org/licenses/.
 */
 
@@ -25,14 +25,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Shell;
 using BassPlayer;
 using Elpis.Hotkeys;
 using Elpis.UpdateSystem;
@@ -45,15 +42,7 @@ using Util;
 using Log = Util.Log;
 using UserControl = System.Windows.Controls.UserControl;
 using PandoraSharp.Plugins;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Text;
-using Kayak;
-using Kayak.Http;
-using System.Windows.Threading;
+using System.Windows.Interop;
 
 namespace Elpis
 {
@@ -72,7 +61,7 @@ namespace Elpis
 
         private string _configLocation;
 
-        private Config _config;
+        private readonly Config _config;
 
         private bool _finalComplete = false;
         private bool _initComplete;
@@ -104,7 +93,7 @@ namespace Elpis
 
         private SearchMode _searchMode = SearchMode.NewStation;
 
-        private bool _configError = false;
+        private readonly bool _configError = false;
 
         private bool _forceClose = false;
 
@@ -122,11 +111,11 @@ namespace Elpis
 
         private bool _isActiveWindow;
 
-        public static DateTime lastTimeSkipped;
+        private static DateTime lastTimeSkipped;
 
-        private WebInterface webInterfaceObject;
+        private WebInterface _webInterfaceObject;
 
-        private bool restarting = false;
+        private bool _restarting = false;
 
         private const int PLAY = 1;
         private const int PAUSE = 2;
@@ -210,8 +199,14 @@ namespace Elpis
 
                 if (loc.X != -1 && loc.Y != -1)
                 {
-                    this.Left = loc.X;
-                    this.Top = loc.Y;
+                    // Bug Fix: Issue #54, make sure that the initial window location is
+                    // always fully within the virtual screen bounds.
+                    // Unfortunately may not preserve window location when primary display is not left most
+                    // but it eliminates the missing window problem in most situations.
+                    this.Left = Math.Max(0, Math.Min(loc.X, 
+                        SystemParameters.VirtualScreenWidth - this.ActualWidth));
+                    this.Top = Math.Max(0, Math.Min(loc.Y,
+                        SystemParameters.VirtualScreenHeight - this.ActualHeight));
                 }
 
                 if (size.Width != 0 && size.Height != 0)
@@ -356,8 +351,7 @@ namespace Elpis
         void DoRestart()
         {
 
-            System.Collections.Generic.List<string> args = 
-                new System.Collections.Generic.List<string>();
+            List<string> args = new List<string>();
             var cmds = System.Environment.GetCommandLineArgs();
             foreach (string a in cmds)
                 args.Add(a);
@@ -378,7 +372,7 @@ namespace Elpis
         {
             if (status)
             {
-                restarting = true;
+                _restarting = true;
                 DoRestart();
                 Close();
             }
@@ -469,7 +463,7 @@ namespace Elpis
             mainBar.CreateStationClick += mainBar_searchPageClick;
             mainBar.ErrorClicked += mainBar_ErrorClicked;
             mainBar.VolumeChanged += mainBar_VolumeChanged;
-            
+
             _loginPage.Loaded += _loginPage_Loaded;
             _aboutPage.Loaded += _aboutPage_Loaded;
             _settingsPage.Loaded += _settingsPage_Loaded;
@@ -555,10 +549,10 @@ namespace Elpis
             _notifyMenu_Title.Visible =
                 _notifyMenu_Artist.Visible =
                 _notifyMenu_Album.Visible =
-                _notifyMenu_BreakSong.Visible = 
+                _notifyMenu_BreakSong.Visible =
                 _notifyMenu_DownVote.Visible =
                 _notifyMenu_UpVote.Visible =
-                _notifyMenu_Tired.Visible = 
+                _notifyMenu_Tired.Visible =
                 _notifyMenu_BreakVote.Visible = showSongInfo;
 
             _notifyMenu_PlayPause.Enabled =
@@ -617,7 +611,7 @@ namespace Elpis
 
             _notifyMenu_UpVote = new ToolStripMenuItem("Like Song");
             _notifyMenu_UpVote.Click += ((o, e) => _playlistPage.ThumbUpCurrent() );
-            
+
             _notifyMenu_Exit = new ToolStripMenuItem("Exit Elpis");
             _notifyMenu_Exit.Click += ((o, e) => { _forceClose = true; Close(); });
 
@@ -749,7 +743,7 @@ namespace Elpis
 
                 try
                 {
-                    post.Send();  
+                    post.Send();
                 }
                 catch(Exception ex)
                 {
@@ -762,12 +756,11 @@ namespace Elpis
             try
             {
                 _player = new Player();
-                _player.Initialize(_bassRegEmail, _bassRegKey); //TODO - put this in the login sequence? 
+                _player.Initialize(_bassRegEmail, _bassRegKey); //TODO - put this in the login sequence?
                 if(_config.Fields.Proxy_Address != string.Empty)
                     _player.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
                         _config.Fields.Proxy_User, _config.Fields.Proxy_Password);
-                if (!_config.Fields.System_OutputDevice.IsNullOrEmpty())
-                    _player.OutputDevice = _config.Fields.System_OutputDevice;
+                setOutputDevice(_config.Fields.System_OutputDevice);
             }
             catch(Exception ex)
             {
@@ -793,7 +786,7 @@ namespace Elpis
 
             _loadingPage.UpdateStatus("Starting Web Server...");
 
-            startWebServer();
+            StartWebServer();
 
             _loadingPage.UpdateStatus("Setting up UI...");
 
@@ -803,7 +796,7 @@ namespace Elpis
             });
 
             //this.Dispatch(SetupJumpList);
-            
+
             this.Dispatch(SetupNotifyIcon);
 
             this.Dispatch(() => mainBar.DataContext = _player); //To bind playstate
@@ -828,17 +821,42 @@ namespace Elpis
             _finalComplete = true;
         }
 
-        private void startWebServer()
+        private void setOutputDevice(string systemOutputDevice)
         {
-            webInterfaceObject = new WebInterface();
-            Thread webInterfaceThread = new Thread(new ThreadStart(webInterfaceObject.startInterface));
-            webInterfaceThread.Start();            
-            lastTimeSkipped = DateTime.Now;
+            if (!systemOutputDevice.IsNullOrEmpty()) {
+                string prevOutput = _player.OutputDevice;
+                try
+                {
+                    _player.OutputDevice = systemOutputDevice;
+                }
+                catch (BassException bEx)
+                {
+                    _player.OutputDevice = prevOutput;
+                }
+                
+            }
         }
 
-        public void stopWebServer()
+        private void StartWebServer()
         {
-            webInterfaceObject.stopInterface();
+            if (_config.Fields.Elpis_RemoteControlEnabled)
+            {
+                _webInterfaceObject = new WebInterface();
+                Thread webInterfaceThread = new Thread(new ThreadStart(_webInterfaceObject.StartInterface));
+                webInterfaceThread.Start();
+                lastTimeSkipped = DateTime.Now;
+            }
+        }
+
+        private void StopWebServer()
+        {
+            if (_config.Fields.Elpis_RemoteControlEnabled)
+            {
+                if (_webInterfaceObject != null)
+                {
+                    _webInterfaceObject.StopInterface();
+                }
+            }
         }
 
         public static bool Next()
@@ -883,7 +901,7 @@ namespace Elpis
                 {
                     _mainWindow.showBalloon(PAUSE);
                 }
-                _player.PlayPause();                
+                _player.PlayPause();
             }));
         }
         public static void Like()
@@ -893,7 +911,7 @@ namespace Elpis
                 _mainWindow.showBalloon(LIKE);
                 _playlistPage.ThumbUpCurrent();
             }));
-            
+
         }
         public static void Dislike()
         {
@@ -934,7 +952,7 @@ namespace Elpis
                                                "In order to use it while in Debug mode, edit apiKey and apiSecret in LoadLastFM() in MainWindow.xaml.cs");
             }
 #endif
- 
+
 
             if (_config.Fields.Proxy_Address != string.Empty)
                 _scrobbler.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
@@ -1202,7 +1220,7 @@ namespace Elpis
                     string tipText = _player.CurrentSong.SongTitle;
                     _notify.BalloonTipTitle = tipText;
                     _notify.BalloonTipText = " by " + _player.CurrentSong.Artist;
-    
+
                     _notify.ShowBalloonTip(5000);
                 }
             });
@@ -1368,7 +1386,7 @@ namespace Elpis
             //if (transitionControl.CurrentPage == _playlistPage)
             _player.Next();
 
-            transitionControl.ShowPage(_playlistPage);   
+            transitionControl.ShowPage(_playlistPage);
         }
 
         private void mainBar_PlayPauseClick()
@@ -1376,7 +1394,7 @@ namespace Elpis
             //if (transitionControl.CurrentPage == _playlistPage)
             _player.PlayPause();
 
-            transitionControl.ShowPage(_playlistPage);    
+            transitionControl.ShowPage(_playlistPage);
         }
 
         private void _player_StationLoaded(object sender, Station station)
@@ -1449,7 +1467,7 @@ namespace Elpis
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            if (!_forceClose && _config.Fields.Elpis_MinimizeToTray && !restarting)
+            if (!_forceClose && _config.Fields.Elpis_MinimizeToTray && !_restarting)
             {
                 WindowState = WindowState.Minimized;
                 this.Hide();
@@ -1473,7 +1491,7 @@ namespace Elpis
                     _config.Fields.Elpis_Volume = _player.Volume;
                 _config.SaveConfig();
             }
-            stopWebServer();
+            StopWebServer();
         }
 
         private void Window_StateChanged(object sender, EventArgs e)
@@ -1518,7 +1536,7 @@ namespace Elpis
             showBalloon(SKIP);
             _player.Next();
         }
-         
+
         private void showBalloon(int option)
         {
             if (_config.Fields.Elpis_ShowTrayNotifications)
@@ -1569,7 +1587,7 @@ namespace Elpis
                     }
                     _notify.ShowBalloonTip(3000);
                 }
-            }   
+            }
         }
 
         private void CanExecutePlayPauseSkip(object sender, CanExecuteRoutedEventArgs e)

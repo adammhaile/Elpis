@@ -165,6 +165,9 @@ namespace PandoraSharp
             set;
         }
 
+        public int ThumbsUp { get; set; }
+        public int ThumbsDown { get; set; }
+
         public string ArtCacheFile
         {
             get { return Path.Combine(_pandora.ImageCachePath, "Station_" + IdToken); }

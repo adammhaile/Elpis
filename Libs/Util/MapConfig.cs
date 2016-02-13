@@ -3,17 +3,17 @@
  * http://adamhaile.net
  *
  * This file is part of Elpis.
- * Elpis is free software: you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or 
+ * Elpis is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
- * Elpis is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+ *
+ * Elpis is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License 
+ *
+ * You should have received a copy of the GNU General Public License
  * along with Elpis. If not, see http://www.gnu.org/licenses/.
 */
 
@@ -26,7 +26,7 @@ namespace Util
 {
     public class MapConfigEntry
     {
-        public MapConfigEntry(string key, object def)
+        public MapConfigEntry(string key, object defaultValue)
         {
             //Type t = def.GetType();
             //if (t != typeof (string) &&
@@ -39,7 +39,7 @@ namespace Util
             //}
 
             Key = key;
-            Default = def;
+            Default = defaultValue;
         }
 
         public string Key { get; private set; }
@@ -172,7 +172,7 @@ namespace Util
                     configs.Add(kvp.Key + '|' + kvp.Value);
                 }
             }
-            
+
 
             bool result = true;
             StreamWriter sw = null;
@@ -266,7 +266,7 @@ namespace Util
            if (AutoSetDefaults)
                SetValue(key, defValue);
             return defValue;
-            
+
         }
 
         public int GetValue(string key, int defValue)
@@ -300,7 +300,7 @@ namespace Util
 
             if (AutoSetDefaults)
                 SetValue(key, defValue);
-                
+
             return defValue;
         }
 
