@@ -89,8 +89,10 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'AppRelease|x86' ">
     <Compile Include="ReleaseData\ReleaseData.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="WebInterface.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>

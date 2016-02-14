@@ -123,6 +123,8 @@ namespace Elpis
         private const int DISLIKE = 4;
         private const int SKIP = 5;
 
+        private const int DEFAULT_BALLOON_DURATION = 3000;
+
 #endregion
 
 #region Release Data Values
@@ -1215,7 +1217,7 @@ namespace Elpis
         {
             this.BeginDispatch(() =>
             {
-                showBalloon(PLAY);
+                showBalloon(PLAY, 5000);
             });
         }
 
@@ -1531,6 +1533,11 @@ namespace Elpis
         }
 
         private void showBalloon(int option)
+        {
+            showBalloon(option, DEFAULT_BALLOON_DURATION);
+        }
+
+        private void showBalloon(int option, int duration)
         {
             if (_config.Fields.Elpis_ShowTrayNotifications)
             {
