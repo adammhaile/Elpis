@@ -43,7 +43,7 @@ using Log = Util.Log;
 using UserControl = System.Windows.Controls.UserControl;
 using PandoraSharp.Plugins;
 using System.Windows.Interop;
-using Microsoft.WindowsAPICodePack.Taskbar; //TELMER6
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace Elpis
 {
@@ -80,12 +80,12 @@ namespace Elpis
         private ToolStripMenuItem _notifyMenu_DownVote;
         private ToolStripMenuItem _notifyMenu_Tired;
         private ToolStripMenuItem _notifyMenu_Exit;
-        //TELMER6
+
         private ThumbnailToolbarButton _thumbnailToolbarThumbUp;
         private ThumbnailToolbarButton _thumbnailToolbarThumbDown;
         private ThumbnailToolbarButton _thumbnailToolbarPlayPause;
         private ThumbnailToolbarButton _thumbnailToolbarSkip;
-        //END TELMER6
+
         private System.Threading.Timer _notifyDoubleClickTimer;
         private static Boolean _notifyDoubleClicked = false;
         public static Player _player;
@@ -703,7 +703,6 @@ namespace Elpis
             _notify.Visible = true;
         }
 
-        //TELMER6
         private void SetupThumbnailToolbarButtons()
         {
             _thumbnailToolbarThumbUp = new ThumbnailToolbarButton(Properties.Resources.thumb_up, "Thumb Up");
@@ -737,7 +736,6 @@ namespace Elpis
         {
             Like();
         }
-        //END TELMER6
 
         private bool InitLogic()
         {
@@ -848,7 +846,6 @@ namespace Elpis
             this.Dispatch(SetupUIEvents);
             this.Dispatch(SetupPageEvents);
 
-            //TELMER6
             this.Dispatch(SetupThumbnailToolbarButtons);
 
             if (_config.Fields.Login_AutoLogin &&
