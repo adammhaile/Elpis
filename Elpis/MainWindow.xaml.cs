@@ -560,13 +560,13 @@ namespace Elpis
 
             if (showSongInfo)
             {
-                _notifyMenu_Title.Text = _player.CurrentSong.SongTitle;
+                _notifyMenu_Title.Text = _player.CurrentSong.SongTitle.Replace("&", "&&&");
                 _notifyMenu_Title.Tag = _player.CurrentSong.SongDetailUrl;
 
-                _notifyMenu_Artist.Text = "by " + _player.CurrentSong.Artist;
+                _notifyMenu_Artist.Text = "by " + _player.CurrentSong.Artist.Replace("&", "&&&");
                 _notifyMenu_Artist.Tag = _player.CurrentSong.ArtistDetailUrl;
 
-                _notifyMenu_Album.Text = "on " + _player.CurrentSong.Album;
+                _notifyMenu_Album.Text = "on " + _player.CurrentSong.Album.Replace("&", "&&&");
                 _notifyMenu_Album.Tag = _player.CurrentSong.AlbumDetailUrl;
 
                 _notifyMenu_PlayPause.Text = _player.Playing ? "Pause" : "Play";
@@ -760,8 +760,7 @@ namespace Elpis
                 if(_config.Fields.Proxy_Address != string.Empty)
                     _player.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
                         _config.Fields.Proxy_User, _config.Fields.Proxy_Password);
-                if (!_config.Fields.System_OutputDevice.IsNullOrEmpty())
-                    _player.OutputDevice = _config.Fields.System_OutputDevice;
+                setOutputDevice(_config.Fields.System_OutputDevice);
             }
             catch(Exception ex)
             {
@@ -787,10 +786,7 @@ namespace Elpis
 
             _loadingPage.UpdateStatus("Starting Web Server...");
 
-            if (_config.Fields.Elpis_RemoteControlEnabled)
-            {
-                StartWebServer();
-            }
+            StartWebServer();
 
             _loadingPage.UpdateStatus("Setting up UI...");
 
@@ -825,19 +821,41 @@ namespace Elpis
             _finalComplete = true;
         }
 
+        private void setOutputDevice(string systemOutputDevice)
+        {
+            if (!systemOutputDevice.IsNullOrEmpty()) {
+                string prevOutput = _player.OutputDevice;
+                try
+                {
+                    _player.OutputDevice = systemOutputDevice;
+                }
+                catch (BassException bEx)
+                {
+                    _player.OutputDevice = prevOutput;
+                }
+                
+            }
+        }
+
         private void StartWebServer()
         {
-            _webInterfaceObject = new WebInterface();
-            Thread webInterfaceThread = new Thread(new ThreadStart(_webInterfaceObject.StartInterface));
-            webInterfaceThread.Start();
-            lastTimeSkipped = DateTime.Now;
+            if (_config.Fields.Elpis_RemoteControlEnabled)
+            {
+                _webInterfaceObject = new WebInterface();
+                Thread webInterfaceThread = new Thread(new ThreadStart(_webInterfaceObject.StartInterface));
+                webInterfaceThread.Start();
+                lastTimeSkipped = DateTime.Now;
+            }
         }
 
         private void StopWebServer()
         {
-            if (_webInterfaceObject != null)
+            if (_config.Fields.Elpis_RemoteControlEnabled)
             {
-                _webInterfaceObject.StopInterface();
+                if (_webInterfaceObject != null)
+                {
+                    _webInterfaceObject.StopInterface();
+                }
             }
         }
 
@@ -1197,14 +1215,7 @@ namespace Elpis
         {
             this.BeginDispatch(() =>
             {
-                if (_config.Fields.Elpis_ShowTrayNotifications)
-                {
-                    string tipText = _player.CurrentSong.SongTitle;
-                    _notify.BalloonTipTitle = tipText;
-                    _notify.BalloonTipText = " by " + _player.CurrentSong.Artist;
-
-                    _notify.ShowBalloonTip(5000);
-                }
+                showBalloon(PLAY, 5000);
             });
         }
 
@@ -1218,7 +1229,7 @@ namespace Elpis
                                            string title = "Elpis | " + _player.CurrentSong.Artist + " / " +
                                                           _player.CurrentSong.SongTitle;
 
-                                           _notify.Text = title.StringEllipses(63);
+                                           _notify.Text = title.Replace("&", "&&&").StringEllipses(63);
                                                //notify text cannot be more than 63 chars
                                            Title = title;
                                        }
@@ -1519,7 +1530,7 @@ namespace Elpis
             _player.Next();
         }
 
-        private void showBalloon(int option)
+        private void showBalloon(int option, int duration = 3000)
         {
             if (_config.Fields.Elpis_ShowTrayNotifications)
             {

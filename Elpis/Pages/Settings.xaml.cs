@@ -124,11 +124,18 @@ namespace Elpis
             List<string> ips = new List<string>();
             if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
             {
-                IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-                foreach (IPAddress ip in host.AddressList){
-                    if (!(ip.IsIPv6LinkLocal || ip.IsIPv6Multicast || ip.IsIPv6SiteLocal || ip.IsIPv6Teredo)){
-                        ips.Add(ip.ToString());
+                try
+                {
+                    IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+                    foreach (IPAddress ip in host.AddressList) {
+                        if (!(ip.IsIPv6LinkLocal || ip.IsIPv6Multicast || ip.IsIPv6SiteLocal || ip.IsIPv6Teredo)) {
+                            ips.Add(ip.ToString());
+                        }
                     }
+                }
+                catch (SocketException e)
+                {
+                    Console.WriteLine("There was a socket error attempting to get local ips: " + e.ToString());
                 }
             }
             return ips;
