@@ -296,6 +296,7 @@ namespace Elpis
         {
             _scrobbler.IsEnabled = _config.Fields.LastFM_Scrobble;
             RestorePrevPage();
+            ShowInTaskbar = _config.Fields.Elpis_ShowTaskbarIcon;
         }
 
         private void SetupPageEvents()
@@ -1493,6 +1494,7 @@ namespace Elpis
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Task.Factory.StartNew(LoadLogic);
+            ShowInTaskbar = _config.Fields.Elpis_ShowTaskbarIcon;
         }
 
         private void transitionControl_CurrentPageSet(UserControl page)

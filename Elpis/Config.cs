@@ -109,6 +109,7 @@ namespace Elpis
         public static MapConfigEntry Elpis_CheckBetaUpdates = new MapConfigEntry("Elpis_CheckBetaUpdates", false);
         public static MapConfigEntry Elpis_RemoteControlEnabled = new MapConfigEntry("Elpis_RemoteControlEnabled", true);
         public static MapConfigEntry Elpis_MinimizeToTray = new MapConfigEntry("Elpis_MinimizeToTray", false);
+        public static MapConfigEntry Elpis_ShowTaskbarIcon = new MapConfigEntry("Elpis_ShowTaskbarIcon", true);
         public static MapConfigEntry Elpis_ShowTrayNotifications = new MapConfigEntry("Elpis_ShowTrayNotifications", true);
         public static MapConfigEntry Elpis_StartupLocation = new MapConfigEntry("Elpis_StartupLocation", "");
         public static MapConfigEntry Elpis_StartupSize = new MapConfigEntry("Elpis_StartupSize", "");
@@ -158,6 +159,7 @@ namespace Elpis
         public bool Elpis_RemoteControlEnabled { get; set; }
 
         public bool Elpis_MinimizeToTray { get; set; }
+        public bool Elpis_ShowTaskbarIcon { get; set; }
         public bool Elpis_ShowTrayNotifications { get; set; }
         public int Elpis_Volume { get; set; }
         public bool Elpis_PauseOnLock { get; set; }
@@ -252,6 +254,7 @@ namespace Elpis
             Fields.Elpis_CheckBetaUpdates = (bool)_c.GetValue(ConfigItems.Elpis_CheckBetaUpdates);
             Fields.Elpis_RemoteControlEnabled = (bool)_c.GetValue(ConfigItems.Elpis_RemoteControlEnabled);
             Fields.Elpis_MinimizeToTray = (bool) _c.GetValue(ConfigItems.Elpis_MinimizeToTray);
+            Fields.Elpis_ShowTaskbarIcon = (bool)_c.GetValue(ConfigItems.Elpis_ShowTaskbarIcon);
             Fields.Elpis_ShowTrayNotifications = (bool) _c.GetValue(ConfigItems.Elpis_ShowTrayNotifications);
             Fields.Elpis_Volume = (int) _c.GetValue(ConfigItems.Elpis_Volume);
             Fields.Elpis_PauseOnLock = (bool) _c.GetValue(ConfigItems.Elpis_PauseOnLock);
@@ -332,6 +335,7 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Elpis_CheckBetaUpdates, Fields.Elpis_CheckBetaUpdates);
                 _c.SetValue(ConfigItems.Elpis_RemoteControlEnabled, Fields.Elpis_RemoteControlEnabled);
                 _c.SetValue(ConfigItems.Elpis_MinimizeToTray, Fields.Elpis_MinimizeToTray);
+                _c.SetValue(ConfigItems.Elpis_ShowTaskbarIcon, Fields.Elpis_ShowTaskbarIcon);
                 _c.SetValue(ConfigItems.Elpis_ShowTrayNotifications, Fields.Elpis_ShowTrayNotifications);
                 _c.SetValue(ConfigItems.Elpis_PauseOnLock, Fields.Elpis_PauseOnLock);
                 _c.SetValue(ConfigItems.Elpis_MaxHistory, Fields.Elpis_MaxHistory);

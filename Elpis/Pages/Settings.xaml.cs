@@ -91,6 +91,7 @@ namespace Elpis
             chkShowNotify.IsChecked = _config.Fields.Elpis_ShowTrayNotifications;
             chkPauseOnLock.IsChecked = _config.Fields.Elpis_PauseOnLock;
             chkCheckBetaUpdates.IsChecked = _config.Fields.Elpis_CheckBetaUpdates;
+            chkShowTaskbarIcon.IsChecked = _config.Fields.Elpis_ShowTaskbarIcon;
             chkRemoteControlEnabled.IsChecked = _config.Fields.Elpis_RemoteControlEnabled;
 
             _config.Fields.Pandora_AudioFormat = _player.AudioFormat;
@@ -152,6 +153,7 @@ namespace Elpis
             _config.Fields.Pandora_AutoPlay = (bool) chkAutoPlay.IsChecked;
             _config.Fields.Elpis_CheckUpdates = (bool) chkCheckUpdates.IsChecked;
             _config.Fields.Elpis_CheckBetaUpdates = (bool)chkCheckBetaUpdates.IsChecked;
+            _config.Fields.Elpis_ShowTaskbarIcon = (bool)chkShowTaskbarIcon.IsChecked;
             _config.Fields.Elpis_RemoteControlEnabled = (bool)chkRemoteControlEnabled.IsChecked;
             _config.Fields.Elpis_MinimizeToTray = (bool) chkTrayMinimize.IsChecked;
             _config.Fields.Elpis_ShowTrayNotifications = (bool) chkShowNotify.IsChecked;
