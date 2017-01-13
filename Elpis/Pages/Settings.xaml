@@ -98,7 +98,7 @@
                     </Grid>
                 </Expander>
                 <Expander Header="General" Margin="5" IsExpanded="True">
-                    <Grid Height="144">
+                    <Grid Height="164">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -120,19 +120,19 @@
                                 IsChecked="True"
                                 Content="Show Notifications"
                                 ToolTip="Display notificationsin toolbar on each new song"/>
-                        <CheckBox Name="chkRemoteControlEnabled" Grid.Row="2" Grid.Column="1" Margin="4"
-                                IsChecked="True"
-                                Content="Remote Control"
-                                ToolTip="Open TCP port to listen for commands from ElpisRemote app"/>
                         <CheckBox Name="chkPauseOnLock" Grid.Row="0" Grid.Column="2" Margin="4"
                                   IsChecked="False" Content="Pause on SystemLock"
                                   ToolTip="Elpis will pause when the system is locked and resume when unlocked." />
                         <CheckBox Name="chkCheckBetaUpdates" Grid.Row="2" Grid.Column="0" Margin="4"
                                   IsChecked="False" Content="Check for Beta Updates"
                                   ToolTip="These updates are experimental and are prone to break. Use it only if you want to test unstable code." />
-                        <CheckBox Name="chkShowTaskbarIcon" Grid.Row="2" Grid.Column="0" Margin="4"
+                        <CheckBox Name="chkShowTaskbarIcon" Grid.Row="2" Grid.Column="1" Margin="4"
                                   IsChecked="True" Content="Show Taskbar Icon"
                                   ToolTip="Show taskbar icon" />
+                        <CheckBox Name="chkRemoteControlEnabled" Grid.Row="3" Grid.Column="0" Margin="4"
+                                IsChecked="True"
+                                Content="Remote Control"
+                                ToolTip="Open TCP port to listen for commands from ElpisRemote app"/>
                         <Label Content="Your local IP Address: " HorizontalAlignment="Left" Margin="30,1,0,-1" Grid.Row="4"/>
                         <ListBox PreviewKeyDown="txtIPAddress_PreviewKeyDown" Name="txtIPAddress" HorizontalAlignment="Center" Margin="207,1,23,-27" Width="174" Height="45"
                                  Grid.Row="4" Grid.ColumnSpan="2" IsEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
