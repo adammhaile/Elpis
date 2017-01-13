@@ -846,6 +846,7 @@ namespace Elpis
             this.Dispatch(SetupPages);
             this.Dispatch(SetupUIEvents);
             this.Dispatch(SetupPageEvents);
+            this.Dispatch(() => ShowInTaskbar = _config.Fields.Elpis_ShowTaskbarIcon);
 
             this.Dispatch(SetupThumbnailToolbarButtons);
 
@@ -1175,7 +1176,7 @@ namespace Elpis
         protected override void OnActivated(EventArgs e)
         {
             _isActiveWindow = true;
-            base.OnActivated(e);
+            base.OnActivated(e);            
         }
 
         protected override void OnDeactivated(EventArgs e)
@@ -1493,8 +1494,7 @@ namespace Elpis
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Task.Factory.StartNew(LoadLogic);
-            ShowInTaskbar = _config.Fields.Elpis_ShowTaskbarIcon;
+            Task.Factory.StartNew(LoadLogic);            
         }
 
         private void transitionControl_CurrentPageSet(UserControl page)
@@ -1542,7 +1542,7 @@ namespace Elpis
             else
             {
                 this.Show();
-                ShowInTaskbar = true;
+                ShowInTaskbar = _config.Fields.Elpis_ShowTaskbarIcon;
             }
         }
 
