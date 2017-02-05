@@ -49,7 +49,6 @@ namespace PandoraSharp
 
             AmazonAlbumID = (string)song["amazonAlbumDigitalAsin"];
             AmazonTrackID = (string)song["amazonSongDigitalAsin"];
-            AmazonAlbumUrl = (string)song["amazonAlbumUrl"];
 
             var aacUrl = string.Empty;
             try
@@ -161,7 +160,6 @@ namespace PandoraSharp
         public string AlbumArtUrl { get; private set; }
 
         public string AmazonAlbumID { get; private set; }
-        public string AmazonAlbumUrl { get; private set; }
         public string AmazonTrackID { get; private set; }
         [XmlIgnore]
         [ScriptIgnore]

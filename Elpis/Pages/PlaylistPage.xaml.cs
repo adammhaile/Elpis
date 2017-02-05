@@ -440,26 +440,7 @@ namespace Elpis
         {
             if (_currMenuSong != null)
             {
-                if (_currMenuSong.AmazonAlbumID != null)
-                {
-                    LaunchAmazonURL(_currMenuSong.AmazonAlbumID);
-                }
-                else
-                {
-                    if(_currMenuSong.AmazonAlbumUrl != null)
-                    {
-                        string url = _currMenuSong.AmazonAlbumUrl;
-
-#if APP_RELEASE
-                        if (ReleaseData.AmazonTag != string.Empty)
-                        {
-                            string oldTag = url.Substring(url.IndexOf("tag="));
-                            url = url.Replace(oldTag, ReleaseData.AmazonTag);
-                        }
-#endif
-                        Process.Start(url);
-                    }
-                }
+                LaunchAmazonURL(_currMenuSong.AmazonAlbumID);
             }
         }
 
