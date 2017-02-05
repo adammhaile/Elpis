@@ -34,7 +34,7 @@
                 />
     </Window.CommandBindings>
 
-    <Border Name="borderMain" Margin="0" BorderThickness="0" Background="#FF0F0F0F">
+    <Border Name="borderMain" Margin="0" BorderThickness="0">
         <!-- Choice, borderless with drop shadow and crap performance or borderless without drop shadow and good performance. -->
         <!--<Border Name="borderMain" 
             Margin="{Binding Path=WindowState,
@@ -74,20 +74,20 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Name="TitleBar" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,51,0" Height="40">
-                        <TextBlock Name="TitleText" Padding="8,0" HorizontalAlignment="Stretch"
+                    <Grid Grid.Column="0" Name="TitleBar" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,0,0" Height="40">
+                        <TextBlock Name="TitleText" Padding="10" HorizontalAlignment="Stretch"
                        VerticalAlignment="Stretch"
                        Text="{Binding Path=Title,
                                     RelativeSource={RelativeSource 
                                         AncestorType={x:Type Window}}}"
-                       TextTrimming="CharacterEllipsis" Foreground="{StaticResource MainFontBrush}" FontSize="16" FontFamily="Roboto" FontWeight="Medium" Margin="10" />
+                       TextTrimming="CharacterEllipsis" Foreground="{StaticResource MainFontBrush}" FontSize="16" FontFamily="Roboto" FontWeight="Medium" />
                     </Grid>
                     <TextBlock Name="MinimizeButton" Text="0" FontFamily="Webdings" FontSize="16"
-                     Foreground="{StaticResource MainFontBrush}" Margin="0,10,25,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                     Foreground="{StaticResource MainFontBrush}" Margin="0,6,25,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
                     <TextBlock Name="CloseButton" Text="r" FontFamily="Webdings" FontSize="16"
-                     Foreground="{StaticResource MainFontBrush}" Margin="0,14,7,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+                     Foreground="{StaticResource MainFontBrush}" Margin="0,10,5,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
                 </Grid>
-                <elpis:MainBar x:Name="mainBar" Grid.Row="1" Height="45" Foreground="#FF141414" Background="#FF0F0F0F" BorderThickness="0" Margin="0,10,0,10" />
+                <elpis:MainBar x:Name="mainBar" Grid.Row="1" Height="70" Background="{StaticResource ShadeDarkBrush}" BorderThickness="0" Padding="0,10,0,10" />
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -98,7 +98,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <trans:PageTransition Grid.Row="0" Grid.ColumnSpan="2" x:Name="transitionControl"
-                                Background="#FF0F0F0F" Margin="0" TransitionType="Next" HorizontalAlignment="Stretch"
+                                Margin="0" TransitionType="Next" HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch" CurrentPageSet="transitionControl_CurrentPageSet" FontFamily="Roboto" BorderThickness="0" />
                 </Grid>
             </Grid>

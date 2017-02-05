@@ -58,19 +58,19 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         
-        <ElpisControls:ImageButton Width="20" Height="20" Margin="20,2,20,2" Grid.Column="0" x:Name="btnStationList"
+        <ElpisControls:ImageButton Width="20" Height="20" Margin="20,2,2,2" Grid.Column="0" x:Name="btnStationList"
                                ActiveImageUri="{StaticResource Image_PlaylistHover}" InactiveImageUri="{StaticResource Image_Playlist}"
                                ToolTip="Show Station List"
                                Click="btnStationList_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
-        <ElpisControls:ImageButton Width="20" Height="20" Margin="30,2,20,2" Grid.Column="0" x:Name="btnStationListClose"
+        <ElpisControls:ImageButton Width="20" Height="20" Margin="20,2,2,2" Grid.Column="0" x:Name="btnStationListClose"
                                ActiveImageUri="{StaticResource Image_CloseHover}" InactiveImageUri="{StaticResource Image_Close}"
                                ToolTip="Close Station List"
                                Click="btnStationListClose_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
-        <ElpisControls:ImageButton Width="20" Height="20" Margin="0,0,0,4" Grid.Column="1" x:Name="btnCreateStation"
+        <ElpisControls:ImageButton Width="20" Height="20" Margin="20,2,2,4" Grid.Column="1" x:Name="btnCreateStation"
                                ActiveImageUri="{StaticResource Image_AddHover}" InactiveImageUri="{StaticResource Image_Add}"
                                ToolTip="Create New Station"
                                Click="btnCreateStation_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
-        <ElpisControls:ImageButton Width="20" Height="20" Margin="-5,2,2,5" Grid.Column="2" x:Name="btnVolume"
+        <ElpisControls:ImageButton Width="20" Height="20" Margin="20,2,2,4" Grid.Column="2" x:Name="btnVolume"
                                ActiveImageUri="{StaticResource Image_Volume_100_Hover}" InactiveImageUri="{StaticResource Image_Volume_100}"
                                ToolTip="Show Volume Slider"
                                Click="btnVolume_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />

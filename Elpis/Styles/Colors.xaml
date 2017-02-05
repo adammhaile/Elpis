@@ -1,12 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-  <Color x:Key="ShadeDark">#0F0F0F</Color>
-  <Color x:Key="ShadeMediumDark">#071C21</Color>
-  <Color x:Key="ShadeMedium">#29ABE2</Color>
-  <Color x:Key="ShadeMediumLight">#29ABE2</Color>
+  <Color x:Key="ShadeDark">#212121</Color>
+  <Color x:Key="ShadeMediumDark">#263238</Color>
+  <Color x:Key="ShadeMedium">#90A4AE</Color>
+  <Color x:Key="ShadeMediumLight">#90A4AE</Color>
   <Color x:Key="ShadeLight">#FFFFFF</Color>
-  <Color x:Key="TransparencyShade">#880D0D0D</Color>
+  <Color x:Key="TransparencyShade">#757575</Color>
 
   <Color x:Key="ErrorShade">#EE0000</Color>
 
