@@ -1172,6 +1172,7 @@ namespace BassPlayer
                     {
                         using (FileStream fs = File.Open(outputFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read))
                         {
+                            Log.Debug("Saving song, download complete");
                             _cacheStream.Seek(0, SeekOrigin.Begin);
                             _cacheStream.CopyTo(fs);
                             fs.Flush(true);
@@ -1179,6 +1180,7 @@ namespace BassPlayer
                     }
                     else
                     {
+                        Log.Debug("Download incomplete, changing cache location");
                         _cacheOnDownloadCompleteSaveLocation = outputFilePath;
                         //FIX ME!!! Might be a timing issue if we save at the exact moment that the download completes
                     }
@@ -1779,7 +1781,7 @@ namespace BassPlayer
             //if (_downloadStream == null)
             //    return;
 
-            Log.Debug("DownloadProc: " + length.ToString());
+            //Log.Debug("DownloadProc: " + length.ToString());
             try
             {
                 if (buffer != IntPtr.Zero)
