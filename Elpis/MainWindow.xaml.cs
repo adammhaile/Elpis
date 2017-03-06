@@ -43,6 +43,7 @@ using Log = Util.Log;
 using UserControl = System.Windows.Controls.UserControl;
 using PandoraSharp.Plugins;
 using System.Windows.Interop;
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace Elpis
 {
@@ -79,6 +80,12 @@ namespace Elpis
         private ToolStripMenuItem _notifyMenu_DownVote;
         private ToolStripMenuItem _notifyMenu_Tired;
         private ToolStripMenuItem _notifyMenu_Exit;
+
+        private ThumbnailToolbarButton _thumbnailToolbarThumbUp;
+        private ThumbnailToolbarButton _thumbnailToolbarThumbDown;
+        private ThumbnailToolbarButton _thumbnailToolbarPlayPause;
+        private ThumbnailToolbarButton _thumbnailToolbarSkip;
+
         private System.Threading.Timer _notifyDoubleClickTimer;
         private static Boolean _notifyDoubleClicked = false;
         public static Player _player;
@@ -696,6 +703,40 @@ namespace Elpis
             _notify.Visible = true;
         }
 
+        private void SetupThumbnailToolbarButtons()
+        {
+            _thumbnailToolbarThumbUp = new ThumbnailToolbarButton(Properties.Resources.thumb_up, "Thumb Up");
+            _thumbnailToolbarThumbDown = new ThumbnailToolbarButton(Properties.Resources.thumb_down, "Thumb Down");
+            _thumbnailToolbarPlayPause = new ThumbnailToolbarButton(Properties.Resources.play_pause, "Play/Pause");
+            _thumbnailToolbarSkip = new ThumbnailToolbarButton(Properties.Resources.skip_song, "Skip");
+
+            TaskbarManager.Instance.ThumbnailToolbars.AddButtons((new WindowInteropHelper(this)).Handle, _thumbnailToolbarThumbUp, _thumbnailToolbarPlayPause, _thumbnailToolbarSkip, _thumbnailToolbarThumbDown);
+            _thumbnailToolbarThumbUp.Click += _thumbnailToolbarThumbUp_Click;
+            _thumbnailToolbarThumbDown.Click += _thumbnailToolbarThumbDown_Click;
+            _thumbnailToolbarPlayPause.Click += _thumbnailToolbarPlayPause_Click;
+            _thumbnailToolbarSkip.Click += _thumbnailToolbarSkip_Click;
+    }
+
+        private void _thumbnailToolbarSkip_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            Next();
+        }
+
+        private void _thumbnailToolbarPlayPause_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            PlayPauseToggle();
+        }
+
+        private void _thumbnailToolbarThumbDown_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            Dislike();
+        }
+
+        private void _thumbnailToolbarThumbUp_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            Like();
+        }
+
         private bool InitLogic()
         {
             while (transitionControl.CurrentPage != _loadingPage) Thread.Sleep(10);
@@ -804,6 +845,8 @@ namespace Elpis
             this.Dispatch(SetupPages);
             this.Dispatch(SetupUIEvents);
             this.Dispatch(SetupPageEvents);
+
+            this.Dispatch(SetupThumbnailToolbarButtons);
 
             if (_config.Fields.Login_AutoLogin &&
                 (!string.IsNullOrEmpty(_config.Fields.Login_Email)) &&

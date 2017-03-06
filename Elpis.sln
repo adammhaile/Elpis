@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elpis", "Elpis\Elpis.csproj", "{F19D43F0-5E7A-4B5C-A5D8-1B683218730B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{CC987F15-1B4B-4F63-95F5-E2E554C11986}"
+	ProjectSection(SolutionItems) = preProject
+		Libs\Microsoft.WindowsAPICodePack.dll = Libs\Microsoft.WindowsAPICodePack.dll
+		Libs\Microsoft.WindowsAPICodePack.Shell.dll = Libs\Microsoft.WindowsAPICodePack.Shell.dll
+		Libs\Microsoft.WindowsAPICodePack.Shell.XML = Libs\Microsoft.WindowsAPICodePack.Shell.XML
+		Libs\Microsoft.WindowsAPICodePack.XML = Libs\Microsoft.WindowsAPICodePack.XML
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BassPlayer", "Libs\BassPlayer\BassPlayer.csproj", "{D054F1ED-6A9C-4C4D-B500-7C1AF01F16C9}"
 EndProject
