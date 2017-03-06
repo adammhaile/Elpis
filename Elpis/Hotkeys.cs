@@ -237,12 +237,13 @@ namespace Elpis.Hotkeys
             if (name == Next.Name) return Next;
             if (name == ThumbsUp.Name) return ThumbsUp;
             if (name == ThumbsDown.Name) return ThumbsDown;
+            if (name == SaveSong.Name) return SaveSong;
             return null;
         }
 
         public static List<RoutedUICommand> AllCommands
         {
-            get { return new List<RoutedUICommand>() { PlayPause, Next, ThumbsUp, ThumbsDown }; }
+            get { return new List<RoutedUICommand>() { PlayPause, Next, ThumbsUp, ThumbsDown, SaveSong }; }
 
         }
 
@@ -250,6 +251,7 @@ namespace Elpis.Hotkeys
         public static RoutedUICommand Next = new RoutedUICommand("Skips currently playing track", "Skip Song", typeof(PlayerCommands));
         public static RoutedUICommand ThumbsUp = new RoutedUICommand("Marks this as a liked track that suits this station", "Thumbs Up", typeof(PlayerCommands));
         public static RoutedUICommand ThumbsDown = new RoutedUICommand("Marks this as a disliked track or one that doesn't suit this station", "Thumbs Down", typeof(PlayerCommands));
+        public static RoutedUICommand SaveSong = new RoutedUICommand("Saves the currently playing song", "Save Song", typeof(PlayerCommands));
     }
 
     public sealed class HotKeyHost : IDisposable

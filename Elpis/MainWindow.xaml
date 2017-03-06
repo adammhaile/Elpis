@@ -32,6 +32,10 @@
                 Executed="ExecuteThumbsDown"
                 CanExecute="CanExecuteThumbsUpDown"
                 />
+        <CommandBinding Command="{x:Static Hotkeys:PlayerCommands.SaveSong}"
+                Executed="ExecuteSaveSong"
+                CanExecute="CanExecuteSaveSong"
+                />
     </Window.CommandBindings>
 
     <Border Name="borderMain" Margin="0">
