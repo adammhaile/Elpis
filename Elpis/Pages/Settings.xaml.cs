@@ -58,6 +58,7 @@ namespace Elpis
 
         private readonly Player _player;
         private readonly HotKeyHost _keyHost;
+        private System.Windows.Forms.FolderBrowserDialog _saveLocationDialog;
 
         public Settings(Player player, Config config, HotKeyHost keyHost)
         {
@@ -66,6 +67,9 @@ namespace Elpis
             _config = config;
             _player = player;
             _keyHost = keyHost;
+            _saveLocationDialog = new System.Windows.Forms.FolderBrowserDialog();
+            _saveLocationDialog.Description = "Select the directory to save songs in";
+            _saveLocationDialog.RootFolder = Environment.SpecialFolder.MyComputer;
             HotKeyItems.SetBinding(ItemsControl.ItemsSourceProperty, new Binding("HotKeys") {Source = _keyHost, NotifyOnSourceUpdated=true, Mode=BindingMode.OneWay });
         }
 
@@ -92,6 +96,8 @@ namespace Elpis
             chkPauseOnLock.IsChecked = _config.Fields.Elpis_PauseOnLock;
             chkCheckBetaUpdates.IsChecked = _config.Fields.Elpis_CheckBetaUpdates;
             chkRemoteControlEnabled.IsChecked = _config.Fields.Elpis_RemoteControlEnabled;
+            lblSaveLocation.Content = _config.Fields.Elpis_SaveLocation;
+            _saveLocationDialog.SelectedPath = _config.Fields.Elpis_SaveLocation;
 
             _config.Fields.Pandora_AudioFormat = _player.AudioFormat;
 
@@ -156,6 +162,7 @@ namespace Elpis
             _config.Fields.Elpis_MinimizeToTray = (bool) chkTrayMinimize.IsChecked;
             _config.Fields.Elpis_ShowTrayNotifications = (bool) chkShowNotify.IsChecked;
             _player.PauseOnLock = _config.Fields.Elpis_PauseOnLock = (bool)chkPauseOnLock.IsChecked;
+            _config.Fields.Elpis_SaveLocation = (string)lblSaveLocation.Content;
 
             _player.AudioFormat = _config.Fields.Pandora_AudioFormat;
             //In case MP3-HiFi was rejected
@@ -317,6 +324,20 @@ namespace Elpis
             {
                 Clipboard.SetText(txtIPAddress.SelectedItem.ToString());
             }
+        }
+
+        private void btnSaveLocation_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.DialogResult result = _saveLocationDialog.ShowDialog();
+            if(result == System.Windows.Forms.DialogResult.OK)
+            {
+                lblSaveLocation.Content = _saveLocationDialog.SelectedPath;
+            }
+        }
+
+        private void btnClearSaveLocation_Click(object sender, RoutedEventArgs e)
+        {
+            lblSaveLocation.Content = "";
         }
     }
 
