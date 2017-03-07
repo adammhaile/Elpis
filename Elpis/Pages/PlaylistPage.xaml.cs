@@ -475,5 +475,12 @@ namespace Elpis
         {
             _player.SaveSong(fileName);
         }
+
+        private void progPlayTime_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            int percentClicked = (int) Math.Round(e.GetPosition((ProgressBar)sender).X / this.progPlayTime.ActualWidth * 100);
+            //Util.Log.O("Bar percentage, numerator, denominator: {0} {1} {2}", new object[] {percentClicked, e.GetPosition((ProgressBar)sender).X, this.progPlayTime.ActualWidth});
+            _player.SeekToTime(percentClicked);
+        }
     }
 }
