@@ -1209,6 +1209,7 @@ namespace BassPlayer
             _downloadFile = outputFile;
             _downloadFileComplete = false;
             _downloadStream = new FileStream(outputFile, FileMode.Create);
+            Log.Debug("Download Stream created: {0}", outputFile);
         }
 
         public bool PlayStreamWithDownload(string url, string outputFile, double gainDB)
@@ -1219,7 +1220,6 @@ namespace BassPlayer
 
         public bool PlayStreamWithDownload(string url, string outputFile)
         {
-            FinalizeDownloadStream();
             SetupDownloadStream(outputFile);
             return Play(url);
         }
@@ -1242,7 +1242,7 @@ namespace BassPlayer
                 return false;
             }
 
-            SetupCacheFile(filePath);
+            //SetupCacheFile(filePath);
 
             try
             {
@@ -1360,6 +1360,7 @@ namespace BassPlayer
                     {
                         _isRadio = true; // We're playing Internet Radio Stream
 
+                        Log.Debug("DownloadProc: {0}", DownloadProcDelegate.ToString());
                         stream = Bass.BASS_StreamCreateURL(filePath, 0, streamFlags, DownloadProcDelegate, IntPtr.Zero);
 
                         if (stream != 0)
@@ -1778,10 +1779,11 @@ namespace BassPlayer
 
         private void DownloadProc(IntPtr buffer, int length, IntPtr user)
         {
-            //if (_downloadStream == null)
-            //    return;
+            //Log.Debug("Download stream: {0}", _downloadStream);
+            if (_downloadStream == null)
+                return;
 
-            //Log.Debug("DownloadProc: " + length.ToString());
+            Log.Debug("DownloadProc: " + length.ToString());
             try
             {
                 if (buffer != IntPtr.Zero)
@@ -1789,24 +1791,17 @@ namespace BassPlayer
                     var managedBuffer = new byte[length];
                     Marshal.Copy(buffer, managedBuffer, 0, length);
 
-                    if (_downloadStream != null)
-                    {
-                        _downloadStream.Write(managedBuffer, 0, length);
-                        _downloadStream.Flush();
-                    }
-
-                    if (_cacheStream != null)
-                    {
-                        _cacheStream.Write(managedBuffer, 0, managedBuffer.Length);
-                    }
+                    _downloadStream.Write(managedBuffer, 0, length);
+                    _downloadStream.Flush();
                 }
                 else
                 {
+                    Log.Debug("Download complete: {0}", length.ToString());
                     _downloadFileComplete = true;
                     string file = _downloadFile;
 
                     FinalizeDownloadStream();
-                    FinalizeAndSaveCacheFile();
+                    //FinalizeAndSaveCacheFile();
 
                     if (DownloadComplete != null)
                         DownloadComplete(this, file);
@@ -1995,7 +1990,7 @@ namespace BassPlayer
                 PlaybackStateChanged(this, oldState, _State);
             }
 
-            FinalizeDownloadStream();
+            //FinalizeDownloadStream();
             _CrossFading = false; // Set crossfading to false, Play() will update it when the next song starts
         }
 

@@ -41,6 +41,7 @@ namespace PandoraSharpPlayer
 
         private bool _playNext;
         private Playlist _playlist;
+        public string _filePath = "";
 
         private SessionWatcher _sessionWatcher;
 
@@ -452,7 +453,20 @@ namespace PandoraSharpPlayer
 
                 try
                 {
-                    _bass.Play(song.AudioUrl, song.FileGain);
+                    if (string.IsNullOrEmpty(_filePath))
+                    {
+                        _bass.Play(song.AudioUrl, song.FileGain);
+                    }
+                    else
+                    {
+                        Uri fileUri = new Uri(song.AudioUrl);
+                        string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
+                        string fileName = (song.Artist ?? string.Empty) + " - " + (song.Album ?? string.Empty) + " - " + (song.SongTitle ?? string.Empty) + fileExtension;
+                        string folderPath = _filePath + Path.DirectorySeparatorChar + song.Station.Name;
+
+                        Directory.CreateDirectory(folderPath);
+                        _bass.PlayStreamWithDownload(song.AudioUrl, folderPath + Path.DirectorySeparatorChar + fileName, song.FileGain);
+                    }
                     _cqman.SendSongUpdate(song);
                     //_cqman.SendStatusUpdate(QueryStatusValue.Playing);
                 }
