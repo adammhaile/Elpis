@@ -163,6 +163,7 @@ namespace Elpis
             _config.Fields.Elpis_ShowTrayNotifications = (bool) chkShowNotify.IsChecked;
             _player.PauseOnLock = _config.Fields.Elpis_PauseOnLock = (bool)chkPauseOnLock.IsChecked;
             _config.Fields.Elpis_SaveLocation = (string)lblSaveLocation.Content;
+            _player._filePath = _config.Fields.Elpis_SaveLocation;
 
             _player.AudioFormat = _config.Fields.Pandora_AudioFormat;
             //In case MP3-HiFi was rejected

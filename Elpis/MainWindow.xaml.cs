@@ -797,6 +797,7 @@ namespace Elpis
             try
             {
                 _player = new Player();
+                _player._filePath = _config.Fields.Elpis_SaveLocation;
                 _player.Initialize(_bassRegEmail, _bassRegKey); //TODO - put this in the login sequence?
                 if(_config.Fields.Proxy_Address != string.Empty)
                     _player.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
@@ -1277,23 +1278,6 @@ namespace Elpis
                                            _notify.Text = title.Replace("&", "&&&").StringEllipses(63);
                                                //notify text cannot be more than 63 chars
                                            Title = title;
-                                           if(!string.IsNullOrEmpty(_config.Fields.Elpis_SaveLocation))
-                                           {
-                                               Song song = _player.CurrentSong;                                               
-
-                                               Uri fileUri = new Uri(song.AudioUrl);
-                                               string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
-                                               string fileName = (song.Artist ?? string.Empty) + " - " + (song.Album ?? string.Empty) + " - " + (song.SongTitle ?? string.Empty) + fileExtension;
-                                               string folderPath = _config.Fields.Elpis_SaveLocation + Path.DirectorySeparatorChar + song.Station.Name;
-                                               string filePath = folderPath + Path.DirectorySeparatorChar + fileName;
-
-                                               Directory.CreateDirectory(folderPath);
-                                               if (!File.Exists(filePath))
-                                               {
-                                                   Log.O("Saving current song in: {0}", filePath);
-                                                   _playlistPage.SaveSong(filePath);
-                                               }
-                                           }
                                        }
                                        else if (newState == BassAudioEngine.PlayState.Paused)
                                        {
@@ -1705,6 +1689,13 @@ namespace Elpis
             string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
 
             string fileName = (song.Artist ?? string.Empty) + " - " + (song.Album ?? string.Empty) + " - " + (song.SongTitle ?? string.Empty) + fileExtension;
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                if (fileName.Contains(c.ToString()))
+                {
+                    fileName = fileName.Replace(c, '_');
+                }
+            }
 
             Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
             sfd.FileName = fileName;
@@ -1714,7 +1705,21 @@ namespace Elpis
             bool? result = sfd.ShowDialog();
             if (result.HasValue && result.Value)
             {
-                _playlistPage.SaveSong(sfd.FileName);
+                try
+                {
+                    _playlistPage.SaveSong(sfd.FileName);
+                }
+                catch(Exception ex)
+                {
+                    if (ex is UnauthorizedAccessException)
+                    {
+                        ShowError(ErrorCodes.UNAUTHORIZED_DIRECTORY_ACCESS, ex, true);
+                    }
+                    else if(ex is IOException || ex is ArgumentException)
+                    {
+                        ShowError(ErrorCodes.INTERNAL, ex, true);
+                    }
+                }
             }
         }
 
