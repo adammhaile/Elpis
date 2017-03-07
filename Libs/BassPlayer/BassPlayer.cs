@@ -1129,87 +1129,19 @@ namespace BassPlayer
             }
         }
 
-        private MemoryStream _cacheStream;
-        private string _cacheOriginalFilePath;
-        private string _cacheOnDownloadCompleteSaveLocation;
-        
-        private void FinalizeAndSaveCacheFile()
-        {
-            if ((_cacheStream != null) && _downloadFileComplete)
-            {
-                try
-                {
-                    if (!string.IsNullOrEmpty(_cacheOnDownloadCompleteSaveLocation))
-                    {
-                        SaveCacheFile(_cacheOnDownloadCompleteSaveLocation);
-                        _cacheOnDownloadCompleteSaveLocation = null;
-                    }
-                    //else
-                    //{
-                    //    Uri originalFileUri = new Uri(_cacheOriginalFilePath);
-                    //    string originalFileExtension = Path.GetExtension(originalFileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
-
-                    //    DateTime now = DateTime.Now;
-                    //    string outputFileName = string.Format("{0:0000}{1:00}{2:00}.{3:00}{4:00}{5:00}", now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second) + originalFileExtension;
-                    //    string outputFilePath = Path.Combine(Environment.ExpandEnvironmentVariables("%TEMP%"), outputFileName);
-                        
-                    //    SaveCacheFile(outputFilePath);
-                    //}
-                }
-                catch
-                {
-                }
-            }
-        }
-
-        public void SaveCacheFile(string outputFilePath)
-        {
-            try
-            {
-                if (_cacheStream != null)
-                {
-                    if (_downloadFileComplete)
-                    {
-                        using (FileStream fs = File.Open(outputFilePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read))
-                        {
-                            Log.Debug("Saving song, download complete");
-                            _cacheStream.Seek(0, SeekOrigin.Begin);
-                            _cacheStream.CopyTo(fs);
-                            fs.Flush(true);
-                        }
-                    }
-                    else
-                    {
-                        Log.Debug("Download incomplete, changing cache location");
-                        _cacheOnDownloadCompleteSaveLocation = outputFilePath;
-                        //FIX ME!!! Might be a timing issue if we save at the exact moment that the download completes
-                    }
-                }
-            }
-            catch
-            {
-            }
-        }
-
-        private void SetupCacheFile(string originalFilePath)
-        {
-            if (_cacheStream != null)
-            {
-                _cacheStream.Dispose();
-            }
-
-            _cacheStream = new MemoryStream();
-            _cacheOriginalFilePath = originalFilePath;
-            _cacheOnDownloadCompleteSaveLocation = null;
-        }
-
         private void SetupDownloadStream(string outputFile)
         {
             FinalizeDownloadStream();
             _downloadFile = outputFile;
             _downloadFileComplete = false;
+            Log.Debug("Creating Download stream: {0}", outputFile);
             _downloadStream = new FileStream(outputFile, FileMode.Create);
-            Log.Debug("Download Stream created: {0}", outputFile);
+        }
+
+        public void SaveDownloadFile(string newFileName, string currentSongFileName)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(newFileName));
+            File.Copy(currentSongFileName, newFileName, true);
         }
 
         public bool PlayStreamWithDownload(string url, string outputFile, double gainDB)
@@ -1360,7 +1292,6 @@ namespace BassPlayer
                     {
                         _isRadio = true; // We're playing Internet Radio Stream
 
-                        Log.Debug("DownloadProc: {0}", DownloadProcDelegate.ToString());
                         stream = Bass.BASS_StreamCreateURL(filePath, 0, streamFlags, DownloadProcDelegate, IntPtr.Zero);
 
                         if (stream != 0)
@@ -1779,7 +1710,6 @@ namespace BassPlayer
 
         private void DownloadProc(IntPtr buffer, int length, IntPtr user)
         {
-            //Log.Debug("Download stream: {0}", _downloadStream);
             if (_downloadStream == null)
                 return;
 

@@ -1689,6 +1689,13 @@ namespace Elpis
             string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
 
             string fileName = (song.Artist ?? string.Empty) + " - " + (song.Album ?? string.Empty) + " - " + (song.SongTitle ?? string.Empty) + fileExtension;
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                if (fileName.Contains(c.ToString()))
+                {
+                    fileName = fileName.Replace(c, '_');
+                }
+            }
 
             Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
             sfd.FileName = fileName;
@@ -1698,7 +1705,21 @@ namespace Elpis
             bool? result = sfd.ShowDialog();
             if (result.HasValue && result.Value)
             {
-                _playlistPage.SaveSong(sfd.FileName);
+                try
+                {
+                    _playlistPage.SaveSong(sfd.FileName);
+                }
+                catch(Exception ex)
+                {
+                    if (ex is UnauthorizedAccessException)
+                    {
+                        ShowError(ErrorCodes.UNAUTHORIZED_DIRECTORY_ACCESS, ex, true);
+                    }
+                    else if(ex is IOException || ex is ArgumentException)
+                    {
+                        ShowError(ErrorCodes.INTERNAL, ex, true);
+                    }
+                }
             }
         }
 

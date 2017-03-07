@@ -42,6 +42,7 @@ namespace PandoraSharpPlayer
         private bool _playNext;
         private Playlist _playlist;
         public string _filePath = "";
+        private string _currentSongFileName;
 
         private SessionWatcher _sessionWatcher;
 
@@ -455,7 +456,8 @@ namespace PandoraSharpPlayer
                 {
                     if (string.IsNullOrEmpty(_filePath))
                     {
-                        _bass.Play(song.AudioUrl, song.FileGain);
+                        _currentSongFileName = Path.GetTempFileName();
+                        _bass.PlayStreamWithDownload(song.AudioUrl, _currentSongFileName, song.FileGain);
                     }
                     else
                     {
@@ -465,7 +467,23 @@ namespace PandoraSharpPlayer
                         string folderPath = _filePath + Path.DirectorySeparatorChar + song.Station.Name;
 
                         Directory.CreateDirectory(folderPath);
-                        _bass.PlayStreamWithDownload(song.AudioUrl, folderPath + Path.DirectorySeparatorChar + fileName, song.FileGain);
+                        foreach(char c in Path.GetInvalidPathChars())
+                        {
+                            if(folderPath.Contains(c))
+                            {
+                                folderPath = folderPath.Replace(c, '_');
+                            }
+                        }
+                        foreach(char c in Path.GetInvalidFileNameChars())
+                        {
+                            if(fileName.Contains(c))
+                            {
+                                fileName = fileName.Replace(c, '_');
+                            }
+                        }
+
+                        _currentSongFileName = folderPath + Path.DirectorySeparatorChar + fileName;
+                        _bass.PlayStreamWithDownload(song.AudioUrl, _currentSongFileName, song.FileGain);
                     }
                     _cqman.SendSongUpdate(song);
                     //_cqman.SendStatusUpdate(QueryStatusValue.Playing);
@@ -952,10 +970,10 @@ namespace PandoraSharpPlayer
         }
 
         #endregion
-        
+
         public void SaveSong(string fileName)
         {
-            _bass.SaveCacheFile(fileName);
+            _bass.SaveDownloadFile(fileName, _currentSongFileName);
         }
     }
 }
