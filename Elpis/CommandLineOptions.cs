@@ -14,5 +14,6 @@ namespace Elpis
         public string StationToLoad = null;
         public bool ShowHelp = false;
         public string ConfigPath = null;
+        public bool Exit = false;
     }
 }
