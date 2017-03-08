@@ -62,7 +62,8 @@ namespace Elpis
                .Add("next", "skips current track", delegate(string v) { clo.SkipTrack = v != null; })
                .Add("thumbsup", "rates the song as suitable for this station", delegate(string v) { clo.DoThumbsUp = v != null; })
                .Add("thumbsdown", "rates the song as unsuitable for this station", delegate(string v) { clo.DoThumbsDown = v != null; })
-               .Add("s|station=", "starts station \"{STATIONNAME}\" - puts quotes around station names with spaces", delegate(string v) { clo.StationToLoad = v; });
+               .Add("s|station=", "starts station \"{STATIONNAME}\" - puts quotes around station names with spaces", delegate(string v) { clo.StationToLoad = v; })
+               .Add("exit|quit", "exits Elpis", delegate(string v) { clo.Exit = v != null; });
 
             try
             {

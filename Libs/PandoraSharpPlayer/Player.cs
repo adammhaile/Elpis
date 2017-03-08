@@ -630,7 +630,7 @@ namespace PandoraSharpPlayer
         public void PlayStation(Station station)
         {
             CurrentStation = station;
-            //JumpList.AddToRecentCategory(station.asJumpTask());
+            JumpList.AddToRecentCategory(station.asJumpTask());
 
             RunTask(PlayThread);
         }
