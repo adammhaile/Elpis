@@ -480,6 +480,14 @@ namespace PandoraSharpPlayer
             }
         }
 
+        public void SeekToTime(int percentage)
+        {
+            if (_bass.CanSeek())
+            {
+                _bass.SeekAsolutePercentage(percentage);
+            }
+        }
+
         private int UpdatePlaylist()
         {
             List<Song> result = new List<Song>();
