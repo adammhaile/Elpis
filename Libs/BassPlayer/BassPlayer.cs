@@ -1131,11 +1131,18 @@ namespace BassPlayer
 
         private void SetupDownloadStream(string outputFile)
         {
-            FinalizeDownloadStream();
-            _downloadFile = outputFile;
-            _downloadFileComplete = false;
-            Log.Debug("Creating Download stream: {0}", outputFile);
-            _downloadStream = new FileStream(outputFile, FileMode.Create);
+            try
+            {
+                FinalizeDownloadStream();
+                _downloadFile = outputFile;
+                _downloadFileComplete = false;
+                Log.Debug("Creating Download stream: {0}", outputFile);
+                _downloadStream = new FileStream(outputFile, FileMode.Create);
+            }
+            catch(Exception ex)
+            {
+                Log.Error("Error setting up file download", ex);
+            }
         }
 
         public void SaveDownloadFile(string newFileName, string currentSongFileName)

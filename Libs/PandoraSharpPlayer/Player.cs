@@ -36,6 +36,9 @@ namespace PandoraSharpPlayer
 {
     public class Player : INotifyPropertyChanged
     {
+        private const int MAX_PATH_LENGTH = 248;
+        private const int MAX_FILENAME_LENGTH = 260;
+
         private BassAudioEngine _bass;
         private Pandora _pandora;
 
@@ -454,37 +457,8 @@ namespace PandoraSharpPlayer
 
                 try
                 {
-                    if (string.IsNullOrEmpty(_filePath))
-                    {
-                        _currentSongFileName = Path.GetTempFileName();
-                        _bass.PlayStreamWithDownload(song.AudioUrl, _currentSongFileName, song.FileGain);
-                    }
-                    else
-                    {
-                        Uri fileUri = new Uri(song.AudioUrl);
-                        string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
-                        string fileName = (song.Artist ?? string.Empty) + " - " + (song.Album ?? string.Empty) + " - " + (song.SongTitle ?? string.Empty) + fileExtension;
-                        string folderPath = _filePath + Path.DirectorySeparatorChar + song.Station.Name;
-
-                        Directory.CreateDirectory(folderPath);
-                        foreach(char c in Path.GetInvalidPathChars())
-                        {
-                            if(folderPath.Contains(c))
-                            {
-                                folderPath = folderPath.Replace(c, '_');
-                            }
-                        }
-                        foreach(char c in Path.GetInvalidFileNameChars())
-                        {
-                            if(fileName.Contains(c))
-                            {
-                                fileName = fileName.Replace(c, '_');
-                            }
-                        }
-
-                        _currentSongFileName = folderPath + Path.DirectorySeparatorChar + fileName;
-                        _bass.PlayStreamWithDownload(song.AudioUrl, _currentSongFileName, song.FileGain);
-                    }
+                    _currentSongFileName = buildFilePath(song);
+                    _bass.PlayStreamWithDownload(song.AudioUrl, _currentSongFileName, song.FileGain);                    
                     _cqman.SendSongUpdate(song);
                     //_cqman.SendStatusUpdate(QueryStatusValue.Playing);
                 }
@@ -509,6 +483,48 @@ namespace PandoraSharpPlayer
                 }
 
                 _playNext = false; 
+            }
+        }
+
+        private string buildFilePath(Song song)
+        {
+            if (string.IsNullOrEmpty(_filePath))
+            {
+                return Path.GetTempFileName();
+            }
+            else
+            {
+                Uri fileUri = new Uri(song.AudioUrl);
+                string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
+                string fileName = (song.Artist ?? string.Empty) + " - " + (song.Album ?? string.Empty) + " - " + (song.SongTitle ?? string.Empty) + fileExtension;
+                string folderPath = _filePath + Path.DirectorySeparatorChar + song.Station.Name;
+
+                Directory.CreateDirectory(folderPath);
+                if (folderPath.Length > MAX_PATH_LENGTH)
+                {
+                    folderPath = song.Station.Name.Substring(0, MAX_PATH_LENGTH - _filePath.Length);
+                }
+                foreach (char c in Path.GetInvalidPathChars())
+                {
+                    if (folderPath.Contains(c))
+                    {
+                        folderPath = folderPath.Replace(c, '_');
+                    }
+                }
+
+                if(fileName.Length > MAX_FILENAME_LENGTH)
+                {
+                    fileName = fileName.Substring(0, MAX_FILENAME_LENGTH - fileExtension.Length) + fileExtension;
+                }
+                foreach (char c in Path.GetInvalidFileNameChars())
+                {
+                    if (fileName.Contains(c))
+                    {
+                        fileName = fileName.Replace(c, '_');
+                    }
+                }
+
+                return folderPath + Path.DirectorySeparatorChar + fileName;
             }
         }
 
