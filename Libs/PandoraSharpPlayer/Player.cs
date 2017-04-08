@@ -458,6 +458,8 @@ namespace PandoraSharpPlayer
                 try
                 {
                     _currentSongFileName = buildFilePath(song);
+                    _bass.DownloadComplete += new BassAudioEngine.DownloadCompleteHandler(addSongMetaData);
+                    _bass.DownloadCanceled += new BassAudioEngine.DownloadCanceledHandler(deletePartiallyDownloadedFile);
                     _bass.PlayStreamWithDownload(song.AudioUrl, _currentSongFileName, song.FileGain);                    
                     _cqman.SendSongUpdate(song);
                     //_cqman.SendStatusUpdate(QueryStatusValue.Playing);
@@ -486,6 +488,21 @@ namespace PandoraSharpPlayer
             }
         }
 
+        private void deletePartiallyDownloadedFile(object sender, string songFilePath)
+        {
+            File.Delete(songFilePath);
+        }
+
+        private void addSongMetaData(object sender, string songFilePath)
+        {
+            TagLib.File songFile = TagLib.File.Create(new SimpleFileAbstraction(songFilePath));
+            songFile.Tag.Album = this.CurrentSong.Album;
+            songFile.Tag.AmazonId = this.CurrentSong.AmazonTrackID;
+            songFile.Tag.Performers = new string[] { this.CurrentSong.Artist };
+            songFile.Tag.Title = this.CurrentSong.SongTitle;
+            songFile.Save();
+        }
+
         private string buildFilePath(Song song)
         {
             if (string.IsNullOrEmpty(_filePath))
@@ -496,10 +513,12 @@ namespace PandoraSharpPlayer
             {
                 Uri fileUri = new Uri(song.AudioUrl);
                 string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
-                string fileName = (song.Artist ?? string.Empty) + " - " + (song.Album ?? string.Empty) + " - " + (song.SongTitle ?? string.Empty) + fileExtension;
-                string folderPath = _filePath + Path.DirectorySeparatorChar + song.Station.Name;
+                string fileName = (song.SongTitle ?? string.Empty) + fileExtension;
+                string folderPath = _filePath + Path.DirectorySeparatorChar 
+                    + song.Station.Name + Path.DirectorySeparatorChar 
+                    + (song.Artist ?? string.Empty) + Path.DirectorySeparatorChar 
+                    + (song.Album ?? string.Empty);
 
-                Directory.CreateDirectory(folderPath);
                 if (folderPath.Length > MAX_PATH_LENGTH)
                 {
                     folderPath = song.Station.Name.Substring(0, MAX_PATH_LENGTH - _filePath.Length);
@@ -511,6 +530,7 @@ namespace PandoraSharpPlayer
                         folderPath = folderPath.Replace(c, '_');
                     }
                 }
+                Directory.CreateDirectory(folderPath);
 
                 if(fileName.Length > MAX_FILENAME_LENGTH)
                 {
