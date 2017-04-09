@@ -433,6 +433,12 @@
   <ItemGroup>
     <None Include="Resources\thumbUp.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\thumbs-down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\thumbs-up.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"$(ProjectDir)Resources\InsertIcons.exe" "$(TargetPath)" "$(ProjectDir)Resources\icon-list.txt"</PostBuildEvent>
