@@ -587,10 +587,12 @@ namespace Elpis
                 }
                 if (_player.CurrentSong.Loved)
                 {
+                    _notifyMenu_UpVote.Text = "Unlike Song";
                     _notifyMenu_UpVote.Image = Properties.Resources.thumbs_up;
                 }
                 else
                 {
+                    _notifyMenu_UpVote.Text = "Like Song";
                     _notifyMenu_UpVote.Image = null;
                 }
             }
