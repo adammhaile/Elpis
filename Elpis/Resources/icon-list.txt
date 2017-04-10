@@ -1,4 +1,4 @@
 play-pause.ico
 skip-song.ico
-thumb-up.ico
-thumb-down.ico
+thumbs_up_icon.ico
+thumbs_down_icon.ico

@@ -712,8 +712,8 @@ namespace Elpis
 
         private void SetupThumbnailToolbarButtons()
         {
-            _thumbnailToolbarThumbUp = new ThumbnailToolbarButton(Properties.Resources.thumb_up, "Thumb Up");
-            _thumbnailToolbarThumbDown = new ThumbnailToolbarButton(Properties.Resources.thumb_down, "Thumb Down");
+            _thumbnailToolbarThumbUp = new ThumbnailToolbarButton(Properties.Resources.thumbs_up_icon, "Thumb Up");
+            _thumbnailToolbarThumbDown = new ThumbnailToolbarButton(Properties.Resources.thumbs_down_icon, "Thumb Down");
             _thumbnailToolbarPlayPause = new ThumbnailToolbarButton(Properties.Resources.play_pause, "Play/Pause");
             _thumbnailToolbarSkip = new ThumbnailToolbarButton(Properties.Resources.skip_song, "Skip");
 
@@ -1091,7 +1091,7 @@ namespace Elpis
             JumpTask thumbsDown = JumpListManager.createJumpTask(PlayerCommands.ThumbsDown, "--thumbsdown",4);
             jumpList.JumpItems.Add(thumbsDown);
 
-            JumpTask exitElpis = JumpListManager.createJumpTask("Exit Elpis", "Exits Elpis", "--exit", 5);
+            JumpTask exitElpis = JumpListManager.createJumpTask("Exit Elpis", "Exits Elpis", "--exit", 0);
             jumpList.JumpItems.Add(exitElpis);
 
             jumpList.Apply();
