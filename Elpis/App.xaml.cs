@@ -95,6 +95,10 @@ namespace Elpis
         #region ISingleInstanceApp Members
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
+            ((Elpis.MainWindow)MainWindow).Show();
+            ((Elpis.MainWindow)MainWindow).Activate();
+            ((Elpis.MainWindow)MainWindow).WindowState = WindowState.Normal;
+            ((Elpis.MainWindow)MainWindow).ShowInTaskbar = true;
             return HandleCommandLine(args);
         }
 
