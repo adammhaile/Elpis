@@ -44,6 +44,7 @@ using UserControl = System.Windows.Controls.UserControl;
 using PandoraSharp.Plugins;
 using System.Windows.Interop;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using System.Windows.Shell;
 
 namespace Elpis
 {
@@ -257,6 +258,12 @@ namespace Elpis
             if (_clo.StationToLoad != null)
             {
                 LoadStation(_clo.StationToLoad);
+            }
+
+            if(_clo.Exit)
+            {
+                _forceClose = true;
+                Close();
             }
         }
 
@@ -723,8 +730,8 @@ namespace Elpis
 
         private void SetupThumbnailToolbarButtons()
         {
-            _thumbnailToolbarThumbUp = new ThumbnailToolbarButton(Properties.Resources.thumb_up, "Thumb Up");
-            _thumbnailToolbarThumbDown = new ThumbnailToolbarButton(Properties.Resources.thumb_down, "Thumb Down");
+            _thumbnailToolbarThumbUp = new ThumbnailToolbarButton(Properties.Resources.thumbs_up_icon, "Thumb Up");
+            _thumbnailToolbarThumbDown = new ThumbnailToolbarButton(Properties.Resources.thumbs_down_icon, "Thumb Down");
             _thumbnailToolbarPlayPause = new ThumbnailToolbarButton(Properties.Resources.play_pause, "Play/Pause");
             _thumbnailToolbarSkip = new ThumbnailToolbarButton(Properties.Resources.skip_song, "Skip");
 
@@ -854,7 +861,7 @@ namespace Elpis
                 ConfigureHotKeys();
             });
 
-            //this.Dispatch(SetupJumpList);
+            this.Dispatch(SetupJumpList);
 
             this.Dispatch(SetupNotifyIcon);
 
@@ -1086,23 +1093,26 @@ namespace Elpis
 
         private void SetupJumpList()
         {
-            //JumpList jumpList = new JumpList();
-            //jumpList.ShowRecentCategory = true;
-            //JumpList.SetJumpList(System.Windows.Application.Current, jumpList);
+            System.Windows.Shell.JumpList jumpList = new System.Windows.Shell.JumpList();
+            jumpList.ShowRecentCategory = true;
+            System.Windows.Shell.JumpList.SetJumpList(System.Windows.Application.Current, jumpList);
 
-            //JumpTask pause = JumpListManager.createJumpTask(PlayerCommands.PlayPause, "--playpause",1);
-            //jumpList.JumpItems.Add(pause);
+            JumpTask pause = JumpListManager.createJumpTask(PlayerCommands.PlayPause, "--playpause",1);
+            jumpList.JumpItems.Add(pause);
 
-            //JumpTask next = JumpListManager.createJumpTask(PlayerCommands.Next, "--next",2);
-            //jumpList.JumpItems.Add(next);
+            JumpTask next = JumpListManager.createJumpTask(PlayerCommands.Next, "--next",2);
+            jumpList.JumpItems.Add(next);
 
-            //JumpTask thumbsUp  = JumpListManager.createJumpTask(PlayerCommands.ThumbsUp, "--thumbsup",3);
-            //jumpList.JumpItems.Add(thumbsUp);
+            JumpTask thumbsUp  = JumpListManager.createJumpTask(PlayerCommands.ThumbsUp, "--thumbsup",3);
+            jumpList.JumpItems.Add(thumbsUp);
 
-            //JumpTask thumbsDown = JumpListManager.createJumpTask(PlayerCommands.ThumbsDown, "--thumbsdown",4);
-            //jumpList.JumpItems.Add(thumbsDown);
+            JumpTask thumbsDown = JumpListManager.createJumpTask(PlayerCommands.ThumbsDown, "--thumbsdown",4);
+            jumpList.JumpItems.Add(thumbsDown);
 
-            //jumpList.Apply();
+            JumpTask exitElpis = JumpListManager.createJumpTask("Exit Elpis", "Exits Elpis", "--exit", 0);
+            jumpList.JumpItems.Add(exitElpis);
+
+            jumpList.Apply();
         }
 
 
