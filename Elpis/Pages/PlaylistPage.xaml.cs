@@ -475,7 +475,7 @@ namespace Elpis
         {
             _player.SaveSong(fileName);
         }
-
+        
         private void seekToPosition(object sender, MouseEventArgs e)
         {
             int percentClicked = (int)Math.Round(e.GetPosition((ProgressBar)sender).X / this.progPlayTime.ActualWidth * 100);
@@ -490,7 +490,7 @@ namespace Elpis
 
         private void progPlayTime_MouseMove(object sender, MouseEventArgs e)
         {
-            if(e.LeftButton == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 seekToPosition(sender, e);
             }

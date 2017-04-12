@@ -100,6 +100,11 @@
     <Compile Include="ReleaseData\ReleaseData.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="WebInterface.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -284,11 +289,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -424,8 +424,14 @@
   <ItemGroup>
     <Resource Include="Resources\play-pause.ico" />
     <Resource Include="Resources\skip-song.ico" />
-    <Resource Include="Resources\thumb-down.ico" />
-    <Resource Include="Resources\thumb-up.ico" />
+    <Resource Include="Resources\thumbs_down_icon.ico" />
+    <Resource Include="Resources\thumbs_up_icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\thumbs-down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\thumbs-up.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -584,6 +584,24 @@ namespace Elpis
                 _notifyMenu_Album.Tag = _player.CurrentSong.AlbumDetailUrl;
 
                 _notifyMenu_PlayPause.Text = _player.Playing ? "Pause" : "Play";
+                if (_player.CurrentSong.Banned)
+                {
+                    _notifyMenu_DownVote.Image = Properties.Resources.thumbs_down;
+                }
+                else
+                {
+                    _notifyMenu_DownVote.Image = null;
+                }
+                if (_player.CurrentSong.Loved)
+                {
+                    _notifyMenu_UpVote.Text = "Unlike Song";
+                    _notifyMenu_UpVote.Image = Properties.Resources.thumbs_up;
+                }
+                else
+                {
+                    _notifyMenu_UpVote.Text = "Like Song";
+                    _notifyMenu_UpVote.Image = null;
+                }
             }
 
             _notifyMenu_BreakStation.Visible =
@@ -618,13 +636,13 @@ namespace Elpis
             _notifyMenu_Stations = new ToolStripMenuItem("Stations");
 
             _notifyMenu_DownVote = new ToolStripMenuItem("Dislike Song");
-            _notifyMenu_DownVote.Click += ((o, e) => _playlistPage.ThumbDownCurrent() );
+            _notifyMenu_DownVote.Click += ((o, e) => _playlistPage.ThumbDownCurrent() );               
 
             _notifyMenu_Tired = new ToolStripMenuItem("Tired of This Song");
             _notifyMenu_Tired.Click += ((o, e) => _playlistPage.TiredOfCurrentSongFromSystemTray());
 
             _notifyMenu_UpVote = new ToolStripMenuItem("Like Song");
-            _notifyMenu_UpVote.Click += ((o, e) => _playlistPage.ThumbUpCurrent() );
+            _notifyMenu_UpVote.Click += ((o, e) => _playlistPage.ThumbUpCurrent() );               
 
             _notifyMenu_Exit = new ToolStripMenuItem("Exit Elpis");
             _notifyMenu_Exit.Click += ((o, e) => { _forceClose = true; Close(); });
@@ -712,8 +730,8 @@ namespace Elpis
 
         private void SetupThumbnailToolbarButtons()
         {
-            _thumbnailToolbarThumbUp = new ThumbnailToolbarButton(Properties.Resources.thumb_up, "Thumb Up");
-            _thumbnailToolbarThumbDown = new ThumbnailToolbarButton(Properties.Resources.thumb_down, "Thumb Down");
+            _thumbnailToolbarThumbUp = new ThumbnailToolbarButton(Properties.Resources.thumbs_up_icon, "Thumb Up");
+            _thumbnailToolbarThumbDown = new ThumbnailToolbarButton(Properties.Resources.thumbs_down_icon, "Thumb Down");
             _thumbnailToolbarPlayPause = new ThumbnailToolbarButton(Properties.Resources.play_pause, "Play/Pause");
             _thumbnailToolbarSkip = new ThumbnailToolbarButton(Properties.Resources.skip_song, "Skip");
 
@@ -1092,7 +1110,7 @@ namespace Elpis
             JumpTask thumbsDown = JumpListManager.createJumpTask(PlayerCommands.ThumbsDown, "--thumbsdown",4);
             jumpList.JumpItems.Add(thumbsDown);
 
-            JumpTask exitElpis = JumpListManager.createJumpTask("Exit Elpis", "Exits Elpis", "--exit", 5);
+            JumpTask exitElpis = JumpListManager.createJumpTask("Exit Elpis", "Exits Elpis", "--exit", 0);
             jumpList.JumpItems.Add(exitElpis);
 
             jumpList.Apply();
