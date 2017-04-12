@@ -1131,10 +1131,24 @@ namespace BassPlayer
 
         private void SetupDownloadStream(string outputFile)
         {
-            FinalizeDownloadStream();
-            _downloadFile = outputFile;
-            _downloadFileComplete = false;
-            _downloadStream = new FileStream(outputFile, FileMode.Create);
+            try
+            {
+                FinalizeDownloadStream();
+                _downloadFile = outputFile;
+                _downloadFileComplete = false;
+                Log.Debug("Creating Download stream: {0}", outputFile);
+                _downloadStream = new FileStream(outputFile, FileMode.Create);
+            }
+            catch(Exception ex)
+            {
+                Log.Error("Error setting up file download", ex);
+            }
+        }
+
+        public void SaveDownloadFile(string newFileName, string currentSongFileName)
+        {
+            Directory.CreateDirectory(Path.GetDirectoryName(newFileName));
+            File.Copy(currentSongFileName, newFileName, true);
         }
 
         public bool PlayStreamWithDownload(string url, string outputFile, double gainDB)
@@ -1145,7 +1159,6 @@ namespace BassPlayer
 
         public bool PlayStreamWithDownload(string url, string outputFile)
         {
-            FinalizeDownloadStream();
             SetupDownloadStream(outputFile);
             return Play(url);
         }
@@ -1167,6 +1180,8 @@ namespace BassPlayer
             {
                 return false;
             }
+
+            //SetupCacheFile(filePath);
 
             try
             {
@@ -1712,15 +1727,18 @@ namespace BassPlayer
                 {
                     var managedBuffer = new byte[length];
                     Marshal.Copy(buffer, managedBuffer, 0, length);
+
                     _downloadStream.Write(managedBuffer, 0, length);
                     _downloadStream.Flush();
                 }
                 else
                 {
+                    Log.Debug("Download complete: {0}", length.ToString());
                     _downloadFileComplete = true;
                     string file = _downloadFile;
 
                     FinalizeDownloadStream();
+                    //FinalizeAndSaveCacheFile();
 
                     if (DownloadComplete != null)
                         DownloadComplete(this, file);
@@ -1909,7 +1927,7 @@ namespace BassPlayer
                 PlaybackStateChanged(this, oldState, _State);
             }
 
-            FinalizeDownloadStream();
+            //FinalizeDownloadStream();
             _CrossFading = false; // Set crossfading to false, Play() will update it when the next song starts
         }
 

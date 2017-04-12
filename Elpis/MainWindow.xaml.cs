@@ -822,6 +822,7 @@ namespace Elpis
             try
             {
                 _player = new Player();
+                _player._filePath = _config.Fields.Elpis_SaveLocation;
                 _player.Initialize(_bassRegEmail, _bassRegKey); //TODO - put this in the login sequence?
                 if(_config.Fields.Proxy_Address != string.Empty)
                     _player.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
@@ -1132,6 +1133,8 @@ namespace Elpis
                 _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsUp, Key.MediaPlayPause, ModifierKeys.Control, true, true));
 
                 _keyHost.AddHotKey(new HotKey(PlayerCommands.ThumbsDown, Key.MediaStop, ModifierKeys.Control, true, true));
+
+                _keyHost.AddHotKey(new HotKey(PlayerCommands.SaveSong, Key.S, ModifierKeys.Control, true, true));
             }
 
             Dictionary<int, HotkeyConfig> keys = new Dictionary<int, HotkeyConfig>();
@@ -1689,6 +1692,68 @@ namespace Elpis
         private void CanExecuteThumbsUpDown(object sender, CanExecuteRoutedEventArgs e)
         {
             if (!_isActiveWindow&& _player.CurrentSong != null)
+            {
+                e.CanExecute = true;
+            }
+            else
+            {
+                if (IsOnPlaylist() && _player.CurrentSong != null)
+                {
+                    e.CanExecute = true;
+                }
+                else
+                {
+                    e.CanExecute = false;
+                }
+            }
+        }
+
+
+        public void ExecuteSaveSong(object sender, ExecutedRoutedEventArgs e)
+        {
+            Song song = _player.CurrentSong;
+            
+            Uri fileUri = new Uri(song.AudioUrl);
+            string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
+
+            string fileName = (song.Artist ?? string.Empty) + " - " + (song.Album ?? string.Empty) + " - " + (song.SongTitle ?? string.Empty) + fileExtension;
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                if (fileName.Contains(c.ToString()))
+                {
+                    fileName = fileName.Replace(c, '_');
+                }
+            }
+
+            Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog();
+            sfd.FileName = fileName;
+            sfd.OverwritePrompt = true;
+            sfd.ValidateNames = true;
+
+            bool? result = sfd.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                try
+                {
+                    _playlistPage.SaveSong(sfd.FileName);
+                }
+                catch(Exception ex)
+                {
+                    if (ex is UnauthorizedAccessException)
+                    {
+                        ShowError(ErrorCodes.UNAUTHORIZED_DIRECTORY_ACCESS, ex, true);
+                    }
+                    else if(ex is IOException || ex is ArgumentException)
+                    {
+                        ShowError(ErrorCodes.INTERNAL, ex, true);
+                    }
+                }
+            }
+        }
+
+        private void CanExecuteSaveSong(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (!_isActiveWindow && _player.CurrentSong != null)
             {
                 e.CanExecute = true;
             }
