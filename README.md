@@ -1,3 +1,5 @@
+**LOOKING FOR NEW MANAGEMENT!!** - Are you interested in maintaining Elpis? It's in dire need of someone passionate about the project to take over. Contact email @ adamhaile.net if you are interested.
+
 
 Elpis is native Windows client for the Pandora Radio music service, implemented in C# and WPF.  
 
@@ -41,6 +43,3 @@ To download the latest version of Elpis, click here: [Elpis Releases](https://gi
  * [LPFM](http://lpfm.codeplex.com/) - Elpis uses (and contributes to) LPFM, an open source .NET API for Last.FM
  * [ElpisRemote](https://github.com/seliver/ElpisRemote) - Android Remote Control for Elpis, built with Java on Eclipse.
 
-If you like this project, buy me a cup of tea :)
-
-[![Paypal Button](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif "Paypal Button")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DEY298PN7NR38)

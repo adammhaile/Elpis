@@ -584,6 +584,24 @@ namespace Elpis
                 _notifyMenu_Album.Tag = _player.CurrentSong.AlbumDetailUrl;
 
                 _notifyMenu_PlayPause.Text = _player.Playing ? "Pause" : "Play";
+                if (_player.CurrentSong.Banned)
+                {
+                    _notifyMenu_DownVote.Image = Properties.Resources.thumbs_down;
+                }
+                else
+                {
+                    _notifyMenu_DownVote.Image = null;
+                }
+                if (_player.CurrentSong.Loved)
+                {
+                    _notifyMenu_UpVote.Text = "Unlike Song";
+                    _notifyMenu_UpVote.Image = Properties.Resources.thumbs_up;
+                }
+                else
+                {
+                    _notifyMenu_UpVote.Text = "Like Song";
+                    _notifyMenu_UpVote.Image = null;
+                }
             }
 
             _notifyMenu_BreakStation.Visible =
@@ -618,13 +636,13 @@ namespace Elpis
             _notifyMenu_Stations = new ToolStripMenuItem("Stations");
 
             _notifyMenu_DownVote = new ToolStripMenuItem("Dislike Song");
-            _notifyMenu_DownVote.Click += ((o, e) => _playlistPage.ThumbDownCurrent() );
+            _notifyMenu_DownVote.Click += ((o, e) => _playlistPage.ThumbDownCurrent() );               
 
             _notifyMenu_Tired = new ToolStripMenuItem("Tired of This Song");
             _notifyMenu_Tired.Click += ((o, e) => _playlistPage.TiredOfCurrentSongFromSystemTray());
 
             _notifyMenu_UpVote = new ToolStripMenuItem("Like Song");
-            _notifyMenu_UpVote.Click += ((o, e) => _playlistPage.ThumbUpCurrent() );
+            _notifyMenu_UpVote.Click += ((o, e) => _playlistPage.ThumbUpCurrent() );               
 
             _notifyMenu_Exit = new ToolStripMenuItem("Exit Elpis");
             _notifyMenu_Exit.Click += ((o, e) => { _forceClose = true; Close(); });
