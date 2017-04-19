@@ -471,11 +471,6 @@ namespace Elpis
             }
         }
 
-        public void SaveSong(string fileName)
-        {
-            _player.SaveSong(fileName);
-        }
-        
         private void seekToPosition(object sender, MouseEventArgs e)
         {
             int percentClicked = (int)Math.Round(e.GetPosition((ProgressBar)sender).X / this.progPlayTime.ActualWidth * 100);
