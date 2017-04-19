@@ -479,6 +479,30 @@ namespace PandoraSharpPlayer
                         throw new PandoraException(ErrorCodes.STREAM_ERROR, ex);
                     }
                 }
+                catch(System.NotSupportedException ex)
+                {
+                    try
+                    {
+                        Log.O("Failed to save song: '" + song.ToString() + "' on album: '" + song.Album + "'" + ex.Message);
+                        _bass.Play(song.AudioUrl, song.FileGain);
+                        _cqman.SendSongUpdate(song);
+                    }
+                    catch (BassStreamException innerEx)
+                    {
+                        if (innerEx.ErrorCode == Un4seen.Bass.BASSError.BASS_ERROR_FILEOPEN)
+                        {
+                            _playlist.DoReload();
+                        }
+                        if (retry > 0)
+                            PlayNextSong(retry - 1);
+                        else
+                        {
+                            Stop();
+                            _cqman.SendStatusUpdate(QueryStatusValue.Error);
+                            throw new PandoraException(ErrorCodes.STREAM_ERROR, innerEx);
+                        }
+                    }
+                }
                 finally
                 {
                     _playNext = false;
@@ -514,10 +538,7 @@ namespace PandoraSharpPlayer
                 Uri fileUri = new Uri(song.AudioUrl);
                 string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
                 string fileName = (song.SongTitle ?? string.Empty) + fileExtension;
-                string folderPath = _filePath + Path.DirectorySeparatorChar 
-                    + song.Station.Name + Path.DirectorySeparatorChar 
-                    + (song.Artist ?? string.Empty) + Path.DirectorySeparatorChar 
-                    + (song.Album ?? string.Empty);
+                string folderPath = Path.Combine(_filePath, song.Station.Name, (song.Artist ?? string.Empty), (song.Album ?? string.Empty));
 
                 if (folderPath.Length > MAX_PATH_LENGTH)
                 {
