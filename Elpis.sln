@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elpis", "Elpis\Elpis.csproj", "{F19D43F0-5E7A-4B5C-A5D8-1B683218730B}"
 EndProject
@@ -41,8 +41,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lpfm.LastFmScrobbler", "Libs\LastFmScrobbler\Lpfm.LastFmScrobbler.csproj", "{BA7F7E8A-B089-4323-8C8D-F406E7AFCDBE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kayak", "Libs\kayak\Kayak\Kayak.csproj", "{79DDD0CE-6F79-4212-A972-8618AD6E405F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "taglib-sharp", "..\..\taglib-sharp-taglib-sharp-2.1.0.0\taglib-sharp-taglib-sharp-2.1.0.0\src\taglib-sharp.csproj", "{6B143A39-C7B2-4743-9917-92262C60E9A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -160,6 +158,7 @@ Global
 		{DD7E8439-223A-4FE8-AFC8-869FF10E0E5D}.Release|Any CPU.ActiveCfg = Release
 		{DD7E8439-223A-4FE8-AFC8-869FF10E0E5D}.Release|Any CPU.Build.0 = Release
 		{DD7E8439-223A-4FE8-AFC8-869FF10E0E5D}.Release|Mixed Platforms.ActiveCfg = Release
+		{DD7E8439-223A-4FE8-AFC8-869FF10E0E5D}.Release|Mixed Platforms.Build.0 = Release
 		{DD7E8439-223A-4FE8-AFC8-869FF10E0E5D}.Release|x86.ActiveCfg = Release
 		{B4B2C2FD-9FE7-48A9-BBC5-4D1FF1045E2A}.AppRelease|Any CPU.ActiveCfg = Release|x86
 		{B4B2C2FD-9FE7-48A9-BBC5-4D1FF1045E2A}.AppRelease|Mixed Platforms.ActiveCfg = Release|x86
@@ -236,21 +235,6 @@ Global
 		{79DDD0CE-6F79-4212-A972-8618AD6E405F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{79DDD0CE-6F79-4212-A972-8618AD6E405F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{79DDD0CE-6F79-4212-A972-8618AD6E405F}.Release|x86.ActiveCfg = Release|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.AppRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.AppRelease|Any CPU.Build.0 = Release|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.AppRelease|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.AppRelease|Mixed Platforms.Build.0 = Release|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.AppRelease|x86.ActiveCfg = Release|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{6B143A39-C7B2-4743-9917-92262C60E9A6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -266,6 +250,5 @@ Global
 		{19FB9DF6-5C82-439D-94C7-521E6EAF3FF3} = {CC987F15-1B4B-4F63-95F5-E2E554C11986}
 		{BA7F7E8A-B089-4323-8C8D-F406E7AFCDBE} = {CC987F15-1B4B-4F63-95F5-E2E554C11986}
 		{79DDD0CE-6F79-4212-A972-8618AD6E405F} = {CC987F15-1B4B-4F63-95F5-E2E554C11986}
-		{6B143A39-C7B2-4743-9917-92262C60E9A6} = {CC987F15-1B4B-4F63-95F5-E2E554C11986}
 	EndGlobalSection
 EndGlobal

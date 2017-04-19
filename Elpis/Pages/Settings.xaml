@@ -3,7 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:config="clr-namespace:Elpis" mc:Ignorable="d"
              xmlns:Controls="clr-namespace:Elpis.Controls" xmlns:Hotkeys="clr-namespace:Elpis.Hotkeys"
-             d:DesignHeight="548.333" d:DesignWidth="442" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="479" d:DesignWidth="442" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -98,7 +98,7 @@
                     </Grid>
                 </Expander>
                 <Expander Header="General" Margin="5" IsExpanded="True">
-                    <Grid Height="211">
+                    <Grid Height="144">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -129,13 +129,9 @@
                         <CheckBox Name="chkCheckBetaUpdates" Grid.Row="2" Grid.Column="0" Margin="4"
                                   IsChecked="False" Content="Check for Beta Updates"
                                   ToolTip="These updates are experimental and are prone to break. Use it only if you want to test unstable code." />
-                        <Label Content="Your local IP Address: " HorizontalAlignment="Left" Margin="30,1,0,82" Grid.Row="3"/>
-                        <ListBox PreviewKeyDown="txtIPAddress_PreviewKeyDown" Name="txtIPAddress" HorizontalAlignment="Center" Margin="4,1,4,58" Width="174"
-                                 Grid.Row="3" IsEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Grid.Column="1"/>
-                        <Label x:Name="___Label___Save_Location__" Content="Save Location:" HorizontalAlignment="Left" Margin="30,51,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.153,6.317" Grid.Row="4"/>
-                        <Button x:Name="btnSaveLocation" Content="Browse..." HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="4" Margin="0,51,0,0" Grid.Column="1" Click="btnSaveLocation_Click"/>
-                        <Label x:Name="lblSaveLocation" Content="" HorizontalAlignment="Left" Margin="30,77,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.153,6.317" Grid.Row="4" Grid.ColumnSpan="2"/>
-                        <Button x:Name="btnClearSaveLocation" Content="Clear" Grid.Column="1" HorizontalAlignment="Left" Margin="27,51,0,0" Grid.Row="4" VerticalAlignment="Top" Width="75" Click="btnClearSaveLocation_Click"/>
+                        <Label Content="Your local IP Address: " HorizontalAlignment="Left" Margin="30,1,0,-1" Grid.Row="3"/>
+                        <ListBox PreviewKeyDown="txtIPAddress_PreviewKeyDown" Name="txtIPAddress" HorizontalAlignment="Center" Margin="207,1,23,-27" Width="174" Height="45"
+                                 Grid.Row="3" Grid.ColumnSpan="2" IsEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
                         <!--TextBox Name="txtIPAddress" HorizontalAlignment="Center" Height="23" Margin="220,3,10,3" TextWrapping="Wrap" Text="TextBox" Width="174"
                                  Grid.Row="3" Grid.ColumnSpan="2" IsEnabled="False"/-->
                     </Grid>

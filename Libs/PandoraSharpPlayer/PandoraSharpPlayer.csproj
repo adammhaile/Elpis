@@ -94,13 +94,8 @@
     <Compile Include="Playlist.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionWatcher.cs" />
-    <Compile Include="SimpleFileAbstraction.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\taglib-sharp-taglib-sharp-2.1.0.0\taglib-sharp-taglib-sharp-2.1.0.0\src\taglib-sharp.csproj">
-      <Project>{6b143a39-c7b2-4743-9917-92262c60e9a6}</Project>
-      <Name>taglib-sharp</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BassPlayer\BassPlayer.csproj">
       <Project>{D054F1ED-6A9C-4C4D-B500-7C1AF01F16C9}</Project>
       <Name>BassPlayer</Name>
