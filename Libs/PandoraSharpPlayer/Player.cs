@@ -466,18 +466,7 @@ namespace PandoraSharpPlayer
                 }
                 catch (BassStreamException ex)
                 {
-                    if (ex.ErrorCode == Un4seen.Bass.BASSError.BASS_ERROR_FILEOPEN)
-                    {
-                        _playlist.DoReload();
-                    }
-                    if (retry > 0)
-                        PlayNextSong(retry - 1);
-                    else
-                    {
-                        Stop();
-                        _cqman.SendStatusUpdate(QueryStatusValue.Error);
-                        throw new PandoraException(ErrorCodes.STREAM_ERROR, ex);
-                    }
+                    streamErrorFallback(retry, ex);
                 }
                 catch(System.NotSupportedException ex)
                 {
@@ -489,18 +478,7 @@ namespace PandoraSharpPlayer
                     }
                     catch (BassStreamException innerEx)
                     {
-                        if (innerEx.ErrorCode == Un4seen.Bass.BASSError.BASS_ERROR_FILEOPEN)
-                        {
-                            _playlist.DoReload();
-                        }
-                        if (retry > 0)
-                            PlayNextSong(retry - 1);
-                        else
-                        {
-                            Stop();
-                            _cqman.SendStatusUpdate(QueryStatusValue.Error);
-                            throw new PandoraException(ErrorCodes.STREAM_ERROR, innerEx);
-                        }
+                        streamErrorFallback(retry, innerEx);
                     }
                 }
                 finally
@@ -509,6 +487,22 @@ namespace PandoraSharpPlayer
                 }
 
                 _playNext = false; 
+            }
+        }
+
+        private void streamErrorFallback(int retry, BassStreamException ex)
+        {
+            if (ex.ErrorCode == Un4seen.Bass.BASSError.BASS_ERROR_FILEOPEN)
+            {
+                _playlist.DoReload();
+            }
+            if (retry > 0)
+                PlayNextSong(retry - 1);
+            else
+            {
+                Stop();
+                _cqman.SendStatusUpdate(QueryStatusValue.Error);
+                throw new PandoraException(ErrorCodes.STREAM_ERROR, ex);
             }
         }
 
