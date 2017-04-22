@@ -440,7 +440,26 @@ namespace Elpis
         {
             if (_currMenuSong != null)
             {
-                LaunchAmazonURL(_currMenuSong.AmazonAlbumID);
+                if (_currMenuSong.AmazonAlbumID != null)
+                {
+                    LaunchAmazonURL(_currMenuSong.AmazonAlbumID);
+                }
+                else
+                {
+                    if(_currMenuSong.AmazonAlbumUrl != null)
+                    {
+                        string url = _currMenuSong.AmazonAlbumUrl;
+
+#if APP_RELEASE
+                        if (ReleaseData.AmazonTag != string.Empty)
+                        {
+                            string oldTag = url.Substring(url.IndexOf("tag="));
+                            url = url.Replace(oldTag, ReleaseData.AmazonTag);
+                        }
+#endif
+                        Process.Start(url);
+                    }
+                }
             }
         }
 
@@ -449,6 +468,26 @@ namespace Elpis
             if (_currMenuSong != null)
             {
                 LaunchAmazonURL(_currMenuSong.AmazonTrackID);
+            }
+        }
+
+        private void seekToPosition(object sender, MouseEventArgs e)
+        {
+            int percentClicked = (int)Math.Round(e.GetPosition((ProgressBar)sender).X / this.progPlayTime.ActualWidth * 100);
+            //Util.Log.O("Bar percentage, numerator, denominator: {0} {1} {2}", new object[] {percentClicked, e.GetPosition((ProgressBar)sender).X, this.progPlayTime.ActualWidth});
+            _player.SeekToTime(percentClicked);
+        }
+
+        private void progPlayTime_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            seekToPosition(sender, e);
+        }
+
+        private void progPlayTime_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                seekToPosition(sender, e);
             }
         }
     }

@@ -43,6 +43,8 @@ using Log = Util.Log;
 using UserControl = System.Windows.Controls.UserControl;
 using PandoraSharp.Plugins;
 using System.Windows.Interop;
+using Microsoft.WindowsAPICodePack.Taskbar;
+using System.Windows.Shell;
 
 namespace Elpis
 {
@@ -79,6 +81,12 @@ namespace Elpis
         private ToolStripMenuItem _notifyMenu_DownVote;
         private ToolStripMenuItem _notifyMenu_Tired;
         private ToolStripMenuItem _notifyMenu_Exit;
+
+        private ThumbnailToolbarButton _thumbnailToolbarThumbUp;
+        private ThumbnailToolbarButton _thumbnailToolbarThumbDown;
+        private ThumbnailToolbarButton _thumbnailToolbarPlayPause;
+        private ThumbnailToolbarButton _thumbnailToolbarSkip;
+
         private System.Threading.Timer _notifyDoubleClickTimer;
         private static Boolean _notifyDoubleClicked = false;
         public static Player _player;
@@ -250,6 +258,12 @@ namespace Elpis
             if (_clo.StationToLoad != null)
             {
                 LoadStation(_clo.StationToLoad);
+            }
+
+            if(_clo.Exit)
+            {
+                _forceClose = true;
+                Close();
             }
         }
 
@@ -570,6 +584,24 @@ namespace Elpis
                 _notifyMenu_Album.Tag = _player.CurrentSong.AlbumDetailUrl;
 
                 _notifyMenu_PlayPause.Text = _player.Playing ? "Pause" : "Play";
+                if (_player.CurrentSong.Banned)
+                {
+                    _notifyMenu_DownVote.Image = Properties.Resources.thumbs_down;
+                }
+                else
+                {
+                    _notifyMenu_DownVote.Image = null;
+                }
+                if (_player.CurrentSong.Loved)
+                {
+                    _notifyMenu_UpVote.Text = "Unlike Song";
+                    _notifyMenu_UpVote.Image = Properties.Resources.thumbs_up;
+                }
+                else
+                {
+                    _notifyMenu_UpVote.Text = "Like Song";
+                    _notifyMenu_UpVote.Image = null;
+                }
             }
 
             _notifyMenu_BreakStation.Visible =
@@ -604,13 +636,13 @@ namespace Elpis
             _notifyMenu_Stations = new ToolStripMenuItem("Stations");
 
             _notifyMenu_DownVote = new ToolStripMenuItem("Dislike Song");
-            _notifyMenu_DownVote.Click += ((o, e) => _playlistPage.ThumbDownCurrent() );
+            _notifyMenu_DownVote.Click += ((o, e) => _playlistPage.ThumbDownCurrent() );               
 
             _notifyMenu_Tired = new ToolStripMenuItem("Tired of This Song");
             _notifyMenu_Tired.Click += ((o, e) => _playlistPage.TiredOfCurrentSongFromSystemTray());
 
             _notifyMenu_UpVote = new ToolStripMenuItem("Like Song");
-            _notifyMenu_UpVote.Click += ((o, e) => _playlistPage.ThumbUpCurrent() );
+            _notifyMenu_UpVote.Click += ((o, e) => _playlistPage.ThumbUpCurrent() );               
 
             _notifyMenu_Exit = new ToolStripMenuItem("Exit Elpis");
             _notifyMenu_Exit.Click += ((o, e) => { _forceClose = true; Close(); });
@@ -696,6 +728,40 @@ namespace Elpis
             _notify.Visible = true;
         }
 
+        private void SetupThumbnailToolbarButtons()
+        {
+            _thumbnailToolbarThumbUp = new ThumbnailToolbarButton(Properties.Resources.thumbs_up_icon, "Thumb Up");
+            _thumbnailToolbarThumbDown = new ThumbnailToolbarButton(Properties.Resources.thumbs_down_icon, "Thumb Down");
+            _thumbnailToolbarPlayPause = new ThumbnailToolbarButton(Properties.Resources.play_pause, "Play/Pause");
+            _thumbnailToolbarSkip = new ThumbnailToolbarButton(Properties.Resources.skip_song, "Skip");
+
+            TaskbarManager.Instance.ThumbnailToolbars.AddButtons((new WindowInteropHelper(this)).Handle, _thumbnailToolbarThumbUp, _thumbnailToolbarPlayPause, _thumbnailToolbarSkip, _thumbnailToolbarThumbDown);
+            _thumbnailToolbarThumbUp.Click += _thumbnailToolbarThumbUp_Click;
+            _thumbnailToolbarThumbDown.Click += _thumbnailToolbarThumbDown_Click;
+            _thumbnailToolbarPlayPause.Click += _thumbnailToolbarPlayPause_Click;
+            _thumbnailToolbarSkip.Click += _thumbnailToolbarSkip_Click;
+    }
+
+        private void _thumbnailToolbarSkip_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            Next();
+        }
+
+        private void _thumbnailToolbarPlayPause_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            PlayPauseToggle();
+        }
+
+        private void _thumbnailToolbarThumbDown_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            Dislike();
+        }
+
+        private void _thumbnailToolbarThumbUp_Click(object sender, ThumbnailButtonClickedEventArgs e)
+        {
+            Like();
+        }
+
         private bool InitLogic()
         {
             while (transitionControl.CurrentPage != _loadingPage) Thread.Sleep(10);
@@ -760,8 +826,7 @@ namespace Elpis
                 if(_config.Fields.Proxy_Address != string.Empty)
                     _player.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
                         _config.Fields.Proxy_User, _config.Fields.Proxy_Password);
-                if (!_config.Fields.System_OutputDevice.IsNullOrEmpty())
-                    _player.OutputDevice = _config.Fields.System_OutputDevice;
+                setOutputDevice(_config.Fields.System_OutputDevice);
             }
             catch(Exception ex)
             {
@@ -787,10 +852,7 @@ namespace Elpis
 
             _loadingPage.UpdateStatus("Starting Web Server...");
 
-            if (_config.Fields.Elpis_RemoteControlEnabled)
-            {
-                StartWebServer();
-            }
+            StartWebServer();
 
             _loadingPage.UpdateStatus("Setting up UI...");
 
@@ -799,7 +861,7 @@ namespace Elpis
                 ConfigureHotKeys();
             });
 
-            //this.Dispatch(SetupJumpList);
+            this.Dispatch(SetupJumpList);
 
             this.Dispatch(SetupNotifyIcon);
 
@@ -808,6 +870,8 @@ namespace Elpis
             this.Dispatch(SetupPages);
             this.Dispatch(SetupUIEvents);
             this.Dispatch(SetupPageEvents);
+
+            this.Dispatch(SetupThumbnailToolbarButtons);
 
             if (_config.Fields.Login_AutoLogin &&
                 (!string.IsNullOrEmpty(_config.Fields.Login_Email)) &&
@@ -825,19 +889,41 @@ namespace Elpis
             _finalComplete = true;
         }
 
+        private void setOutputDevice(string systemOutputDevice)
+        {
+            if (!systemOutputDevice.IsNullOrEmpty()) {
+                string prevOutput = _player.OutputDevice;
+                try
+                {
+                    _player.OutputDevice = systemOutputDevice;
+                }
+                catch (BassException bEx)
+                {
+                    _player.OutputDevice = prevOutput;
+                }
+                
+            }
+        }
+
         private void StartWebServer()
         {
-            _webInterfaceObject = new WebInterface();
-            Thread webInterfaceThread = new Thread(new ThreadStart(_webInterfaceObject.StartInterface));
-            webInterfaceThread.Start();
-            lastTimeSkipped = DateTime.Now;
+            if (_config.Fields.Elpis_RemoteControlEnabled)
+            {
+                _webInterfaceObject = new WebInterface();
+                Thread webInterfaceThread = new Thread(new ThreadStart(_webInterfaceObject.StartInterface));
+                webInterfaceThread.Start();
+                lastTimeSkipped = DateTime.Now;
+            }
         }
 
         private void StopWebServer()
         {
-            if (_webInterfaceObject != null)
+            if (_config.Fields.Elpis_RemoteControlEnabled)
             {
-                _webInterfaceObject.StopInterface();
+                if (_webInterfaceObject != null)
+                {
+                    _webInterfaceObject.StopInterface();
+                }
             }
         }
 
@@ -1007,23 +1093,26 @@ namespace Elpis
 
         private void SetupJumpList()
         {
-            //JumpList jumpList = new JumpList();
-            //jumpList.ShowRecentCategory = true;
-            //JumpList.SetJumpList(System.Windows.Application.Current, jumpList);
+            System.Windows.Shell.JumpList jumpList = new System.Windows.Shell.JumpList();
+            jumpList.ShowRecentCategory = true;
+            System.Windows.Shell.JumpList.SetJumpList(System.Windows.Application.Current, jumpList);
 
-            //JumpTask pause = JumpListManager.createJumpTask(PlayerCommands.PlayPause, "--playpause",1);
-            //jumpList.JumpItems.Add(pause);
+            JumpTask pause = JumpListManager.createJumpTask(PlayerCommands.PlayPause, "--playpause",1);
+            jumpList.JumpItems.Add(pause);
 
-            //JumpTask next = JumpListManager.createJumpTask(PlayerCommands.Next, "--next",2);
-            //jumpList.JumpItems.Add(next);
+            JumpTask next = JumpListManager.createJumpTask(PlayerCommands.Next, "--next",2);
+            jumpList.JumpItems.Add(next);
 
-            //JumpTask thumbsUp  = JumpListManager.createJumpTask(PlayerCommands.ThumbsUp, "--thumbsup",3);
-            //jumpList.JumpItems.Add(thumbsUp);
+            JumpTask thumbsUp  = JumpListManager.createJumpTask(PlayerCommands.ThumbsUp, "--thumbsup",3);
+            jumpList.JumpItems.Add(thumbsUp);
 
-            //JumpTask thumbsDown = JumpListManager.createJumpTask(PlayerCommands.ThumbsDown, "--thumbsdown",4);
-            //jumpList.JumpItems.Add(thumbsDown);
+            JumpTask thumbsDown = JumpListManager.createJumpTask(PlayerCommands.ThumbsDown, "--thumbsdown",4);
+            jumpList.JumpItems.Add(thumbsDown);
 
-            //jumpList.Apply();
+            JumpTask exitElpis = JumpListManager.createJumpTask("Exit Elpis", "Exits Elpis", "--exit", 0);
+            jumpList.JumpItems.Add(exitElpis);
+
+            jumpList.Apply();
         }
 
 
@@ -1197,14 +1286,7 @@ namespace Elpis
         {
             this.BeginDispatch(() =>
             {
-                if (_config.Fields.Elpis_ShowTrayNotifications)
-                {
-                    string tipText = _player.CurrentSong.SongTitle;
-                    _notify.BalloonTipTitle = tipText;
-                    _notify.BalloonTipText = " by " + _player.CurrentSong.Artist;
-
-                    _notify.ShowBalloonTip(5000);
-                }
+                showBalloon(PLAY, 5000);
             });
         }
 
@@ -1519,7 +1601,7 @@ namespace Elpis
             _player.Next();
         }
 
-        private void showBalloon(int option)
+        private void showBalloon(int option, int duration = 3000)
         {
             if (_config.Fields.Elpis_ShowTrayNotifications)
             {
