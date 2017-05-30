@@ -480,6 +480,14 @@ namespace PandoraSharpPlayer
             }
         }
 
+        public void SeekToTime(int percentage)
+        {
+            if (_bass.CanSeek())
+            {
+                _bass.SeekAsolutePercentage(percentage);
+            }
+        }
+
         private int UpdatePlaylist()
         {
             List<Song> result = new List<Song>();
@@ -630,7 +638,7 @@ namespace PandoraSharpPlayer
         public void PlayStation(Station station)
         {
             CurrentStation = station;
-            //JumpList.AddToRecentCategory(station.asJumpTask());
+            JumpList.AddToRecentCategory(station.asJumpTask());
 
             RunTask(PlayThread);
         }
