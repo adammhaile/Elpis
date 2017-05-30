@@ -96,10 +96,16 @@ namespace Elpis
         #region ISingleInstanceApp Members
         public bool SignalExternalCommandLineArgs(IList<string> args)
         {
-            ((Elpis.MainWindow)MainWindow).Show();
-            ((Elpis.MainWindow)MainWindow).Activate();
-            ((Elpis.MainWindow)MainWindow).WindowState = WindowState.Normal;
-            ((Elpis.MainWindow)MainWindow).ShowInTaskbar = true;
+            //only bring app to front if called with no arguments.  If argument was passed assume user
+            //is calling exe for control purposes only and does not want the app to be brought to front
+            if (args.Count == 1)
+            {
+                ((Elpis.MainWindow)MainWindow).Show();
+                ((Elpis.MainWindow)MainWindow).Activate();
+                ((Elpis.MainWindow)MainWindow).WindowState = WindowState.Normal;
+                ((Elpis.MainWindow)MainWindow).ShowInTaskbar = true;
+            }
+
             return HandleCommandLine(args);
         }
 
