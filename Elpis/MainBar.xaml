@@ -58,19 +58,19 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         
-        <ElpisControls:ImageButton Width="28" Height="28" Margin="8,2,2,2" Grid.Column="0" x:Name="btnStationList"
+        <ElpisControls:ImageButton Width="20" Height="20" Margin="20,2,2,2" Grid.Column="0" x:Name="btnStationList"
                                ActiveImageUri="{StaticResource Image_PlaylistHover}" InactiveImageUri="{StaticResource Image_Playlist}"
                                ToolTip="Show Station List"
                                Click="btnStationList_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
-        <ElpisControls:ImageButton Width="28" Height="28" Margin="8,2,2,2" Grid.Column="0" x:Name="btnStationListClose"
+        <ElpisControls:ImageButton Width="20" Height="20" Margin="20,2,2,2" Grid.Column="0" x:Name="btnStationListClose"
                                ActiveImageUri="{StaticResource Image_CloseHover}" InactiveImageUri="{StaticResource Image_Close}"
                                ToolTip="Close Station List"
                                Click="btnStationListClose_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
-        <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="1" x:Name="btnCreateStation"
+        <ElpisControls:ImageButton Width="20" Height="20" Margin="20,2,2,4" Grid.Column="1" x:Name="btnCreateStation"
                                ActiveImageUri="{StaticResource Image_AddHover}" InactiveImageUri="{StaticResource Image_Add}"
                                ToolTip="Create New Station"
                                Click="btnCreateStation_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
-        <ElpisControls:ImageButton Width="24" Height="24" Margin="8,2,2,2" Grid.Column="2" x:Name="btnVolume"
+        <ElpisControls:ImageButton Width="20" Height="20" Margin="20,2,2,4" Grid.Column="2" x:Name="btnVolume"
                                ActiveImageUri="{StaticResource Image_Volume_100_Hover}" InactiveImageUri="{StaticResource Image_Volume_100}"
                                ToolTip="Show Volume Slider"
                                Click="btnVolume_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
@@ -81,21 +81,21 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="0" x:Name="btnPlay"
+            <ElpisControls:ImageButton Width="26" Height="26" Margin="35,2,2,2" Grid.Column="0" x:Name="btnPlay"
                                  ActiveImageUri="{StaticResource Image_PlayHover}" InactiveImageUri="{StaticResource Image_Play}"
                                  Click="btnPlayPause_Click" VerticalAlignment="Center" HorizontalAlignment="Center"
                                  ToolTip="Play"
                                  Visibility="{Binding Path=Playing, 
                                                 Converter={StaticResource visConverter}, 
                                                 ConverterParameter={StaticResource BoolFalse}}" />
-            <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="0" x:Name="btnPause"
+            <ElpisControls:ImageButton Width="26" Height="26" Margin="35,2,2,2" Grid.Column="0" x:Name="btnPause"
                                  ActiveImageUri="{StaticResource Image_PauseHover}" InactiveImageUri="{StaticResource Image_Pause}"
                                  Click="btnPlayPause_Click" VerticalAlignment="Center" HorizontalAlignment="Center"
                                  ToolTip="Pause"
                                  Visibility="{Binding Path=Playing, 
                                                 Converter={StaticResource visConverter}, 
                                                 ConverterParameter={StaticResource BoolTrue}}" />
-            <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="1" x:Name="btnNext"
+            <ElpisControls:ImageButton Width="18" Height="18" Margin="20,2,2,2" Grid.Column="1" x:Name="btnNext"
                                  ActiveImageUri="{StaticResource Image_NextHover}" InactiveImageUri="{StaticResource Image_Next}" Click="btnNext_Click"
                                  ToolTip="Next Track"
                                  VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" />
@@ -103,7 +103,7 @@
         <Grid Grid.Column="4" Name="gridError" Style="{StaticResource GridFade}"
               Visibility="Hidden">
             
-            <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="1" x:Name="btnError"
+            <ElpisControls:ImageButton Width="20" Height="20" Margin="2" Grid.Column="1" x:Name="btnError"
                                ActiveImageUri="{StaticResource Image_ErrorHover}" InactiveImageUri="{StaticResource Image_Error}"
                                Click="btnError_Click" VerticalAlignment="Center" HorizontalAlignment="Center">
                 
@@ -123,11 +123,11 @@
             <Slider Name="sVolume" Height="28" Grid.Column="0" Minimum="0" Maximum="100" Margin="8,5,8,2" ValueChanged="sVolume_VolumeChanged" />
             <Image Name="imgVolume" Grid.Column="1" Width="24" Height="24" Margin="8,2,8,2" Source="/Elpis;component/Images/volume_100.png"  />
         </Grid>
-        <ElpisControls:ImageButton Width="28" Height="28" Margin="2" Grid.Column="5" x:Name="btnSettings"
+        <ElpisControls:ImageButton Width="20" Height="20" Margin="2,2,20,2" Grid.Column="5" x:Name="btnSettings"
                                ActiveImageUri="{StaticResource Image_SettingsHover}" InactiveImageUri="{StaticResource Image_Settings}"
                                ToolTip="Show Settings"
                                Click="btnSettings_Click" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
-        <ElpisControls:ImageButton Width="28" Height="28" Margin="2,2,8,2" Grid.Column="6" x:Name="btnAbout"
+        <ElpisControls:ImageButton Width="20" Height="20" Margin="2,2,20,2" Grid.Column="6" x:Name="btnAbout"
                                ActiveImageUri="{StaticResource Image_InfoHover}" InactiveImageUri="{StaticResource Image_Info}" Click="btnAbout_Click"
                                ToolTip="About Elpis"
                                VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" />
