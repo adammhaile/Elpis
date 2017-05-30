@@ -468,17 +468,24 @@ namespace PandoraSharpPlayer
                 {
                     streamErrorFallback(retry, ex);
                 }
-                catch(System.NotSupportedException ex)
+                catch(Exception ex)
                 {
-                    try
+                    if (ex is System.NotSupportedException || ex is System.ArgumentException)
                     {
-                        Log.O("Failed to save song: '" + song.ToString() + "' on album: '" + song.Album + "'" + ex.Message);
-                        _bass.Play(song.AudioUrl, song.FileGain);
-                        _cqman.SendSongUpdate(song);
+                        try
+                        {
+                            Log.O("Failed to save song: '" + song.ToString() + "' on album: '" + song.Album + "'" + ex.Message);
+                            _bass.Play(song.AudioUrl, song.FileGain);
+                            _cqman.SendSongUpdate(song);
+                        }
+                        catch (BassStreamException innerEx)
+                        {
+                            streamErrorFallback(retry, innerEx);
+                        }
                     }
-                    catch (BassStreamException innerEx)
+                    else
                     {
-                        streamErrorFallback(retry, innerEx);
+                        throw ex;
                     }
                 }
                 finally
@@ -532,19 +539,22 @@ namespace PandoraSharpPlayer
                 Uri fileUri = new Uri(song.AudioUrl);
                 string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
                 string fileName = (song.SongTitle ?? string.Empty) + fileExtension;
-                string folderPath = Path.Combine(_filePath, song.Station.Name, (song.Artist ?? string.Empty), (song.Album ?? string.Empty));
-
+                string artist = song.Artist ?? string.Empty;
+                string album = song.Album ?? string.Empty;
+                string station = song.Station.Name;
+                foreach (char c in (new char[]{':'}).Concat(Path.GetInvalidPathChars()))
+                {
+                    artist = artist.Replace(c, '_');
+                    album = album.Replace(c, '_');
+                    station = station.Replace(c, '_');
+                }
+                string folderPath = Path.Combine(_filePath, station, artist, album);
+                
                 if (folderPath.Length > MAX_PATH_LENGTH)
                 {
                     folderPath = song.Station.Name.Substring(0, MAX_PATH_LENGTH - _filePath.Length);
                 }
-                foreach (char c in Path.GetInvalidPathChars())
-                {
-                    if (folderPath.Contains(c))
-                    {
-                        folderPath = folderPath.Replace(c, '_');
-                    }
-                }
+                Log.O("Creating folder path: {0}", folderPath);
                 Directory.CreateDirectory(folderPath);
 
                 if(fileName.Length > MAX_FILENAME_LENGTH)
@@ -559,7 +569,8 @@ namespace PandoraSharpPlayer
                     }
                 }
 
-                return folderPath + Path.DirectorySeparatorChar + fileName;
+                Log.O("Creating fileName: {0}", fileName);
+                return Path.Combine(folderPath, fileName);
             }
         }
 
