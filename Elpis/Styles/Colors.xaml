@@ -4,9 +4,9 @@
   <Color x:Key="ShadeDark">#212121</Color>
   <Color x:Key="ShadeMediumDark">#263238</Color>
   <Color x:Key="ShadeMedium">#90A4AE</Color>
-  <Color x:Key="ShadeMediumLight">#90A4AE</Color>
+  <Color x:Key="ShadeMediumLight">#cfd8dc</Color>
   <Color x:Key="ShadeLight">#FFFFFF</Color>
-  <Color x:Key="TransparencyShade">#757575</Color>
+  <Color x:Key="TransparencyShade">#212121</Color>
 
   <Color x:Key="ErrorShade">#EE0000</Color>
 
