@@ -79,7 +79,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Web.Extensions" />
@@ -426,12 +425,6 @@
     <Resource Include="Resources\skip-song.ico" />
     <Resource Include="Resources\thumbs_down_icon.ico" />
     <Resource Include="Resources\thumbs_up_icon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Images\thumbs-down.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Images\thumbs-up.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

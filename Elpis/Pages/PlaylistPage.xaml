@@ -14,7 +14,7 @@
                 <ResourceDictionary Source="/Elpis;component/Styles/Misc.xaml" />
                 <ResourceDictionary Source="/Elpis;component/Styles/Images.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <ContextMenu x:Key="SongMenu" Closed="SongMenu_Closed">    
+            <ContextMenu x:Key="SongMenu" Closed="SongMenu_Closed">
                 <!-- Must changes inits in constructor if the order of these changes -->
                 <MenuItem x:Name="mnuPurchase" Header="Purchase">
                     <MenuItem x:Name="mnuPurchaseAmazonAlbum" 
@@ -73,20 +73,20 @@
                         </Grid.RowDefinitions>
                         <ElpisControls:ContentSpinner x:Name="SpinUp" Grid.Row="0" NumberOfFrames="32"
                                           RevolutionsPerSecond="1.5" AutoStart="False">
-                            <ElpisControls:ImageButton Width="28" Height="28" x:Name="btnThumbUp"
+                            <ElpisControls:ImageButton Width="25" Height="25" x:Name="btnThumbUp"
                                          ActiveImageUri="{StaticResource Image_ThumbLove}" InactiveImageUri="{StaticResource Image_ThumbUp}"
                                          ToolTip="Like Song"
                                          IsActive="{Binding Loved}" Click="btnThumbUp_Click" VerticalAlignment="Center" HorizontalAlignment="Center" />
                         </ElpisControls:ContentSpinner>
-                        <ElpisControls:ImageButton Width="28" Height="28" x:Name="btnMenu" Grid.Row="1"
+                        <ElpisControls:ImageButton Padding="5" Width="25" Height="25" x:Name="btnMenu" Grid.Row="1"
                                        ActiveImageUri="{StaticResource Image_MenuRightHover}" InactiveImageUri="{StaticResource Image_MenuRight}"
                                        ToolTip="Show Song Menu"
                                        VerticalAlignment="Center" HorizontalAlignment="Center" Click="btnMenu_Click">
- 
+
                         </ElpisControls:ImageButton>
                         <ElpisControls:ContentSpinner x:Name="SpinDown" Grid.Row="2" NumberOfFrames="32"
                                           RevolutionsPerSecond="1.5" AutoStart="False">
-                            <ElpisControls:ImageButton Width="28" Height="28" x:Name="btnThumbDown"
+                            <ElpisControls:ImageButton Width="25" Height="25" x:Name="btnThumbDown"
                                          ActiveImageUri="{StaticResource Image_ThumbBan}" InactiveImageUri="{StaticResource Image_ThumbDown}"
                                          ToolTip="Dislike Song"
                                          IsActive="{Binding Banned}" Click="btnThumbDown_Click" VerticalAlignment="Center" HorizontalAlignment="Center" />
@@ -106,7 +106,7 @@
                        Margin="8,0" Style="{StaticResource TextBase}">
               <Hyperlink Name="TitleLink" Style="{StaticResource LinkStyle}"
                          NavigateUri="{Binding Path=SongDetailUrl}" RequestNavigate="RequestNavigate">
-                <TextBlock Text="{Binding Path=SongTitle}" FontWeight="Bold"
+                <TextBlock Text="{Binding Path=SongTitle}" FontWeight="Normal"
                            Style="{StaticResource TextBase}" ElpisControls:TextBlockUtils.AutoTooltip="True"
                            ElpisControls:TextBlockUtils.AutoTooltipFontSize="12" />
               </Hyperlink>
@@ -153,25 +153,23 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Name="txtStationName"
                  Background="{StaticResource MainBGBrush}" Foreground="{StaticResource MainFontBrush}" Text="Loading Songs..."
-                 FontSize="16" FontWeight="Bold" TextAlignment="Center" Padding="0,1,0,1" />
-            <Grid Grid.Row="1">
+                 FontSize="20" FontWeight="NOrmal" TextAlignment="Center" FontFamily="Roboto" Padding="0,4,0,4" ></TextBlock>
+            <Grid Grid.Row="1" Margin="0,10,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Label Name="lblCurrTime" Grid.Column="0" Background="{StaticResource MainBGBrush}" Padding="6,1"
+                <Label Name="lblCurrTime" Grid.Column="0" Background="{StaticResource MainBGBrush}" Margin="15,5,10,5"
                Content="" HorizontalAlignment="Stretch" FontSize="11" FontWeight="DemiBold"
                Foreground="{StaticResource MainFontBrush}" />
-                <ProgressBar Name="progPlayTime" Grid.Column="1" HorizontalAlignment="Stretch" Value="0.0" 
-                             MouseLeftButtonDown="progPlayTime_MouseLeftButtonDown" MouseMove="progPlayTime_MouseMove"/>
-                <Label Name="lblRemainTime" Grid.Column="2" Background="{StaticResource MainBGBrush}" Padding="6,1"
+                <ProgressBar Name="progPlayTime" Grid.Column="1" HorizontalAlignment="Stretch" Value="0.0" Margin="0,7,0,7"/>
+                <Label Name="lblRemainTime" Grid.Column="2" Background="{StaticResource MainBGBrush}" Margin="10,5,15,5"
                Content="" HorizontalAlignment="Stretch" FontSize="11" FontWeight="DemiBold"
                Foreground="{StaticResource MainFontBrush}" />
             </Grid>
             <ContentControl Name="CurrentSong" Grid.Row="2" ContentTemplate="{StaticResource SongTemplate}" Height="96" />
-            <Border Name="WaitScreen" BorderBrush="{StaticResource MainBGBrush}" BorderThickness="0" Grid.Row="2"
-              Height="96" Background="{StaticResource MainWaitBrush}" Visibility="Visible">
+            <Border Name="WaitScreen" BorderBrush="{StaticResource MainBGBrush}" BorderThickness="0" Grid.Row="2" Background="{StaticResource MainWaitBrush}" Visibility="Visible" Margin="0,0.2,0,269" Grid.RowSpan="2">
                 <Grid x:Name="LayoutRoot">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -183,8 +181,8 @@
                 </Grid>
             </Border>
             <Image Grid.Row="3" Grid.ColumnSpan="3" Source="/Elpis;component/Images/background.png"
-               Margin="10" Opacity="0.25"/>
-            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+               Margin="100" Opacity="0.25"/>
+            <ScrollViewer Margin="0,0,0,0" Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
                     Style="{StaticResource FadeScroller}">
                 <ItemsControl Name="lstOldSongs" HorizontalContentAlignment="Stretch">
                 </ItemsControl>
