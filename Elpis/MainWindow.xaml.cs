@@ -834,6 +834,7 @@ namespace Elpis
                 return;
             }
 
+            _loadingPage.UpdateStatus("Loading LastFM Scrobbler...");
             LoadLastFM();
 
             _player.AudioFormat = _config.Fields.Pandora_AudioFormat;
