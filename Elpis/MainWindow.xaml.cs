@@ -1246,6 +1246,7 @@ namespace Elpis
             if (status && _update.DownloadUrl != string.Empty)
             {
                 //Process.Start(_update.DownloadUrl);
+                _forceClose = true;
                 Close();
             }
             else
