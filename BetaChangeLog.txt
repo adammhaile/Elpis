@@ -1,3 +1,7 @@
+v1.5.3
+Fixing a myriad of bugs
+First steps towards a modern-looking UI
+
 v1.5.2
 station sorting by rating (or listening frequency)
 last.fm scrobbler - it should work now
