@@ -60,15 +60,7 @@ namespace PandoraSharp.Plugins
 
         private void InitScrobblers()
         {
-            Log.O("Initializing Scrobblers...");
-            try
-            {
-                _scrobbler = new QueuingScrobbler(APIKey, APISecret, SessionKey);
-            }
-            catch(ArgumentNullException e)
-            {
-                Log.O(e.ParamName + " was empty or null, exiting scrobblers");
-            }
+            _scrobbler = new QueuingScrobbler(APIKey, APISecret, SessionKey);
         }
 
         private void DoScrobbles()

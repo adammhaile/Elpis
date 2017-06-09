@@ -458,26 +458,17 @@ namespace PandoraSharpPlayer
                 }
                 catch (BassStreamException ex)
                 {
-                    streamErrorFallback(retry, ex);
-                }
-                catch(Exception ex)
-                {
-                    if (ex is System.NotSupportedException || ex is System.ArgumentException)
+                    if (ex.ErrorCode == Un4seen.Bass.BASSError.BASS_ERROR_FILEOPEN)
                     {
-                        try
-                        {
-                            Log.O("Failed to save song: '" + song.ToString() + "' on album: '" + song.Album + "'" + ex.Message);
-                            _bass.Play(song.AudioUrl, song.FileGain);
-                            _cqman.SendSongUpdate(song);
-                        }
-                        catch (BassStreamException innerEx)
-                        {
-                            streamErrorFallback(retry, innerEx);
-                        }
+                        _playlist.DoReload();
                     }
+                    if (retry > 0)
+                        PlayNextSong(retry - 1);
                     else
                     {
-                        throw ex;
+                        Stop();
+                        _cqman.SendStatusUpdate(QueryStatusValue.Error);
+                        throw new PandoraException(ErrorCodes.STREAM_ERROR, ex);
                     }
                 }
                 finally
@@ -489,82 +480,6 @@ namespace PandoraSharpPlayer
             }
         }
 
-        private void streamErrorFallback(int retry, BassStreamException ex)
-        {
-            if (ex.ErrorCode == Un4seen.Bass.BASSError.BASS_ERROR_FILEOPEN)
-            {
-                _playlist.DoReload();
-            }
-            if (retry > 0)
-                PlayNextSong(retry - 1);
-            else
-            {
-                Stop();
-                _cqman.SendStatusUpdate(QueryStatusValue.Error);
-                throw new PandoraException(ErrorCodes.STREAM_ERROR, ex);
-            }
-        }
-
-        private void deletePartiallyDownloadedFile(object sender, string songFilePath)
-        {
-            File.Delete(songFilePath);
-        }
-
-        private void addSongMetaData(object sender, string songFilePath)
-        {
-            TagLib.File songFile = TagLib.File.Create(new SimpleFileAbstraction(songFilePath));
-            songFile.Tag.Album = this.CurrentSong.Album;
-            songFile.Tag.AmazonId = this.CurrentSong.AmazonTrackID;
-            songFile.Tag.Performers = new string[] { this.CurrentSong.Artist };
-            songFile.Tag.Title = this.CurrentSong.SongTitle;
-            songFile.Save();
-        }
-
-        private string buildFilePath(Song song)
-        {
-            if (string.IsNullOrEmpty(_filePath))
-            {
-                return Path.GetTempFileName();
-            }
-            else
-            {
-                Uri fileUri = new Uri(song.AudioUrl);
-                string fileExtension = Path.GetExtension(fileUri.AbsolutePath.Replace('/', '\\')) ?? string.Empty;
-                string fileName = (song.SongTitle ?? string.Empty) + fileExtension;
-                string artist = song.Artist ?? string.Empty;
-                string album = song.Album ?? string.Empty;
-                string station = song.Station.Name;
-                foreach (char c in (new char[]{':'}).Concat(Path.GetInvalidPathChars()))
-                {
-                    artist = artist.Replace(c, '_');
-                    album = album.Replace(c, '_');
-                    station = station.Replace(c, '_');
-                }
-                string folderPath = Path.Combine(_filePath, station, artist, album);
-                
-                if (folderPath.Length > MAX_PATH_LENGTH)
-                {
-                    folderPath = song.Station.Name.Substring(0, MAX_PATH_LENGTH - _filePath.Length);
-                }
-                Log.O("Creating folder path: {0}", folderPath);
-                Directory.CreateDirectory(folderPath);
-
-                if(fileName.Length > MAX_FILENAME_LENGTH)
-                {
-                    fileName = fileName.Substring(0, MAX_FILENAME_LENGTH - fileExtension.Length) + fileExtension;
-                }
-                foreach (char c in Path.GetInvalidFileNameChars())
-                {
-                    if (fileName.Contains(c))
-                    {
-                        fileName = fileName.Replace(c, '_');
-                    }
-                }
-
-                Log.O("Creating fileName: {0}", fileName);
-                return Path.Combine(folderPath, fileName);
-            }
-        }
         public void SeekToTime(int percentage)
         {
             if (_bass.CanSeek())
