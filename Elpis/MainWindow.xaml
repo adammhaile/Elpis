@@ -74,7 +74,7 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" Name="TitleBar" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,0,0" Height="40">
+                    <Grid Grid.Column="0" Name="TitleBar" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,46,0" Height="40">
                         <TextBlock Name="TitleText" Padding="10" HorizontalAlignment="Stretch"
                        VerticalAlignment="Stretch"
                        Text="{Binding Path=Title,
