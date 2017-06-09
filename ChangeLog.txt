@@ -2,6 +2,11 @@
 Before configuring your custom hotkeys on Elpis, do first kill all of the possible programs 
 that came with your keyboard drivers, like "Mouse and Keyboard Center" or "IType" from Microsoft keyboards.
 
+v1.6.0
+This is the first stable release in two years, so many bugs have been fixed.
+The other major update is the beginnings of an update to the UI.
+The next release will show more updates to the UI, so join the beta release cycle if you'd like to see it as it goes!
+
 v1.5.0
 This is a stable release, which includes all the beta update changes so far. The changelog follows:
 - Added the action to ignore the current playing song for a month (a.k.a. "Tired of this song") from system tray right-click menu.
