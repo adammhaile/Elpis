@@ -929,7 +929,7 @@ namespace Elpis
 
         public static bool Next()
         {
-            if ((DateTime.Now - lastTimeSkipped).Seconds > 20)
+            if ((DateTime.Now - lastTimeSkipped).TotalSeconds > 20)
             {
                 System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
                 {
