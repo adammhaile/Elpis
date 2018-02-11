@@ -940,9 +940,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="Border" CornerRadius="0" BorderThickness="2"
+                    <Border x:Name="Border" CornerRadius="0" BorderThickness="1"
                   Background="{StaticResource ControlBGBrush}" BorderBrush="{StaticResource ControlBorderBrush}">
-                        <ContentPresenter Margin="5,2,5,2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        <ContentPresenter Margin="10, 5, 10, 5" HorizontalAlignment="Center" VerticalAlignment="Center"
                               RecognizesAccessKey="True" />
                     </Border>
                     <ControlTemplate.Triggers>
@@ -1111,10 +1111,10 @@
     <ControlTemplate x:Key="ExpanderToggleButton" TargetType="ToggleButton">
         <Border
             Name="Border"
-            CornerRadius="2,0,0,0"
+            CornerRadius="0,0,0,0"
             Background="Transparent"
             BorderBrush="{StaticResource ControlBorderBrush}"
-            BorderThickness="0,0,1,0">
+            BorderThickness="0,0,0,0">
             <Path
               Name="Arrow"
               Fill="{StaticResource ControlGlyphBrush}"
@@ -1152,6 +1152,7 @@
 
     <Style TargetType="Expander">
         <Setter Property="Foreground" Value="{StaticResource MainFontBrush}" />
+        <Setter Property="FontSize" Value="21"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Expander">
@@ -1163,9 +1164,9 @@
                         <Border
                             Name="Border"
                             Grid.Row="0"
-                            Background="{StaticResource ControlSelectBrush}"
+                            Background="{StaticResource ShadeDarkBrush}"
                             BorderBrush="{StaticResource ControlBorderBrush}"
-                            BorderThickness="1"
+                            BorderThickness="0"
                             CornerRadius="0,0,0,0" >
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -1190,9 +1191,10 @@
                             Grid.Row="1"
                             Background="{StaticResource ControlBGBrush}"
                             BorderBrush="{StaticResource ControlBorderBrush}"
-                            BorderThickness="1,0,1,1"
+
+                            BorderThickness="0, 0, 0, 1"
                             CornerRadius="0,0,0,0" >
-                            <ContentPresenter Margin="4" />
+                            <ContentPresenter Margin="4, 4, 4, 12" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -1302,7 +1304,7 @@
                             <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}"
                     MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                 <Border x:Name="DropDownBorder" Background="{StaticResource ControlBGBrush}"
-                        BorderThickness="2" BorderBrush="{StaticResource ControlBorderBrush}" />
+                        BorderThickness="1" BorderBrush="{StaticResource ControlBorderBrush}" />
                                 <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                     <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
                                 </ScrollViewer>

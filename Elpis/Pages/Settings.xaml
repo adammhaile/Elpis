@@ -38,7 +38,7 @@
             <StackPanel Grid.Row="0" VerticalAlignment="Stretch">
                 <!-- Due to a bug in the VS2010 Designer, the contents of expanders are not visible at design time when using custom styles.
                      In order to see the contents while designing, add Style="" to the main expander tag section of each. Then remove when done. -->
-                <Expander Header="Login" Margin="5" IsExpanded="True">
+                <Expander Header="Login" Margin="5, 20" IsExpanded="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -47,7 +47,7 @@
                         <CheckBox Grid.Column="0" Margin="4" Name="chkAutoLogin"
                       IsChecked="True"
                       Content="Automatically Login" />
-                        <Button Grid.Column="1" Name="btnLogout" Content="Logout" HorizontalAlignment="Right"
+                        <Button Grid.Column="1" Name="btnLogout" Content="Logout" HorizontalAlignment="Right" 
                     Click="btnLogout_Click">
                             <Button.ToolTip>
                                 <TextBlock FontSize="14">
@@ -62,7 +62,7 @@
 
                     </Grid>
                 </Expander>
-                <Expander Header="Pandora" Margin="5" IsExpanded="True">
+                <Expander Header="Pandora" Margin="5, 20" IsExpanded="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -75,7 +75,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Grid.Column="0" Content="Audio Format" FontSize="16" />
-                        <ComboBox Name="cmbAudioFormat" Grid.Row="0" Grid.Column="1" Margin="3"
+                        <ComboBox Name="cmbAudioFormat" Grid.Row="0" Grid.Column="1" Margin="3" FontSize="14"
                       ItemsSource="{StaticResource AudioFormats}" DisplayMemberPath="Display" SelectedValuePath="Value">
                             <ComboBox.ToolTip>
                                 <TextBlock FontSize="14">
@@ -88,16 +88,16 @@
                             </ComboBox.ToolTip>
                         </ComboBox>
                         <Label Grid.Row="1" Grid.Column="0" Content="Station Sort Order" FontSize="16" />
-                        <ComboBox Name="cmbStationSort" Grid.Row="1" Grid.Column="1" Margin="3"
+                        <ComboBox Name="cmbStationSort" Grid.Row="1" Grid.Column="1" Margin="3" FontSize="14"
                       ItemsSource="{StaticResource StationSortOrder}" DisplayMemberPath="Display" SelectedValuePath="Value" />
                         <Label Grid.Row="2" Grid.Column="0" Content="Output Device" FontSize="16" />
-                        <ComboBox Name="cmbOutputDevice" Grid.Row="2" Grid.Column="1" Margin="3" />
+                        <ComboBox Name="cmbOutputDevice" Grid.Row="2" Grid.Column="1" Margin="3" FontSize="14" />
                         <CheckBox Name="chkAutoPlay" Grid.Row="3" Grid.ColumnSpan="2" Margin="4"
                       IsChecked="True"
                       Content="Automatically Play Last Station" />
                     </Grid>
                 </Expander>
-                <Expander Header="General" Margin="5" IsExpanded="True">
+                <Expander Header="General" Margin="5, 20" IsExpanded="True">
                     <Grid Height="144">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -136,7 +136,7 @@
                                  Grid.Row="3" Grid.ColumnSpan="2" IsEnabled="False"/-->
                     </Grid>
                 </Expander>
-                <Expander Header="Global Hotkeys" IsExpanded="True" Margin="5" >
+                <Expander Header="Global Hotkeys" IsExpanded="True" Margin="5, 20">
                     <StackPanel Orientation="Vertical" Margin="0 2 0 5">
                         <Grid Name="HotKeyGrid">
                             <Grid.RowDefinitions>
@@ -145,15 +145,14 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="5*" />
                                 <ColumnDefinition Width="5*"  />
+                                <ColumnDefinition Width="2*"  />
+                                <ColumnDefinition Width="2*"  />
                                 <ColumnDefinition Width="1*"  />
-                                <ColumnDefinition Width="1*"  />
-                                <ColumnDefinition Width="3*"  />
                             </Grid.ColumnDefinitions>
-                            <Label Content="Command" Grid.Column="0" HorizontalContentAlignment="Left" />
-                            <Label Content="Hotkey" Grid.Column="1" HorizontalContentAlignment="Left" />
-                            <Label Grid.Row="0" Grid.Column="2" Content="Global" HorizontalContentAlignment="Center"/>
-                            <Label Grid.Row="0" Grid.Column="3" Content="Enabled" HorizontalContentAlignment="Center"/>
-                            <Label Grid.Row="0" Grid.Column="4" Content="Remove" HorizontalContentAlignment="Center"/>
+                            <Label Content="Command" Grid.Column="0" HorizontalContentAlignment="Left" FontSize="16" />
+                            <Label Content="Hotkey" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="16" />
+                            <Label Grid.Row="0" Grid.Column="2" Content="Global" HorizontalContentAlignment="Center" FontSize="16" />
+                            <Label Grid.Row="0" Grid.Column="3" Content="Enabled" HorizontalContentAlignment="Center" FontSize="16" />
                         </Grid>
 
                         <ItemsControl Name="HotKeyItems">
@@ -163,13 +162,13 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="5*" />
                                             <ColumnDefinition Width="5*"  />
+                                            <ColumnDefinition Width="2*"  />
+                                            <ColumnDefinition Width="2*"  />
                                             <ColumnDefinition Width="1*"  />
-                                            <ColumnDefinition Width="1*"  />
-                                            <ColumnDefinition Width="3*"  />
                                         </Grid.ColumnDefinitions>
-                                        <ComboBox Grid.Column="0" ItemsSource="{Binding Source={x:Static Hotkeys:PlayerCommands.AllCommands}}"
+                                        <ComboBox Grid.Column="0" ItemsSource="{Binding Source={x:Static Hotkeys:PlayerCommands.AllCommands}}" FontSize="14"
                                                   DisplayMemberPath="Name" SelectedItem="{Binding Path=Value.Command}" Margin="0 0 5 0" />
-                                        <config:HotKeyBox Grid.Column="1" IsReadOnly="True"
+                                        <config:HotKeyBox Grid.Column="1" IsReadOnly="True" FontSize="14"
                                                           Text="{Binding Path=Value.KeysString, Mode=OneWay}"
                                                           Margin="0 0 5 0"  >
                                             <config:HotKeyBox.ToolTip>
@@ -205,6 +204,11 @@
                                         <TextBlock Grid.Column="4" Text="r" FontFamily="Webdings" FontSize="16"
                                                    Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"
                                                    MouseDown="RemoveHotkey_MouseDown">
+                                            <TextBlock.ToolTip>
+                                                <ToolTip>
+                                                    <TextBlock FontFamily="Segoe UI">Remove</TextBlock>
+                                                </ToolTip>
+                                            </TextBlock.ToolTip>
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
                                                     <Style.Triggers>
@@ -219,12 +223,12 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <Button Name="btnAddHotKey" Click="btnAddHotKey_Click" HorizontalAlignment="Right" Width="80" Height="30" Padding="2 2 2 2" Margin="0 4 4 5">Add New</Button>
+                        <Button Name="btnAddHotKey" Click="btnAddHotKey_Click" HorizontalAlignment="Right" Width="100" Height="30" Padding="2 2 2 2" Margin="0 4 4 5">Add New</Button>
                     </StackPanel>
                 </Expander>
                 <Expander Header="Proxy - Changes Require Restarting Elpis"
                           IsExpanded="False"
-                          Margin="5">
+                          Margin="5, 20">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition />
@@ -265,7 +269,7 @@
                                     Name="txtProxyPassword"/>
                     </Grid>
                 </Expander>
-                <Expander Header="Last.FM Scrobbler"  IsExpanded="False" Margin="5" >
+                <Expander Header="Last.FM Scrobbler"  IsExpanded="False" Margin="5, 20" >
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
