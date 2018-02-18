@@ -624,11 +624,14 @@ namespace PandoraSharpPlayer
 
         public Station GetStationFromName(string stationName)
         {
-            foreach (Station s in Stations)
+            if (Stations != null)
             {
-                if (stationName == s.Name)
+                foreach (Station s in Stations)
                 {
-                    return s;
+                    if (stationName == s.Name)
+                    {
+                        return s;
+                    }
                 }
             }
 
