@@ -1017,7 +1017,7 @@
                             <Border x:Name="Border" Width="20" Height="20" CornerRadius="0"
                       Background="{StaticResource ControlBGBrush}" BorderThickness="1" BorderBrush="{StaticResource ControlBorderBrush}">
                                 <Path Width="15" Height="15" x:Name="CheckMark" SnapsToDevicePixels="False"
-                      Stroke="{StaticResource ControlGlyphBrush}" StrokeThickness="3" Data="M 2 6 L 7 13 M 7 13 L 14 1" />
+                      Stroke="{StaticResource ControlGlyphBrush}" StrokeThickness="1.5" Data="M 2 6 L 7 13 M 7 13 L 14 1" />
                             </Border>
                         </BulletDecorator.Bullet>
                         <ContentPresenter Margin="4,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"

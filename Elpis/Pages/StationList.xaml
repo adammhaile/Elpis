@@ -69,7 +69,7 @@
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <Controls:ImageButton Width="28" Height="28" x:Name="btnMenu" Grid.Column="0"
+                                        <Controls:ImageButton Margin="10 0 0 0" Width="20" Height="20" x:Name="btnMenu" Grid.Column="0"
                                         ToolTip="Show Station Menu"
                                         ActiveImageUri="{StaticResource Image_MenuRightHover}" InactiveImageUri="{StaticResource Image_MenuRight}"
                                         VerticalAlignment="Center" HorizontalAlignment="Center" Click="btnMenu_Click" Visibility="Visible" />
