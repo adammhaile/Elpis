@@ -52,7 +52,7 @@ namespace PandoraSharp
             IdToken = d["stationToken"].ToString();
             IsCreator = !d["isShared"].ToObject<bool>();
             IsQuickMix = d["isQuickMix"].ToObject<bool>();
-            Name = d["stationName"].ToString();
+            Name = WebUtility.HtmlDecode(d["stationName"].ToString());
             InfoUrl = (string)d["stationDetailUrl"];
 
             if (IsQuickMix)

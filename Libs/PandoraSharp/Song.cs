@@ -44,8 +44,8 @@ namespace PandoraSharp
             _pandora = p;
 
             TrackToken = (string)song["trackToken"];
-            Artist = (string)song["artistName"];
-            Album = (string)song["albumName"];
+            Artist = WebUtility.HtmlDecode((string)song["artistName"]);
+            Album = WebUtility.HtmlDecode((string)song["albumName"]);
 
             AmazonAlbumID = (string)song["amazonAlbumDigitalAsin"];
             AmazonTrackID = (string)song["amazonSongDigitalAsin"];
@@ -108,7 +108,7 @@ namespace PandoraSharp
 
             Rating = (((int)song["songRating"]) > 0 ? SongRating.love : SongRating.none);
             StationID = (string)song["stationId"];
-            SongTitle = (string)song["songName"];
+            SongTitle = WebUtility.HtmlDecode((string)song["songName"]);
             SongDetailUrl = (string)song["songDetailUrl"];
             ArtistDetailUrl = (string)song["artistDetailUrl"];
             AlbumDetailUrl = (string)song["albumDetailUrl"];
