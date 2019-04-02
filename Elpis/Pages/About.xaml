@@ -1,7 +1,14 @@
-﻿<UserControl x:Class="Elpis.About" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl x:Class="Elpis.About" 
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Converter="clr-namespace:GUI.Converters"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Elpis"
+             Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             xmlns:Converter="clr-namespace:GUI.Converters"
              mc:Ignorable="d" d:DesignHeight="479" d:DesignWidth="482">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -11,35 +18,29 @@
                 <ResourceDictionary Source="/Elpis;component/Styles/Misc.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Converter:AssemblyVersionConverter x:Key="assemblyVersion" />
-            <Style x:Key="TextBase" TargetType="{x:Type TextBlock}">
-                <Setter Property="Foreground" Value="{StaticResource MainFontBrush}" />
-            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Background="{StaticResource MainBGBrush}">
-        <TextBlock Foreground="{StaticResource MainFontBrush}" FontSize="22" HorizontalAlignment="Center"
-    		               VerticalAlignment="Center" TextAlignment="Center">
-      Elpis <TextBlock Text="{Binding ., Converter={StaticResource assemblyVersion}}" />
-      <LineBreak />
-      © Adam Haile       
-      <LineBreak />
-      Alexey Seliverstov 
-      <LineBreak />
-      2015
-      <LineBreak />
-      <LineBreak />
-      <TextBlock FontWeight="DemiBold">Links:</TextBlock>
-      <LineBreak />
-      <Hyperlink Name="GitHub_Repo" Style="{StaticResource LinkStyle}"
-                         NavigateUri="https://github.com/adammhaile/Elpis"
-                  RequestNavigate="RequestNavigate">
-                <TextBlock Text="Elpis Source Repository" FontStyle="Italic" Foreground="{StaticResource MainFontBrush}" 
-                           ToolTip="https://github.com/adammhaile/Elpis" />
-              </Hyperlink> 
-    </TextBlock>
-
-
-        <Button Content="Close" Name="btnClose" Click="btnClose_Click" Width="100" Height="30"
-            HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="5" />
+    <Grid Background="{x:Null}">
+        <TextBlock FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
+            Elpis <TextBlock Text="{Binding ., Converter={StaticResource assemblyVersion}}" />
+            <LineBreak />
+            © Adam Haile       
+            <LineBreak />
+            Alexey Seliverstov 
+            <LineBreak />
+            2015
+            <LineBreak />
+            <LineBreak />
+            © ƝƠƇƬƲƦƝƛԼ
+            <LineBreak />
+            2019
+            <LineBreak />  
+            <LineBreak />
+            <TextBlock FontWeight="DemiBold">Links:</TextBlock>
+            <LineBreak />
+            <Hyperlink Name="GitHub_Repo" Style="{StaticResource LinkStyle}" NavigateUri="https://github.com/adammhaile/Elpis" RequestNavigate="RequestNavigate">
+                <TextBlock Text="Elpis Source Repository" FontStyle="Italic" Foreground="{StaticResource MainFontBrush}" ToolTip="https://github.com/adammhaile/Elpis" />
+            </Hyperlink> 
+        </TextBlock>
     </Grid>
 </UserControl>

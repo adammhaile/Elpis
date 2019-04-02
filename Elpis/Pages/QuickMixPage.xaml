@@ -4,7 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:Elpis.Controls"
-             mc:Ignorable="d" d:DesignHeight="440" d:DesignWidth="440"
+             Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
+             mc:Ignorable="d" 
              Loaded="UserControl_Loaded"
              Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
@@ -18,7 +22,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Background="{StaticResource MainBGBrush}">
+    <Grid Background="{x:Null}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -29,12 +33,10 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0"
                    Text="Select the Stations to use in QuickMix"
-                   Foreground="{StaticResource MainFontBrush}"
                    FontSize="18"
                    FontWeight="DemiBold"
                    TextAlignment="Center"/>
-        <Image Grid.Row="1" Grid.ColumnSpan="3" Source="/Elpis;component/Images/background.png"
-               Margin="10" Opacity="0.25"/>
+
         <ScrollViewer Name="ResultScroller" Grid.Row="1"
                   ScrollViewer.VerticalScrollBarVisibility="Auto" Style="{StaticResource FadeScroller}">
             <ItemsControl Name="StationItems" HorizontalContentAlignment="Stretch">
@@ -50,7 +52,7 @@
                                 <CheckBox Name="chkUse" Grid.Column="0" IsChecked="{Binding Path=UseQuickMix, Mode=TwoWay}" />
                                 <TextBlock Grid.Column="1" Name="txtStationName" Text="{Binding Path=Name}"
                            FontSize="18" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                           Foreground="{StaticResource MainFontBrush}" Controls:TextBlockUtils.AutoTooltip="True"
+                            Controls:TextBlockUtils.AutoTooltip="True"
                            Controls:TextBlockUtils.AutoTooltipFontSize="12" />
                             </Grid>
                         </ContentControl>
@@ -71,9 +73,9 @@
                     Width="75"
                     Margin="3" Click="btnCancel_Click"/>
         </Grid>
-        <Border Name="WaitScreen" BorderBrush="{StaticResource MainBGBrush}" BorderThickness="0"
-            Background="{StaticResource MainWaitBrush}" Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3">
-            <Grid x:Name="Spinner" Background="{StaticResource TransparencyShadeBrush}">
+        <Border Name="WaitScreen" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0"
+            Visibility="Collapsed" Grid.Row="0" Grid.RowSpan="3" Grid.ColumnSpan="3">
+            <Grid x:Name="Spinner" Background="{x:Null}">
                 <Controls:ContentSpinner Margin="10" Width="190" ContentScale="1" />
             </Grid>
         </Border>

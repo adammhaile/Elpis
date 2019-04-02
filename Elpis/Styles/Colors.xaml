@@ -7,7 +7,9 @@
   <Color x:Key="ShadeMediumLight">#cfd8dc</Color>
   <Color x:Key="ShadeLight">#FFFFFF</Color>
   <Color x:Key="TransparencyShade">#212121</Color>
+    
 
-  <Color x:Key="ErrorShade">#EE0000</Color>
+    <Color x:Key="ErrorShade">#EE0000</Color>
+    <Color x:Key="Blue">#FF393EAC</Color>
 
 </ResourceDictionary>

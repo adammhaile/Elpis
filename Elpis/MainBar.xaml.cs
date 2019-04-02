@@ -77,16 +77,6 @@ namespace Elpis
             return state ? Visibility.Visible : Visibility.Hidden;
         }
 
-        private void ShowAbout(bool state)
-        {
-            btnAbout.Visibility = Vis(state);
-        }
-
-        private void ShowSettings(bool state)
-        {
-            btnSettings.Visibility = Vis(state);
-        }
-
         private void ShowNext(bool state)
         {
             btnNext.Visibility = Vis(state);
@@ -97,21 +87,6 @@ namespace Elpis
             gridPlayPause.Visibility = Vis(state);
 
             btnVolume.Visibility = Vis(state);
-        }
-
-        private void ShowStationList(bool state)
-        {
-            btnStationList.Visibility = Vis(state);
-        }
-
-        private void ShowStationListClose(bool state)
-        {
-            btnStationListClose.Visibility = Vis(state);
-        }
-
-        private void ShowCreateStation(bool state)
-        {
-            btnCreateStation.Visibility = Vis(state);
         }
 
         private void ShowCreateStationClose(bool state)
@@ -126,80 +101,39 @@ namespace Elpis
 
         public void SetModeLoading()
         {
-            ShowAbout(false);
-            ShowSettings(false);
             
-            ShowStationList(false);
-            ShowStationListClose(false);
-            ShowCreateStation(false);
             ShowCreateStationClose(false);
         }
 
         public void SetModePlayList()
         {
-            ShowAbout(true);
-            ShowSettings(true);
-
             //This will not go away once set, that's intended
             SetPlaying(true);
-            ShowStationList(true);
-            ShowStationListClose(false);
-            ShowCreateStation(true);
             ShowCreateStationClose(false);
         }
 
         public void SetModeStationList(bool stationLoaded)
         {
-            ShowAbout(true);
-            ShowSettings(true);
-
-            ShowStationList(!stationLoaded);
-            ShowStationListClose(stationLoaded);
-            ShowCreateStation(true);
             ShowCreateStationClose(false);
         }
 
         public void SetModeSearch()
         {
-            ShowAbout(true);
-            ShowSettings(true);
-
-            ShowStationList(true);
-            ShowStationListClose(false);
-            ShowCreateStation(false);
             ShowCreateStationClose(true);
         }
 
         public void SetModeLogin()
         {
-            ShowAbout(true);
-            ShowSettings(true);
-
-            ShowStationList(false);
-            ShowStationListClose(false);
-            ShowCreateStation(false);
             ShowCreateStationClose(false);
         }
 
         public void SetModeSettings()
         {
-            ShowAbout(true);
-            ShowSettings(true);
-
-            ShowStationList(false);
-            ShowStationListClose(false);
-            ShowCreateStation(false);
             ShowCreateStationClose(false);
         }
 
         public void SetModeAbout()
         {
-            ShowAbout(true);
-            ShowSettings(true);
-
-            ShowStationList(false);
-            ShowStationListClose(false);
-            ShowCreateStation(false);
             ShowCreateStationClose(false);
         }
         #endregion
@@ -284,13 +218,13 @@ namespace Elpis
                 VolumeChanged(e.NewValue);
 
             if (Volume == 0)
-                imgVolume.Source = new BitmapImage(Resources["Image_Volume_0"] as System.Uri);
+                imgVolume.Kind = MaterialDesignThemes.Wpf.PackIconKind.VolumeOff;
             else if (Volume > 0 && Volume < 33)
-                imgVolume.Source = new BitmapImage(Resources["Image_Volume_33"] as System.Uri);
+                imgVolume.Kind = MaterialDesignThemes.Wpf.PackIconKind.VolumeLow;
             else if(Volume >= 33 && Volume < 66)
-                imgVolume.Source = new BitmapImage(Resources["Image_Volume_66"] as System.Uri);
+                imgVolume.Kind = MaterialDesignThemes.Wpf.PackIconKind.VolumeMedium;
             else if(Volume >= 66)
-                imgVolume.Source = new BitmapImage(Resources["Image_Volume_100"] as System.Uri);
+                imgVolume.Kind = MaterialDesignThemes.Wpf.PackIconKind.VolumeHigh;
         }
 
         private void btnVolume_Click(object sender, RoutedEventArgs e)

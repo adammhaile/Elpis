@@ -41,12 +41,6 @@ namespace Elpis
         public string Version { get; set; }
         public event CloseEvent Close;
 
-        private void btnClose_Click(object sender, RoutedEventArgs e)
-        {
-            if (Close != null)
-                Close();
-        }
-
         private void RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);

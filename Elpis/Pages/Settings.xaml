@@ -3,15 +3,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:config="clr-namespace:Elpis" mc:Ignorable="d"
              xmlns:Controls="clr-namespace:Elpis.Controls" xmlns:Hotkeys="clr-namespace:Elpis.Hotkeys"
+             Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              d:DesignHeight="479" d:DesignWidth="442" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Elpis;component/Styles/Brushes.xaml" />
-                <ResourceDictionary Source="/Elpis;component/Styles/BaseControls.xaml" />
                 <ResourceDictionary Source="/Elpis;component/Styles/ScrollBars.xaml" />
-                <ResourceDictionary Source="/Elpis;component/Styles/Images.xaml" />
-                <ResourceDictionary Source="/Elpis;component/Styles/ImageButton.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <x:Array x:Key="AudioFormats" Type="{x:Type config:ConfigDropDownItem}">
                 <config:ConfigDropDownItem Display="AAC Plus" Value="aacplus" />
@@ -28,26 +28,27 @@
             </x:Array>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Background="{StaticResource MainBGBrush}">
+    <Grid Background="{x:Null}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
-                  Style="{StaticResource FadeScroller}">
-            <StackPanel Grid.Row="0" VerticalAlignment="Stretch">
+                  Style="{StaticResource for_scrollviewer}">
+            <StackPanel Grid.Row="0" VerticalAlignment="Stretch"  Margin="10">
                 <!-- Due to a bug in the VS2010 Designer, the contents of expanders are not visible at design time when using custom styles.
                      In order to see the contents while designing, add Style="" to the main expander tag section of each. Then remove when done. -->
+
                 <Expander Header="Login" Margin="5" IsExpanded="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Grid.Column="0" Margin="4" Name="chkAutoLogin"
+                        <CheckBox Grid.Column="0" Margin="5" Name="chkAutoLogin"
                       IsChecked="True"
                       Content="Automatically Login" />
-                        <Button Grid.Column="1" Name="btnLogout" Content="Logout" HorizontalAlignment="Right"
+                        <Button Grid.Column="1" Name="btnLogout" Margin="5"  Content="Logout" HorizontalAlignment="Right"  Style="{DynamicResource MaterialDesignFlatButton}"
                     Click="btnLogout_Click">
                             <Button.ToolTip>
                                 <TextBlock FontSize="14">
@@ -74,8 +75,8 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Audio Format" FontSize="16" />
-                        <ComboBox Name="cmbAudioFormat" Grid.Row="0" Grid.Column="1" Margin="3"
+                        <Label Grid.Row="0" Grid.Column="0" Content="Audio Format" Margin="5" FontSize="16" />
+                        <ComboBox Name="cmbAudioFormat" Grid.Row="0" Grid.Column="1" Margin="5" 
                       ItemsSource="{StaticResource AudioFormats}" DisplayMemberPath="Display" SelectedValuePath="Value">
                             <ComboBox.ToolTip>
                                 <TextBlock FontSize="14">
@@ -87,17 +88,17 @@
                                 </TextBlock>
                             </ComboBox.ToolTip>
                         </ComboBox>
-                        <Label Grid.Row="1" Grid.Column="0" Content="Station Sort Order" FontSize="16" />
-                        <ComboBox Name="cmbStationSort" Grid.Row="1" Grid.Column="1" Margin="3"
+                        <Label Grid.Row="1" Grid.Column="0" Content="Station Sort Order" Margin="5"  FontSize="16" />
+                        <ComboBox Name="cmbStationSort" Grid.Row="1" Grid.Column="1" Margin="5" 
                       ItemsSource="{StaticResource StationSortOrder}" DisplayMemberPath="Display" SelectedValuePath="Value" />
-                        <Label Grid.Row="2" Grid.Column="0" Content="Output Device" FontSize="16" />
-                        <ComboBox Name="cmbOutputDevice" Grid.Row="2" Grid.Column="1" Margin="3" />
-                        <CheckBox Name="chkAutoPlay" Grid.Row="3" Grid.ColumnSpan="2" Margin="4"
+                        <Label Grid.Row="2" Grid.Column="0" Content="Output Device" Margin="5"  FontSize="16" />
+                        <ComboBox Name="cmbOutputDevice" Grid.Row="2" Grid.Column="1" Margin="5"  />
+                        <CheckBox Name="chkAutoPlay" Grid.Row="3" Grid.ColumnSpan="2" Margin="5" 
                       IsChecked="True"
                       Content="Automatically Play Last Station" />
                     </Grid>
                 </Expander>
-                <Expander Header="General" Margin="5" IsExpanded="True">
+                <Expander Header="General" Margin="5" IsExpanded="False">
                     <Grid Height="144">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -109,34 +110,34 @@
                             <ColumnDefinition Width="55*" />
                             <ColumnDefinition Width="45*" />
                         </Grid.ColumnDefinitions>
-                        <CheckBox Name="chkCheckUpdates" Grid.Row="0" Margin="4"
+                        <CheckBox Name="chkCheckUpdates" Grid.Row="0" Margin="5" 
                       IsChecked="True"
                       Content="Check for Updates" />
-                        <CheckBox Name="chkTrayMinimize" Grid.Row="1" Grid.Column="0" Margin="4"
+                        <CheckBox Name="chkTrayMinimize" Grid.Row="1" Grid.Column="0" Margin="5" 
                       IsChecked="True" ToolTip="Exit option in tray menu must be used to fully close."
                       Content="Minimize / Close to Tray" />
-                        <CheckBox Name="chkShowNotify" Grid.Row="1" Grid.Column="1" Margin="4"
+                        <CheckBox Name="chkShowNotify" Grid.Row="1" Grid.Column="1" Margin="5" 
                                 IsChecked="True"
                                 Content="Show Notifications"
                                 ToolTip="Display notificationsin toolbar on each new song"/>
-                        <CheckBox Name="chkRemoteControlEnabled" Grid.Row="2" Grid.Column="1" Margin="4"
+                        <CheckBox Name="chkRemoteControlEnabled" Grid.Row="2" Grid.Column="1" Margin="5" 
                                 IsChecked="True"
                                 Content="Remote Control"
                                 ToolTip="Open TCP port to listen for commands from ElpisRemote app"/>
-                        <CheckBox Name="chkPauseOnLock" Grid.Row="0" Grid.Column="2" Margin="4"
+                        <CheckBox Name="chkPauseOnLock" Grid.Row="0" Grid.Column="2" Margin="5"
                                   IsChecked="False" Content="Pause on SystemLock"
                                   ToolTip="Elpis will pause when the system is locked and resume when unlocked." />
-                        <CheckBox Name="chkCheckBetaUpdates" Grid.Row="2" Grid.Column="0" Margin="4"
+                        <CheckBox Name="chkCheckBetaUpdates" Grid.Row="2" Grid.Column="0" Margin="5"
                                   IsChecked="False" Content="Check for Beta Updates"
                                   ToolTip="These updates are experimental and are prone to break. Use it only if you want to test unstable code." />
-                        <Label Content="Your local IP Address: " HorizontalAlignment="Left" Margin="30,1,0,-1" Grid.Row="3"/>
-                        <ListBox PreviewKeyDown="txtIPAddress_PreviewKeyDown" Name="txtIPAddress" HorizontalAlignment="Center" Margin="207,1,23,-27" Width="174" Height="45"
+                        <Label Content="Your local IP Address: " HorizontalAlignment="Left" Margin="5" Grid.Row="3"/>
+                        <ListBox PreviewKeyDown="txtIPAddress_PreviewKeyDown" Name="txtIPAddress" HorizontalAlignment="Center" Margin="207,1,23,-27" Width="200" Height="45"
                                  Grid.Row="3" Grid.ColumnSpan="2" IsEnabled="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden"/>
                         <!--TextBox Name="txtIPAddress" HorizontalAlignment="Center" Height="23" Margin="220,3,10,3" TextWrapping="Wrap" Text="TextBox" Width="174"
                                  Grid.Row="3" Grid.ColumnSpan="2" IsEnabled="False"/-->
                     </Grid>
                 </Expander>
-                <Expander Header="Global Hotkeys" IsExpanded="True" Margin="5" >
+                <Expander Header="Global Hotkeys" IsExpanded="False" Margin="5" >
                     <StackPanel Orientation="Vertical" Margin="0 2 0 5">
                         <Grid Name="HotKeyGrid">
                             <Grid.RowDefinitions>
@@ -149,11 +150,11 @@
                                 <ColumnDefinition Width="1*"  />
                                 <ColumnDefinition Width="3*"  />
                             </Grid.ColumnDefinitions>
-                            <Label Content="Command" Grid.Column="0" HorizontalContentAlignment="Left" />
-                            <Label Content="Hotkey" Grid.Column="1" HorizontalContentAlignment="Left" />
-                            <Label Grid.Row="0" Grid.Column="2" Content="Global" HorizontalContentAlignment="Center"/>
-                            <Label Grid.Row="0" Grid.Column="3" Content="Enabled" HorizontalContentAlignment="Center"/>
-                            <Label Grid.Row="0" Grid.Column="4" Content="Remove" HorizontalContentAlignment="Center"/>
+                            <Label Content="Command" Grid.Column="0" Margin="5" HorizontalContentAlignment="Left" />
+                            <Label Content="Hotkey" Grid.Column="1" Margin="5" HorizontalContentAlignment="Left" />
+                            <Label Grid.Row="0" Grid.Column="2" Margin="5" Content="Global" HorizontalContentAlignment="Center"/>
+                            <Label Grid.Row="0" Grid.Column="3" Margin="5" Content="Enabled" HorizontalContentAlignment="Center"/>
+                            <Label Grid.Row="0" Grid.Column="4" Margin="5" Content="Remove" HorizontalContentAlignment="Center"/>
                         </Grid>
 
                         <ItemsControl Name="HotKeyItems">
@@ -168,10 +169,10 @@
                                             <ColumnDefinition Width="3*"  />
                                         </Grid.ColumnDefinitions>
                                         <ComboBox Grid.Column="0" ItemsSource="{Binding Source={x:Static Hotkeys:PlayerCommands.AllCommands}}"
-                                                  DisplayMemberPath="Name" SelectedItem="{Binding Path=Value.Command}" Margin="0 0 5 0" />
+                                                  DisplayMemberPath="Name" SelectedItem="{Binding Path=Value.Command}" Margin="5" />
                                         <config:HotKeyBox Grid.Column="1" IsReadOnly="True"
                                                           Text="{Binding Path=Value.KeysString, Mode=OneWay}"
-                                                          Margin="0 0 5 0"  >
+                                                          Margin="5"  >
                                             <config:HotKeyBox.ToolTip>
                                                 <TextBlock>
                                                     Only set Alphanumeric or Space keys as Global
@@ -186,7 +187,7 @@
                                                 </TextBlock>
                                             </config:HotKeyBox.ToolTip>
                                         </config:HotKeyBox>
-                                        <CheckBox Grid.Column="2" IsChecked="{Binding Path=Value.Global}" HorizontalAlignment="Center">
+                                        <CheckBox Grid.Column="2" IsChecked="{Binding Path=Value.Global}" Margin="5" HorizontalAlignment="Center">
                                             <CheckBox.ToolTip>
                                                 <TextBlock>
                                                     Only set Alphanumeric or Space keys as Global
@@ -201,9 +202,9 @@
                                                 </TextBlock>
                                             </CheckBox.ToolTip>
                                         </CheckBox>
-                                        <CheckBox Grid.Column="3" IsChecked="{Binding Path=Value.Enabled}" HorizontalAlignment="Center"/>
+                                        <CheckBox Grid.Column="3" IsChecked="{Binding Path=Value.Enabled}" Margin="5" HorizontalAlignment="Center"/>
                                         <TextBlock Grid.Column="4" Text="r" FontFamily="Webdings" FontSize="16"
-                                                   Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"
                                                    MouseDown="RemoveHotkey_MouseDown">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
@@ -219,7 +220,7 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <Button Name="btnAddHotKey" Click="btnAddHotKey_Click" HorizontalAlignment="Right" Width="80" Height="30" Padding="2 2 2 2" Margin="0 4 4 5">Add New</Button>
+                        <Button Name="btnAddHotKey" Click="btnAddHotKey_Click" HorizontalAlignment="Right" Width="80" Height="30" Padding="2 2 2 2" Margin="5">Add New</Button>
                     </StackPanel>
                 </Expander>
                 <Expander Header="Proxy - Changes Require Restarting Elpis"
@@ -238,28 +239,28 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Address" FontSize="16" />
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="" Margin="3"
+                        <Label Grid.Row="0" Grid.Column="0" Margin="5" Content="Address" FontSize="16" />
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="" Margin="5"
                                  FontSize="16" TextAlignment="Center"
                                     Name="txtProxyAddress"/>
 
-                        <Label Grid.Row="0" Grid.Column="2" Content="Port" FontSize="16" />
+                        <Label Grid.Row="0" Grid.Column="2" Content="Port" Margin="5" FontSize="16" />
                         <TextBox Grid.Row="0" Grid.Column="3" Text="" Width="55"
                                  FontSize="16"
-                                 HorizontalAlignment="Left" Margin="3" TextAlignment="Center"
+                                 HorizontalAlignment="Left" Margin="5" TextAlignment="Center"
                                  PreviewTextInput="txtProxyPort_PreviewTextInput"
                                  Name="txtProxyPort"/>
 
 
-                        <Label Grid.Row="2" Grid.Column="0" Content="Username" FontSize="16" />
+                        <Label Grid.Row="2" Grid.Column="0" Margin="5" Content="Username" FontSize="16" />
                         <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"
                                  Text=""
                             FontSize="16"
-                            TextAlignment="Center" Margin="3"
+                            TextAlignment="Center" Margin="5"
                             Name="txtProxyUser"/>
 
-                        <Label Grid.Row="3" Grid.Column="0" Content="Password" FontSize="16" />
-                        <PasswordBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="3"
+                        <Label Grid.Row="3" Grid.Column="0" Content="Password" Margin="5" FontSize="16" />
+                        <PasswordBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" Margin="5"
                                     HorizontalContentAlignment="Center"
                                     FontSize="16"
                                     Name="txtProxyPassword"/>
@@ -272,15 +273,15 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <CheckBox Name="chkEnableScrobbler" Grid.Column="0"
-                                  Content="Enable Scrobbler" Margin="4"
+                                  Content="Enable Scrobbler" Margin="5"
                                   ToolTip="Enable Elpis to Scrobble to Last.FM - Must authenticate after enabling"
                                   Click="chkEnableScrobbler_Click"/>
                         <Button Name="btnLastFMAuth" Grid.Column="1"
-                                Content="Authenticate Account"
+                                Content="Authenticate Account" Margin="5"
                                 ToolTip="Authenticate and allow Elpis to access Last.FM"
                                 Click="btnLastFMAuth_Click"/>
                         <Button Name="btnLastFMDisable" Grid.Column="1"
-                                Visibility="Hidden"
+                                Visibility="Hidden" Margin="5"
                                 Content="De-Authenticate Account"
                                 ToolTip="Remove Last.FM Authentication"
                                 Click="btnLastFMDisable_Click"/>
@@ -294,8 +295,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Name="btnSave" Content="Save Settings" Margin="4" Click="btnSave_Click" />
-            <Button Grid.Row="1" Grid.Column="1" Name="btnCancel" Content="Cancel" Margin="4" Click="btnCancel_Click" />
+            <Button Grid.Column="0" Name="btnSave" Content="Save Settings" Margin="5" Click="btnSave_Click"  Style="{DynamicResource MaterialDesignFlatButton}"/>
         </Grid>
     </Grid>
 </UserControl>
