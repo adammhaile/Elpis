@@ -903,6 +903,8 @@ namespace Elpis
             CurrentPage = control;
             if (control == _playlistPage)
             {
+                NowPlaying.IsSelected = true;
+                SettingsPage.IsSelected = false;
                 ContentGrid.RowDefinitions[2].Height = new GridLength(75);
             }
             this.Dispatch(() => cntCtrl.Content = control);
