@@ -18,7 +18,7 @@
         WindowStartupLocation="CenterScreen" 
         WindowStyle="None"
         WindowState="Normal" 
-        ResizeMode="CanResize"
+        ResizeMode="NoResize"
         Icon="/Elpis;component/Images/main_icon.png" 
         Loaded="Window_Loaded" 
         Closing="Window_Closing"

@@ -75,15 +75,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
-    </Reference>
-    <Reference Include="DMSkin.Core">
-      <HintPath>C:\Users\ChaoticArts\source\repos\DMSkin-CloudMusic-master\DMSkin.CloudMusic\DMSkin.CloudMusic\bin\Debug\DMSkin.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DMSkin.WPF">
-      <HintPath>C:\Users\ChaoticArts\source\repos\DMSkin-for-WPF-master\DMSkin.WPF\bin\Debug\DMSkin.WPF.dll</HintPath>
-    </Reference>
     <Reference Include="FontAwesome.WPF, Version=4.7.0.37774, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
       <HintPath>..\packages\FontAwesome.WPF.4.7.0.9\lib\net40\FontAwesome.WPF.dll</HintPath>
     </Reference>
@@ -262,10 +253,6 @@
     <Page Include="Pages\PlaylistPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\Button.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\Color.xaml">
       <Generator>MSBuild:Compile</Generator>
