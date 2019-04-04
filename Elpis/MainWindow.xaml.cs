@@ -137,10 +137,10 @@ namespace Elpis
 
         public void InitReleaseData()
         {
-#if APP_RELEASE
+//#if APP_RELEASE
             _bassRegEmail = ReleaseData.BassRegEmail;
             _bassRegKey = ReleaseData.BassRegKey;
-#endif
+//#endif
         }
 
         #endregion
@@ -201,10 +201,13 @@ namespace Elpis
 
         private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            _prevPage = CurrentPage;
+
             ContentGrid.RowDefinitions[2].Height = new GridLength(0);
             switch (((System.Windows.Controls.ListViewItem)((System.Windows.Controls.ListView)sender).SelectedItem).Name)
             {
                 case "Stations":
+
                     ShowPage(_stationPage);
                     break;
                 case "AddStation":
@@ -212,7 +215,6 @@ namespace Elpis
                     break;
                 case "NowPlaying":
                     ShowPage(_playlistPage);
-                    ContentGrid.RowDefinitions[2].Height = new GridLength(75);
                     break;
                 case "HistoryPage":
                     ShowPage(_historyPage);
@@ -340,7 +342,7 @@ namespace Elpis
                     _lastFMPage.SetAuthURL(url);
                     _scrobbler.LaunchAuthPage();
 
-                    //ShowPage(_lastFMPage);
+                    ShowPage(_lastFMPage);
                 }
                 catch (Exception ex)
                 {
@@ -898,6 +900,11 @@ namespace Elpis
 
         public void ShowPage(UserControl control)
         {
+            CurrentPage = control;
+            if (control == _playlistPage)
+            {
+                ContentGrid.RowDefinitions[2].Height = new GridLength(75);
+            }
             this.Dispatch(() => cntCtrl.Content = control);
         }
 
