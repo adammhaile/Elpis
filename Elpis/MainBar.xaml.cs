@@ -56,6 +56,7 @@ namespace Elpis
         public event MainBarHandler StationListClick;
         public event MainBarHandler CreateStationClick;
         public event MainBarHandler PlayPauseClick;
+        public event MainBarHandler VolumeClick;
         public event MainBarHandler NextClick;
         public event MainBarHandler SettingsClick;
         public event MainBarHandler AboutClick;
@@ -230,14 +231,21 @@ namespace Elpis
         private void btnVolume_Click(object sender, RoutedEventArgs e)
         {
             volCloseTimer.Stop();
-            gridVolume.Visibility = System.Windows.Visibility.Visible;
+            if (gridVolume.Visibility == Visibility.Visible)
+            {
+                gridVolume.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                gridVolume.Visibility = Visibility.Visible;
+            }
         }
 
         void volCloseTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             this.BeginDispatch(() =>
             {
-                gridVolume.Visibility = System.Windows.Visibility.Hidden;
+                gridVolume.Visibility = Visibility.Hidden;
             }); 
         }
 
