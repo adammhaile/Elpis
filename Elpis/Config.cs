@@ -25,6 +25,7 @@ using PandoraSharp;
 using Util;
 using System.Windows;
 using System.Windows.Input;
+using MaterialDesignColors;
 
 namespace Elpis
 {
@@ -123,6 +124,7 @@ namespace Elpis
 
         //public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
         public static MapConfigEntry System_OutputDevice = new MapConfigEntry("System_OutputDevice", "");
+        public static MapConfigEntry Current_Color = new MapConfigEntry("Current_Color", "");
     }
 
     public struct ConfigDropDownItem
@@ -174,6 +176,8 @@ namespace Elpis
         public Dictionary<int,HotkeyConfig> Elpis_HotKeys { get; set; }
 
         public string System_OutputDevice { get; set; }
+
+        public string Current_Color { get; set; }
     }
 
     public class Config
@@ -290,6 +294,7 @@ namespace Elpis
             }
 
             Fields.System_OutputDevice = (string)_c.GetValue(ConfigItems.System_OutputDevice);
+            Fields.Current_Color = (string)_c.GetValue(ConfigItems.Current_Color);
 
         Log.O("Config File Contents:");
             Log.O(_c.LastConfig);
@@ -353,6 +358,7 @@ namespace Elpis
                 _c.SetValue(ConfigItems.HotKeysList,hotkeysFlattened);
 
                 _c.SetValue(ConfigItems.System_OutputDevice, Fields.System_OutputDevice);
+                _c.SetValue(ConfigItems.Current_Color, Fields.Current_Color);
             }
             catch (Exception ex)
             {

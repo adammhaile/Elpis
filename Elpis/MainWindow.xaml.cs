@@ -25,6 +25,9 @@ using System.Windows.Interop;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using System.Windows.Shell;
 using System.Windows.Controls;
+using MaterialDesignColors;
+using System.Linq;
+//Background="#191c1f"
 
 namespace Elpis
 {
@@ -172,7 +175,10 @@ namespace Elpis
                 if (_config.Fields.Proxy_Address != string.Empty)
                     PRequest.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
                         _config.Fields.Proxy_User, _config.Fields.Proxy_Password);
-
+                SwatchesProvider swatchesProvider = new SwatchesProvider();
+                
+                Swatch color = swatchesProvider.Swatches.First(a => a.Name == _config.Fields.Current_Color);
+                new PaletteHelper().ReplacePrimaryColor(color);
                 var loc = _config.Fields.Elpis_StartupLocation;
                 var size = _config.Fields.Elpis_StartupSize;
 

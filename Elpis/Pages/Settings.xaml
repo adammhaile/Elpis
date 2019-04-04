@@ -18,6 +18,27 @@
                 <config:ConfigDropDownItem Display="MP3 (128kbps)" Value="mp3" />
                 <config:ConfigDropDownItem Display="MP3 HiFi (192kbps) - Requires Pandora One" Value="mp3-hifi" />
             </x:Array>
+            <x:Array x:Key="ThemeColors" Type="{x:Type config:ConfigDropDownItem}">
+                <config:ConfigDropDownItem Display="Amber" Value="Amber" />
+                <config:ConfigDropDownItem Display="Blue" Value="Blue" />
+                <config:ConfigDropDownItem Display="BlueGrey" Value="BlueGrey" />
+                <config:ConfigDropDownItem Display="Brown" Value="Brown" />
+                <config:ConfigDropDownItem Display="Cyan" Value="Cyan" />
+                <config:ConfigDropDownItem Display="DeepOrange" Value="DeepOrange" />
+                <config:ConfigDropDownItem Display="DeepPurple" Value="DeepPurple" />
+                <config:ConfigDropDownItem Display="Green" Value="Green" />
+                <config:ConfigDropDownItem Display="Grey" Value="Grey" />
+                <config:ConfigDropDownItem Display="Indigo" Value="Indigo" />
+                <config:ConfigDropDownItem Display="LightBlue" Value="LightBlue" />
+                <config:ConfigDropDownItem Display="LightGreen" Value="LightGreen" />
+                <config:ConfigDropDownItem Display="Lime" Value="Lime" />
+                <config:ConfigDropDownItem Display="Orange" Value="Orange" />
+                <config:ConfigDropDownItem Display="Pink" Value="Pink" />
+                <config:ConfigDropDownItem Display="Purple" Value="Purple" />
+                <config:ConfigDropDownItem Display="Red" Value="Red" />
+                <config:ConfigDropDownItem Display="Teal" Value="Teal" />
+                <config:ConfigDropDownItem Display="Yellow" Value="Yellow" />
+            </x:Array>
             <x:Array x:Key="StationSortOrder" Type="{x:Type config:ConfigDropDownItem}">
                 <config:ConfigDropDownItem Display="Date Ascending" Value="DateAsc" />
                 <config:ConfigDropDownItem Display="Date Descending" Value="DateDesc" />
@@ -27,6 +48,7 @@
                 <config:ConfigDropDownItem Display="Rating Descending" Value="RatingDesc" />
             </x:Array>
         </ResourceDictionary>
+        
     </UserControl.Resources>
     <Grid Background="{x:Null}">
         <Grid.RowDefinitions>
@@ -61,6 +83,22 @@
                             </Button.ToolTip>
                         </Button>
 
+                    </Grid>
+                </Expander>
+                <Expander Header="Theme" Margin="5" IsExpanded="True">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" Margin="8">
+                            <TextBlock VerticalAlignment="Center">Light</TextBlock>
+                            <ToggleButton Margin="8 0 16 0" IsEnabled="False" IsChecked="True" Name="LightDark" Checked="Theme_Checked" Unchecked="Theme_Checked" />
+                            <TextBlock VerticalAlignment="Center">Dark</TextBlock>
+                        </StackPanel>
+                        <Label Grid.Column="1" HorizontalAlignment="Right" Content="Primary Color:" Margin="5" FontSize="16" />
+                        <ComboBox Name="primaryPaletteComboBox" Grid.Column="2" Margin="5" Width="100" SelectionChanged="PrimaryPaletteComboBox_SelectionChanged" />
                     </Grid>
                 </Expander>
                 <Expander Header="Pandora" Margin="5" IsExpanded="True">
