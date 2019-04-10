@@ -1012,7 +1012,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
-                    <BulletDecorator Background="{StaticResource MainBGBrush}">
+                    <BulletDecorator Background="{x:Null}">
                         <BulletDecorator.Bullet>
                             <Border x:Name="Border" Width="20" Height="20" CornerRadius="0"
                       Background="{StaticResource ControlBGBrush}" BorderThickness="1" BorderBrush="{StaticResource ControlBorderBrush}">
@@ -1073,7 +1073,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RadioButton}">
-                    <BulletDecorator Background="{StaticResource MainBGBrush}">
+                    <BulletDecorator Background="{x:Null}">
                         <BulletDecorator.Bullet>
                             <Grid Width="13" Height="13">
                                 <Ellipse x:Name="Border" Fill="{StaticResource ControlBGBrush}" StrokeThickness="1"
@@ -1295,7 +1295,7 @@
                               HorizontalAlignment="Left" />
                         <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}"
                      Template="{StaticResource ComboBoxTextBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,3,23,3"
-                     Focusable="True" Background="{StaticResource MainBGBrush}" Foreground="{StaticResource MainFontBrush}"
+                     Focusable="True" Background="{x:Null}" Foreground="{StaticResource MainFontBrush}"
                      Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}" />
                         <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}"
                    AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">

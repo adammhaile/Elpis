@@ -55,15 +55,12 @@ namespace Elpis
             _player = player;
             _player.SongStarted += _player_SongStarted;
             _player.PlaybackStateChanged += _player_PlaybackStateChanged;
-            _player.PlayedSongAdded += _player_PlayedSongAdded;
-            _player.PlayedSongRemoved += _player_PlayedSongRemoved;
             _player.LoadingNextSong += _player_LoadingNextSong;
             _player.FeedbackUpdateEvent += _player_FeedbackUpdateEvent;
             _player.PlaybackProgress += _player_PlaybackProgress;
             _player.StationLoaded += _player_StationLoaded;
             _player.StationLoading += _player_StationLoading;
             _player.ExceptionEvent += _player_ExceptionEvent;
-            _player.LogoutEvent += _player_LogoutEvent;
             InitializeComponent();
 
             _feedbackMap = new Dictionary<Song, ImageButton[]>();
@@ -80,10 +77,6 @@ namespace Elpis
             this.BeginDispatch(() => StationWaitScreen.Visibility = state ? Visibility.Visible : Visibility.Hidden);
         }
 
-        void _player_LogoutEvent(object sender)
-        {
-            lstOldSongs.Items.Clear();
-        }
 
         void _player_ExceptionEvent(object sender, ErrorCodes code, Exception ex)
         {
@@ -167,87 +160,9 @@ namespace Elpis
                                    });
         }
 
-        private void _player_PlayedSongRemoved(object sender, Song song)
-        {
-            this.BeginDispatch(() => PlayedSongRemove(song));
-        }
 
-        private void PlayedSongRemove(Song song)
-        {
-            ContentControl result = null;
-            foreach (ContentControl sc in lstOldSongs.Items)
-            {
-                if (song == sc.Content)
-                {
-                    result = sc;
-                    break;
-                }
-            }
 
-            if (result != null)
-            {
-                bool last = lstOldSongs.Items.IndexOf(result) == (lstOldSongs.Items.Count - 1);
-                Dispatcher.Invoke(AnimateListRemove(result, last));
-            }
-        }
-
-        private Action AnimateListRemove(ContentControl item, bool last)
-        {
-            return () =>
-                       {
-                           Storyboard remSB;
-                           if (last)
-                           {
-                               remSB = ((Storyboard) Resources["ListBoxRemoveLast"]).Clone();
-                           }
-                           else
-                           {
-                               remSB = ((Storyboard) Resources["ListBoxRemove"]).Clone();
-                               ((DoubleAnimation) remSB.Children[1]).From = (item).ActualHeight;
-                           }
-
-                           remSB.Completed += ((o, e) => lstOldSongs.Items.Remove(item));
-                           remSB.Begin(item);
-                       };
-        }
-
-        private void _player_PlayedSongAdded(object sender, Song song)
-        {
-            this.BeginDispatch(() => PlayedSongAdd(song));
-        }
-
-        private void PlayedSongAdd(Song song)
-        {
-            var songControl = new ContentControl();
-            RoutedEventHandler loadEvent = AnimateListAdd(lstOldSongs.Items.Count == 0);
-            songControl.Loaded += loadEvent;
-            songControl.Tag = loadEvent;
-            songControl.ContentTemplate = (DataTemplate) Resources["SongTemplate"];
-            songControl.Content = song;
-
-            lstOldSongs.Items.Insert(0, songControl);
-        }
-
-        private RoutedEventHandler AnimateListAdd(bool first)
-        {
-            return (o1, e1) =>
-                       {
-                           Storyboard addSB;
-                           if (first)
-                           {
-                               addSB = ((Storyboard) Resources["ListBoxAddFirst"]).Clone();
-                           }
-                           else
-                           {
-                               addSB = ((Storyboard) Resources["ListBoxAdd"]).Clone();
-                               //((DoubleAnimation) addSB.Children[0]).To = 96;//((ContentControl)o1).ActualHeight;
-                           }
-                           addSB.Begin((ContentControl) o1);
-
-                           var song = (ContentControl) o1;
-                           song.Loaded -= (RoutedEventHandler) song.Tag;
-                       };
-        }
+        
 
         private void SetSong(Song song)
         {

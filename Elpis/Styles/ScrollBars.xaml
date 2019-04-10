@@ -41,7 +41,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="{x:Type RepeatButton}">
-          <Border Background="{StaticResource MainBGBrush}" />
+          <Border Background="{x:Null}" />
         </ControlTemplate>
       </Setter.Value>
     </Setter>
@@ -70,7 +70,7 @@
         <RowDefinition Height="0.00001*" />
         <RowDefinition MaxHeight="18" />
       </Grid.RowDefinitions>
-      <Border Grid.RowSpan="3" CornerRadius="0" Background="{StaticResource MainBGBrush}" />
+      <Border Grid.RowSpan="3" CornerRadius="0" Background="{x:Null}" />
       <RepeatButton Grid.Row="0" Style="{StaticResource ScrollBarLineButton}" Height="18"
                     Command="ScrollBar.LineUpCommand" Content="M 0 4 L 8 4 L 4 0 Z" />
       <Track Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">

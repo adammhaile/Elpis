@@ -29,10 +29,10 @@
         <Setter Property="TextDecorations" Value="{x:Null}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Foreground" Value="{StaticResource LinkHoverBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="True">
-                <Setter Property="Foreground" Value="{StaticResource LinkBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="True">
                 <Setter Property="Cursor" Value="Hand" />

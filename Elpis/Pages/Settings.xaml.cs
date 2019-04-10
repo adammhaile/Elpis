@@ -32,6 +32,8 @@ using System.Net.Sockets;
 using System.Net;
 using System.Linq;
 using System.ComponentModel;
+using MaterialDesignColors;
+using System.Text.RegularExpressions;
 
 namespace Elpis
 {
@@ -58,7 +60,6 @@ namespace Elpis
 
         private readonly Player _player;
         private readonly HotKeyHost _keyHost;
-
         public Settings(Player player, Config config, HotKeyHost keyHost)
         {
             InitializeComponent();
@@ -113,6 +114,17 @@ namespace Elpis
 
             // Get current output device
             cmbOutputDevice.SelectedValue = _player.OutputDevice;
+
+
+            SwatchesProvider swatchesProvider = new SwatchesProvider();
+            List<string> PrimaryColorsList = swatchesProvider.Swatches.Select(a => a.Name).ToList();
+            primaryPaletteComboBox.Items.Clear();
+            foreach (string str in PrimaryColorsList)
+                primaryPaletteComboBox.Items.Add(str);
+
+            primaryPaletteComboBox.SelectedValue = _config.Fields.Current_Color;
+            Swatch color = swatchesProvider.Swatches.First(a => a.Name == _config.Fields.Current_Color);
+            new PaletteHelper().ReplacePrimaryColor(color);
 
             _config.SaveConfig();
 
@@ -184,6 +196,16 @@ namespace Elpis
                 _config.Fields.System_OutputDevice = (string)cmbOutputDevice.SelectedValue;
                 _player.OutputDevice = (string)cmbOutputDevice.SelectedValue;
             }
+
+            if (!_config.Fields.Current_Color.Equals(this.primaryPaletteComboBox.SelectedValue.ToString()))
+            {
+                _config.Fields.Current_Color = this.primaryPaletteComboBox.SelectedValue.ToString();
+
+                SwatchesProvider swatchesProvider = new SwatchesProvider();
+                Swatch color = swatchesProvider.Swatches.First(a => a.Name == this.primaryPaletteComboBox.SelectedValue.ToString());
+                new PaletteHelper().ReplacePrimaryColor(color);
+            }
+
 
             _config.SaveConfig();
         }
@@ -317,6 +339,16 @@ namespace Elpis
             {
                 Clipboard.SetText(txtIPAddress.SelectedItem.ToString());
             }
+        }
+
+        private void Theme_Checked(object sender, RoutedEventArgs e)
+        {
+            new PaletteHelper().SetLightDark((bool)(LightDark.IsChecked));
+        }
+
+        private void PrimaryPaletteComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 

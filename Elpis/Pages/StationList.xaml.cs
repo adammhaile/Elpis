@@ -17,6 +17,7 @@
  * along with Elpis. If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
@@ -58,6 +59,7 @@ namespace Elpis
         {
             _player = player;
             _player.StationLoading += _player_StationLoading;
+            _player.StationLoaded += _player_StationLoaded;
             _player.ExceptionEvent += _player_ExceptionEvent;
             InitializeComponent();
 
@@ -67,6 +69,14 @@ namespace Elpis
             _mnuEditQuickMix = _stationMenu.Items[2] as MenuItem; //mnuEditQuickMix
             _mnuAddVariety = _stationMenu.Items[3] as MenuItem; //mnuAddVariety
             _mnuInfo = _stationMenu.Items[4] as MenuItem; //mnuInfo
+        }
+
+        private void _player_StationLoaded(object sender, Station station)
+        {
+            this.BeginDispatch(() =>
+            {
+                MainWindow._mainWindow.ShowPage(MainWindow._playlistPage);
+            });
         }
 
         public List<Station> Stations
@@ -81,7 +91,7 @@ namespace Elpis
                                            lblNoStations.Visibility = (value.Count > 0) ? Visibility.Hidden : Visibility.Visible;
                                            StationItems.ItemsSource = value;
                                            _currSort = _player.StationSortOrder;
-                                           scrollMain.ScrollToHome();
+                                           //scrollMain.ScrollToHome();
                                            if (_waiting)
                                            {
                                                ShowWait(false);

@@ -41,7 +41,6 @@ namespace Elpis
         #endregion
 
         private readonly Player _player;
-        private const string initialSearchText = "Enter Artist, Track or Composer";
 
         public SearchMode SearchMode { get; set; }
         public Station VarietyStation { get; set; }
@@ -136,7 +135,6 @@ namespace Elpis
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             lblNoResults.Visibility = Visibility.Collapsed;
-            txtSearch.Text = initialSearchText;
             ResultScroller.ScrollToHome();
             ShowWait(false);
         }
@@ -148,8 +146,7 @@ namespace Elpis
 
         private void ClearSearchBox()
         {
-            if (txtSearch.Text == initialSearchText)
-                txtSearch.Text = string.Empty;
+            txtSearch.Text = string.Empty;
         }
 
         private void txtSearch_PreviewMouseDown(object sender, MouseButtonEventArgs e)

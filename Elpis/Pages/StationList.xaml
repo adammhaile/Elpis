@@ -1,6 +1,10 @@
 ﻿<UserControl x:Class="Elpis.StationList" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Medium"
+             TextElement.FontSize="14"
+             FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GUI.Converters"
              xmlns:Controls="clr-namespace:Elpis.Controls" mc:Ignorable="d" d:DesignHeight="500" d:DesignWidth="440"
              Unloaded="StationList_Unloaded" Loaded="StationList_Loaded">
@@ -25,16 +29,13 @@
             </ContextMenu>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Background="{StaticResource MainBGBrush}">
+    <Grid Background="{x:Null}" Margin="10,0,5,10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Image Grid.Row="3" Grid.ColumnSpan="3" Source="/Elpis;component/Images/background.png"
-               Margin="10" Opacity="0.25"/>
         <TextBlock Name="lblNoStations"
                    Margin="15"
                    FontSize="22"
-                   Foreground="{StaticResource MainFontBrush}"
                    TextWrapping="Wrap"
                    TextAlignment="Center"
                    HorizontalAlignment="Center"
@@ -44,16 +45,16 @@
             <LineBreak/>
             Click on the Plus button above to add your favorite artist or songs and start listening.
         </TextBlock>
-        <ScrollViewer Name="scrollMain" Grid.Row="0" VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Disabled" Style="{StaticResource FadeScroller}">
+        <ScrollViewer Name="scrollMain" Grid.Row="0" VerticalScrollBarVisibility="Auto" 
+                  HorizontalScrollBarVisibility="Disabled" Style="{StaticResource for_scrollviewer}">
 
             <ItemsControl Name="StationItems" HorizontalContentAlignment="Stretch">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <ContentControl Name="StationItem">
-                            <Grid Name="StationGrid">
+                            <Grid Name="StationGrid" Margin="0,0,0,5">
                                 <Grid Margin="0" HorizontalAlignment="Stretch"
-                      MouseLeftButtonUp="StationItem_MouseLeftButtonUp" Style="{StaticResource HoverGrid}">
+                      MouseLeftButtonUp="StationItem_MouseLeftButtonUp">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -62,26 +63,26 @@
                          Source="{Binding Path=ArtImage, 
                                                                     Converter={StaticResource imgConverter}, 
                                                                     ConverterParameter={StaticResource Image_UnknownArt}}"
-                         Height="96" Width="96" />
+                         Height="64" Width="64" />
                                     <Grid Grid.Column="1">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                             <ColumnDefinition Width="Auto" />
                                         </Grid.ColumnDefinitions>
-                                        <Controls:ImageButton Width="28" Height="28" x:Name="btnMenu" Grid.Column="0"
+                                        <Controls:ImageButton Width="25" Height="25" x:Name="btnMenu" Grid.Column="0"
                                         ToolTip="Show Station Menu"
                                         ActiveImageUri="{StaticResource Image_MenuRightHover}" InactiveImageUri="{StaticResource Image_MenuRight}"
                                         VerticalAlignment="Center" HorizontalAlignment="Center" Click="btnMenu_Click" Visibility="Visible" />
 
-                                        <TextBlock Grid.Column="1" Grid.ColumnSpan="2" Name="txtStationName" Text="{Binding Path=Name}" FontSize="22"
-                               FontWeight="DemiBold" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                               Foreground="{StaticResource MainFontBrush}" Controls:TextBlockUtils.AutoTooltip="True"
+                                        <TextBlock Grid.Column="1" Grid.ColumnSpan="2" Name="txtStationName" Text="{Binding Path=Name}" FontSize="18"
+                               Margin="3" TextAlignment="Left" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                               Controls:TextBlockUtils.AutoTooltip="True"
                                Controls:TextBlockUtils.AutoTooltipFontSize="12" />
                                         <TextBox Visibility="Hidden" Name="txtRename" Grid.Column="1"
-                                   FontSize="22" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                                   FontSize="18" Margin="3" TextAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                    KeyUp="TextBox_KeyUp" />
-                                        <Controls:ImageButton Width="32" Height="32" Margin="4,2"
+                                        <Controls:ImageButton Width="25" Height="25" Margin="4,2"
                                                 Grid.Column="2" x:Name="btnSaveRename" ActiveImageUri="{StaticResource Image_CheckHover}"
                                                 ToolTip="Save"
                                                 InactiveImageUri="{StaticResource Image_Check}" Click="btnSaveRename_Click" VerticalAlignment="Center"
@@ -94,9 +95,9 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-        <Border Name="WaitScreen" BorderBrush="{StaticResource MainBGBrush}" BorderThickness="0"
-            Background="{StaticResource MainWaitBrush}" Visibility="Collapsed">
-            <Grid x:Name="Spinner" Background="{StaticResource TransparencyShadeBrush}">
+        <Border Name="WaitScreen" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0"
+            Background="{x:Null}" Visibility="Collapsed">
+            <Grid x:Name="Spinner" Background="{x:Null}">
                 <Controls:ContentSpinner Margin="10" Width="190" ContentScale="1" />
             </Grid>
         </Border>
