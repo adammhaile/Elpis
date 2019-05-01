@@ -124,7 +124,7 @@ namespace Elpis
 
         //public static MapConfigEntry Misc_ForceSSL = new MapConfigEntry("Misc_ForceSSL", false);
         public static MapConfigEntry System_OutputDevice = new MapConfigEntry("System_OutputDevice", "");
-        public static MapConfigEntry Current_Color = new MapConfigEntry("Current_Color", "");
+        public static MapConfigEntry Current_Color = new MapConfigEntry("Current_Color", "grey");
     }
 
     public struct ConfigDropDownItem
