@@ -176,9 +176,9 @@ namespace Elpis
                     PRequest.SetProxy(_config.Fields.Proxy_Address, _config.Fields.Proxy_Port,
                         _config.Fields.Proxy_User, _config.Fields.Proxy_Password);
                 SwatchesProvider swatchesProvider = new SwatchesProvider();
-                
-                Swatch color = swatchesProvider.Swatches.First(a => a.Name == _config.Fields.Current_Color);
-                new PaletteHelper().ReplacePrimaryColor(color);
+
+                Swatch color = swatchesProvider.Swatches.FirstOrDefault(a => a.Name == _config.Fields.Current_Color);
+                if(color != null) new PaletteHelper().ReplacePrimaryColor(color);
                 var loc = _config.Fields.Elpis_StartupLocation;
                 var size = _config.Fields.Elpis_StartupSize;
 
@@ -926,7 +926,9 @@ namespace Elpis
                 {
                     _player.OutputDevice = systemOutputDevice;
                 }
+#pragma warning disable CS0168 // Variable is declared but never used
                 catch (BassException bEx)
+#pragma warning restore CS0168 // Variable is declared but never used
                 {
                     _player.OutputDevice = prevOutput;
                 }
@@ -1060,7 +1062,9 @@ namespace Elpis
 
         private void LoadLogic()
         {
+#pragma warning disable CS0219 // Variable is assigned but its value is never used
             bool foundNewUpdate = false;
+#pragma warning restore CS0219 // Variable is assigned but its value is never used
             if (InitLogic())
             {
 #if APP_RELEASE
