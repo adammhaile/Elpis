@@ -105,6 +105,12 @@ namespace Elpis
             }
         }
 
+        private void mnuCopyToClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currMenuSong != null)
+                _currMenuSong.CopyTitleToClipboard();
+        }
+
         private void LaunchAmazonURL(string ID)
         {
             if (ID != string.Empty)

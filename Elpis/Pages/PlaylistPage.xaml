@@ -36,6 +36,7 @@
                 <MenuItem Click="mnuBookSong_Click" Header="Bookmark Song"/>
                 <MenuItem Click="mnuCreateArtist_Click" Header="Create Station from Artist" />
                 <MenuItem Click="mnuCreateSong_Click" Header="Create Station from Song" />
+                <MenuItem Click="mnuCopyToClipboard_Click" Header="Copy Song Title to Clipboard"/>
             </ContextMenu>
             <Converter:BinaryImageConverter x:Key="imgConverter" />
 
