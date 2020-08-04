@@ -926,9 +926,7 @@ namespace Elpis
                 {
                     _player.OutputDevice = systemOutputDevice;
                 }
-#pragma warning disable CS0168 // Variable is declared but never used
                 catch (BassException bEx)
-#pragma warning restore CS0168 // Variable is declared but never used
                 {
                     _player.OutputDevice = prevOutput;
                 }
@@ -1062,9 +1060,7 @@ namespace Elpis
 
         private void LoadLogic()
         {
-#pragma warning disable CS0219 // Variable is assigned but its value is never used
             bool foundNewUpdate = false;
-#pragma warning restore CS0219 // Variable is assigned but its value is never used
             if (InitLogic())
             {
 #if APP_RELEASE
