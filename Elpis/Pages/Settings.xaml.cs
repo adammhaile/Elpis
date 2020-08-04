@@ -123,8 +123,9 @@ namespace Elpis
                 primaryPaletteComboBox.Items.Add(str);
 
             primaryPaletteComboBox.SelectedValue = _config.Fields.Current_Color;
-            Swatch color = swatchesProvider.Swatches.First(a => a.Name == _config.Fields.Current_Color);
-            new PaletteHelper().ReplacePrimaryColor(color);
+            Swatch color = swatchesProvider.Swatches.FirstOrDefault(a => a.Name == _config.Fields.Current_Color);
+            if(color != null)
+                new PaletteHelper().ReplacePrimaryColor(color);
 
             _config.SaveConfig();
 
@@ -197,7 +198,8 @@ namespace Elpis
                 _player.OutputDevice = (string)cmbOutputDevice.SelectedValue;
             }
 
-            if (!_config.Fields.Current_Color.Equals(this.primaryPaletteComboBox.SelectedValue.ToString()))
+            if (this.primaryPaletteComboBox.SelectedValue != null &&
+                !_config.Fields.Current_Color.Equals(this.primaryPaletteComboBox.SelectedValue.ToString()))
             {
                 _config.Fields.Current_Color = this.primaryPaletteComboBox.SelectedValue.ToString();
 
