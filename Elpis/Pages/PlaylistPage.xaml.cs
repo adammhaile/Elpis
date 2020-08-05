@@ -44,14 +44,17 @@ namespace Elpis
         private readonly Player _player;
         private Song _currSong;
         private Song _currMenuSong;
+        private Config _config;
 
         private ContextMenu _songMenu;
         private MenuItem _purchaseMenu;
         private MenuItem _purchaseAmazonAlbum;
         private MenuItem _purchaseAmazonTrack;
 
-        public PlaylistPage(Player player)
+        public PlaylistPage(Player player, Config config)
         {
+            _config = config;
+
             _player = player;
             _player.SongStarted += _player_SongStarted;
             _player.PlaybackStateChanged += _player_PlaybackStateChanged;
@@ -239,8 +242,11 @@ namespace Elpis
             _feedbackMap.Add(song, new[] { button, otherButton });
             if (song.Loved)
                 _player.SongDeleteFeedback(song);
-            else
+            else 
+            { 
                 _player.SongThumbUp(song);
+                OptionalUserLogging.TryLogSongLoved(_config, song);
+            }
 
             spinner.StartAnimation();
         }

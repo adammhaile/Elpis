@@ -24,13 +24,16 @@ namespace Elpis
         private readonly Dictionary<Song, ImageButton[]> _feedbackMap;
 
         private Song _currMenuSong;
+        private Config _config;
 
         private ContextMenu _songMenu;
         private MenuItem _purchaseMenu;
         private MenuItem _purchaseAmazonAlbum;
         private MenuItem _purchaseAmazonTrack;
-        public HistoryPage(Player player)
+        public HistoryPage(Player player, Config config)
         {
+            _config = config;
+
             _player = player;
             _player.PlayedSongAdded += _player_PlayedSongAdded;
             _player.PlayedSongRemoved += _player_PlayedSongRemoved;
@@ -325,7 +328,10 @@ namespace Elpis
             if (song.Loved)
                 _player.SongDeleteFeedback(song);
             else
+            {
                 _player.SongThumbUp(song);
+                OptionalUserLogging.TryLogSongLoved(_config, song);
+            }
 
             spinner.StartAnimation();
         }
