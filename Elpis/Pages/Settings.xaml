@@ -7,7 +7,7 @@
              TextElement.FontWeight="Medium"
              TextElement.FontSize="14"
              FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto"
-             d:DesignHeight="479" d:DesignWidth="442" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="800" d:DesignWidth="442" Loaded="UserControl_Loaded" Unloaded="UserControl_Unloaded">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -134,6 +134,28 @@
                         <CheckBox Name="chkAutoPlay" Grid.Row="3" Grid.ColumnSpan="2" Margin="5" 
                       IsChecked="True"
                       Content="Automatically Play Last Station" />
+                    </Grid>
+                </Expander>
+                <Expander Header="Logging" Margin="5" IsExpanded="True">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Name="chkLogLikedSongs" Grid.Row="0" Grid.ColumnSpan="3" Margin="5"
+                    IsChecked="False"
+                    Content="Log on song liked"/>
+                        <Label Content="Log to" Grid.Column="0" Grid.Row="1" Margin="5" HorizontalContentAlignment="Left"/>
+                        <TextBox x:Name="txtLikedSongsFile" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5"
+                    Text="{Binding Source={x:Static config:Config.ElpisAppData}, Mode=OneWay, StringFormat='{}{0}\\LikedSongs.txt'}"
+                    IsEnabled="{Binding ElementName=chkLogLikedSongs, Path=IsChecked}"/>
+
                     </Grid>
                 </Expander>
                 <Expander Header="General" Margin="5" IsExpanded="False">

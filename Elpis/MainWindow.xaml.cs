@@ -524,9 +524,9 @@ namespace Elpis
             _loginPage = new LoginPage(_player, _config);
             //transitionControl.AddPage(_loginPage);
 
-            _historyPage = new HistoryPage(_player);
+            _historyPage = new HistoryPage(_player, _config);
 
-            _playlistPage = new PlaylistPage(_player);
+            _playlistPage = new PlaylistPage(_player, _config);
             //transitionControl.AddPage(_playlistPage);
 
             _lastFMPage = new LastFMAuthPage();

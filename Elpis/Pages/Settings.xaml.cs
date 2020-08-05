@@ -82,6 +82,9 @@ namespace Elpis
 
         private void LoadConfig()
         {
+            chkLogLikedSongs.IsChecked = _config.Fields.Logging_LogOnSongLike;
+            txtLikedSongsFile.Text = _config.Fields.Logging_LogOnSongLikeFile;
+
             chkAutoLogin.IsChecked = _config.Fields.Login_AutoLogin;
             cmbAudioFormat.SelectedValue = _config.Fields.Pandora_AudioFormat;
             cmbStationSort.SelectedValue = _config.Fields.Pandora_StationSortOrder;
@@ -156,6 +159,8 @@ namespace Elpis
 
         private void SaveConfig()
         {
+            _config.Fields.Logging_LogOnSongLike = (bool) chkLogLikedSongs.IsChecked;
+            _config.Fields.Logging_LogOnSongLikeFile = (string)txtLikedSongsFile.Text;
             _config.Fields.Login_AutoLogin = (bool) chkAutoLogin.IsChecked;
             _config.Fields.Pandora_AudioFormat = (string) cmbAudioFormat.SelectedValue;
             _config.Fields.Pandora_StationSortOrder = (string) cmbStationSort.SelectedValue;

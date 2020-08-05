@@ -25,6 +25,7 @@ using PandoraSharp.Exceptions;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using System.Web.Script.Serialization;
+using System.Windows;
 
 namespace PandoraSharp
 {
@@ -283,6 +284,11 @@ namespace PandoraSharp
                 _pandora.CallRPC("bookmark.addArtistBookmark", "trackToken", TrackToken);
             }
             catch { } //TODO: Give this a failed event to notify UI
+        }
+
+        public void CopyTitleToClipboard()
+        {
+            Clipboard.SetText($"{this.Artist} - {this.SongTitle}");
         }
 
         public void CreateStation()
