@@ -98,6 +98,8 @@ namespace Elpis
 
         public static MapConfigEntry Pandora_StationSortOrder = new MapConfigEntry("Pandora_StationSortOrder",
                                                                                    Pandora.SortOrder.DateDesc.ToString());
+        public static MapConfigEntry Logging_LogOnSongLike = new MapConfigEntry("Logging_LogOnSongLike", false);
+        public static MapConfigEntry Logging_LogOnSongLikeFile = new MapConfigEntry("Logging_LogOnSongLikeFile", Path.Combine(Config.ElpisAppData, @"\LikedSongs.txt"));
 
         public static MapConfigEntry Proxy_Address = new MapConfigEntry("Proxy_Address", "");
         public static MapConfigEntry Proxy_Port = new MapConfigEntry("Proxy_Port", 0);
@@ -147,6 +149,9 @@ namespace Elpis
         public bool Pandora_AutoPlay { get; set; }
         public string Pandora_LastStationID { get; set; }
         public string Pandora_StationSortOrder { get; set; }
+
+        public bool Logging_LogOnSongLike { get; set; }
+        public string Logging_LogOnSongLikeFile { get; set; }
 
         public string Proxy_Address { get; set; }
         public int Proxy_Port { get; set; }
@@ -241,6 +246,9 @@ namespace Elpis
             Fields.Pandora_LastStationID = (string) _c.GetValue(ConfigItems.Pandora_LastStationID);
             Fields.Pandora_StationSortOrder = (string) _c.GetValue(ConfigItems.Pandora_StationSortOrder);
 
+            Fields.Logging_LogOnSongLike = (bool) _c.GetValue(ConfigItems.Logging_LogOnSongLike);
+            Fields.Logging_LogOnSongLikeFile = (string) _c.GetValue(ConfigItems.Logging_LogOnSongLikeFile); 
+
             Fields.Proxy_Address = ((string) _c.GetValue(ConfigItems.Proxy_Address)).Trim();
             Fields.Proxy_Port = (int) _c.GetValue(ConfigItems.Proxy_Port);
             Fields.Proxy_User = (string) _c.GetValue(ConfigItems.Proxy_User);
@@ -326,6 +334,9 @@ namespace Elpis
                 _c.SetValue(ConfigItems.Pandora_AutoPlay, Fields.Pandora_AutoPlay);
                 _c.SetValue(ConfigItems.Pandora_LastStationID, Fields.Pandora_LastStationID);
                 _c.SetValue(ConfigItems.Pandora_StationSortOrder, Fields.Pandora_StationSortOrder);
+
+                _c.SetValue(ConfigItems.Logging_LogOnSongLike, Fields.Logging_LogOnSongLike);
+                _c.SetValue(ConfigItems.Logging_LogOnSongLikeFile, Fields.Logging_LogOnSongLikeFile);
 
                 _c.SetValue(ConfigItems.Proxy_Address, Fields.Proxy_Address.Trim());
                 _c.SetValue(ConfigItems.Proxy_Port, Fields.Proxy_Port);
