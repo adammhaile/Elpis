@@ -1,4 +1,16 @@
-**LOOKING FOR NEW MANAGEMENT!!** - Are you interested in maintaining Elpis? It's in dire need of someone passionate about the project to take over. Contact email @ adamhaile.net if you are interested.
+__*********************************************************************************************__
+
+__*********************************************************************************************__
+
+**Elpis is no longer developed! Issues are now closed and pull requests are no longer accepted.**
+
+**The source is GPL licensed, so feel free to fork and make whatever changes you would like.**
+
+**Sorry, I just don't have time for this project any longer.**
+
+__*********************************************************************************************__
+
+__*********************************************************************************************__
 
 
 Elpis is native Windows client for the Pandora Radio music service, implemented in C# and WPF.  
@@ -37,7 +49,6 @@ Afraid you might not have .NET 4.0 or don’t know what it is? No worries, if yo
 To download the latest version of Elpis, click here: [Elpis Releases](https://github.com/adammhaile/Elpis/releases)
 
 ## Other Links
- * [Elpis on Facebook](https://www.facebook.com/elpis.pandora)
  * [Pithos](http://kevinmehall.net/p/pithos/) (Linux Gnome client)
  * [Pianobar](http://6xq.net/projects/pianobar/) (Linux command line client)
  * [LPFM](http://lpfm.codeplex.com/) - Elpis uses (and contributes to) LPFM, an open source .NET API for Last.FM
